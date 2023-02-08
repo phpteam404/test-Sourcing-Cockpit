@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{'relationship-classification.manage_classification' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="classficationForm" ng-submit="classficationForm.$valid && save(classification)">
+<div class="modal-body clearfix" id="modal-body">
+    <span ng-if="classification.classification_position=='x'">
+        <div class="col-md-6 form-group">
+            <label>{{'relationship-classification.position.left' | translate}} *</label>
+            <input type="text" ng-model="classification.left" class="form-control" name="classification_left" required/>
+            <span class="error-message" ng-if="classficationForm.classification_left.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>{{'relationship-classification.position.right' | translate}} *</label>
+            <input type="text" ng-model="classification.right" class="form-control" name="classification_right" required/>
+            <span class="error-message" ng-if="classficationForm.classification_right.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+    </span>
+    <span ng-if="classification.classification_position=='y'">
+        <div class="col-md-6 form-group">
+            <label>{{'relationship-classification.position.low' | translate}} *</label>
+            <input type="text" ng-model="classification.low" class="form-control" name="classification_low" required/>
+            <span class="error-message" ng-if="classficationForm.classification_low.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>{{'relationship-classification.position.high' | translate}} *</label>
+            <input type="text" ng-model="classification.high" class="form-control" name="classification_high" required/>
+            <span class="error-message" ng-if="classficationForm.classification_high.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+    </span>
+
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-primary">
+    <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+    <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+</div>
+</form>

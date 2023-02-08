@@ -1,0 +1,217 @@
+<div class="modal-header" >
+    <h6 class="modal-title">{{title | translate}} {{'questions.question' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <form class="" name="form" novalidate ng-submit="form.$valid && addQuestion(question)">
+        <div class="form-group col-sm-12">
+            <label class="gray">{{'questions.question' | translate}} *</label>
+            <input type="text" name="question_text"  ng-model="question.question_text" class="form-control"
+                   placeholder="{{'questions.type_question' | translate}}" required/>
+            <span class="error-message" ng-if="form.question_text.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="form-group col-sm-12">
+            <label class="gray">{{'questions.proof' | translate}}</label>
+            <input type="text" class="form-control" name="req_proof" ng-model="question.request_for_proof">
+        </div>
+        <div class="form-group col-sm-8 mb-h form_input_style" ng-if="question_type == 'radio'">
+            <div class="col-sm-4 pl-2"><label class="gray">{{'questions.choices' | translate}}</label></div>
+            <div class="col-sm-4 p0"></div>
+            <div class="col-sm-4 p0"><label class="gray">{{'questions.values' | translate}}</label></div>
+            <div class="form-group mb-0 col-sm-12 p0" ng-repeat="row in question.option_name">
+                <div class="col-sm-4 p0 mb8">
+                    <label>{{$index+1}}</label>
+                    <input type="text"  ng-model="question.option_name[$index].option"
+                           class="form-control-static  pl-2" readonly>
+                </div>
+                <div class="col-sm-2 p0 mb8"><span class = "pl-1">-</span></div>
+                <div class="col-sm-6 p0 mb8">
+                    <ng-form name="optionForm">
+                    <select class="form-control" ng-model="question.option_name[$index].value" name="radio_value" required
+                            ng-options="item.value as item.label for item in q_options">
+                        <option value="">-- Select --</option>
+                    </select>
+                    <!--<input type="text"  ng-model="question.option_name[$index].value"
+                           class="form-control-static" readonly>-->
+                    <span ng-if="form.$submitted && optionForm.radio_value.$error.required" class="error-message">
+                        {{'general.required_field' | translate}}</span>
+                    </ng-form>
+                </div>
+            </div>
+            <!--  <div class="form-group mb-0 col-sm-12 p0">
+                <div class="col-sm-4 p0">
+                    <label>{{'2' | translate}}</label>
+                    <input type="text" ng-init="question.option_name[1].option = 'No'" ng-model="question.option_name[1].option"
+                           class="form-control-static  pl-2" readonly>
+                </div>
+                <div class="col-sm-4 p0"><span class = "pl-1">-</span></div>
+                <div class="col-sm-4 p0">
+                    <input type="text" ng-init="question.option_name[1].value = '0'" ng-model="question.option_name[1].value"
+                           class="form-control-static" readonly>
+                </div>
+            </div>
+          <div class="form-group mb-0 col-sm-12 p0">
+                <div class="col-sm-4 p0">
+                    <label>{{'3' | translate}}</label>
+                    <input type="text" ng-init="question.option_name[2].option = 'N/A'" ng-model="question.option_name[2].option"
+                           class="form-control-static  pl-2" readonly>
+                </div>
+                <div class="col-sm-4 p0"><span class = "pl-1">-</span></div>
+                <div class="col-sm-4 p0">
+                    <input type="text" ng-init="question.option_name[2].value = 'NA'" ng-model="question.option_name[2].value"
+                           class="form-control-static" readonly>
+                </div>
+            </div>-->
+        </div>
+        <div class="form-group col-sm-8 mb-h form_input_style" ng-if="question_type == 'rag'">
+            <div class="col-sm-4 pl-2"><label class="gray">{{'questions.choices' | translate}}</label></div>
+            <div class="col-sm-4 p0"></div>
+            <div class="col-sm-4 p0"><label class="gray">{{'questions.values' | translate}}</label></div>
+            <div class="form-group mb-0 col-sm-12 p0"  ng-repeat="row in question.option_name">
+                <div class="col-sm-4 p0 mb8">
+                    <label ng-if="question.option_name[$index].option == 'N/A'">{{$index+1}}</label>
+                    <label ng-if="question.option_name[$index].option != 'N/A'" class="pr-2">{{$index+1}}</label>
+                    <input ng-if="question.option_name[$index].option != 'N/A'" type="text" ng-model="question.option_name[$index].option"
+                           class="form-control-static red-brs_{{question.option_name[$index].option}}" readonly>
+                    <input ng-if="question.option_name[$index].option == 'N/A'" type="text" ng-model="question.option_name[$index].option"
+                           class="form-control-static" style="padding-left: 20px" readonly>
+                </div>
+                <div class="col-sm-2 p0 mb8"><span class = "pl-1">-</span></div>
+                <div class="col-sm-6 p0 mb8">
+                    <ng-form name="optionForm">
+                    <select class="form-control"  ng-model="question.option_name[$index].value" name="rag_value" required
+                            ng-options="item.value as item.label for item in q_options">
+                        <option value="">-- Select --</option>
+                    </select>
+                    <!--<input type="text" ng-model="question.option_name[$index].value"
+                           class="form-control-static p0" readonly>-->
+                    <span ng-if="form.$submitted && optionForm.rag_value.$error.required" class="error-message">
+                        {{'general.required_field' | translate}}</span>
+                    </ng-form>
+                </div>
+            </div>
+            <!--<div class="form-group mb-0 col-sm-12 p0">
+                <div class="col-sm-4 p0">
+                    <label class="pr-2">{{'2' | translate}}</label>
+                    <input type="text" ng-init="question.option_name[1].option  = 'A'" ng-model="question.option_name[1].option"
+                           class="form-control-static amber-brs" readonly>
+                </div>
+                <div class="col-sm-4 p0"><span class = "pl-1">-</span></div>
+                <div class="col-sm-4 p0">
+                    <input type="text" ng-init="question.option_name[1].value = '0.1'" ng-model="question.option_name[1].value"
+                           class="form-control-static p0" readonly>
+                </div>
+            </div>
+            <div class="form-group mb-0 col-sm-12 p0">
+                <div class="col-sm-4 p0">
+                    <label class="pr-2">{{'3' | translate}}</label>
+                    <input type="text" ng-init="question.option_name[2].option = 'G'" ng-model="question.option_name[2].option"
+                           class="form-control-static green-brs" readonly>
+                </div>
+                <div class="col-sm-4 p0"><span class = "pl-1">-</span></div>
+                <div class="col-sm-4 p0">
+                    <input type="text" ng-init="question.option_name[2].value = '1'" ng-model="question.option_name[2].value"
+                           class="form-control-static p0" readonly>
+                </div>
+            </div>
+            <div class="form-group mb-0 col-sm-12 p0">
+                <div class="col-sm-4 p0">
+                    <label>{{'4' | translate}}</label>
+                    <input type="text" ng-init="question.option_name[3].option  = 'N/A'" ng-model="question.option_name[3].option"
+                           class="form-control-static  pl-2" readonly>
+                </div>
+                <div class="col-sm-4 p0"><span class = "pl-1">-</span></div>
+                <div class="col-sm-4 p0">
+                    <input type="text" ng-init="question.option_name[3].value = 'NA'" ng-model="question.option_name[3].value"
+                           class="form-control-static" readonly>
+                </div>
+            </div>-->
+        </div>
+        <div class="form-inline col-sm-12 mb-h"  ng-if="question_type == 'dropdown'">
+            <label class="f15 darkcolor pt10 pb5 overflow-hidden  text-capitalize acc-heading clearfix gray">{{'questions.choices' | translate}}</label>
+            <fieldset class="choice-wrap mb10" data-ng-repeat="choice in choices" ng-if="choice.type !='delete'" >
+                    <ng-form name="optionForm">
+                    <label class="pr-1">{{$index+1}}</label>
+                    <input  type="text" class="form-control" ng-model="choice.question_option"
+                           name="question_option" placeholder="{{'questions.enter_option' | translate}}" required>
+                    <select class="form-control"  ng-model="choice.question_value" required name="question_value"
+                            ng-options="item.value as item.label for item in q_options">
+                        <option value="">-- Select --</option>
+                    </select>
+                    <!--<input type="text" class="form-control" ng-model="choice.question_value"
+                           name="question_value" placeholder="{{'questions.enter_value' | translate}}" required>-->
+                    <a href="javascript:;" class="remove" ng-show="!($last && $first)"  ng-click="removeChoice($index,choice)">
+                        <i class="icon-minus-circle red f21 ml-h pt-h"></i>
+                    </a>
+                    <a href="javascript:;" class="addfields" ng-show="$last" ng-click="addNewChoice(question,$index)"><i class="icon-plus-circle green f21 ml-h"></i></a>
+                    <span ng-if="form.$submitted && optionForm.question_option.$error.required" class="error-message" style="width:195px;   display: inline-block;padding-left:25px;">
+                        {{'general.required_field' | translate}}</span>
+                    <span ng-if="form.$submitted && optionForm.question_value.$error.required" class="error-message">
+                        {{'general.required_field' | translate}}</span>
+
+                </ng-form>
+            </fieldset>
+        </div>
+        <div class="col-sm-12 questions-list-form">
+            <p class="gray">{{'questions.relation_category' | translate}} <span class="pull-right">{{'questions.req' | translate}}</span></p>
+            <div class="switch-view">
+                <ul>
+                    <li ng-repeat="cat in categories">
+                        <a href="javascript:;"><i class="fa fa-question-circle darkcolor  mr10"></i></a>
+                        {{cat.relationship_category_name}}
+                        <div class="onoffswitch pull-right">
+                            <input type="checkbox" name="onoffswitch_toggle"
+                                   ng-init="cat.status = (cat.status == 1) ? 1:0"
+                                   ng-model="cat.status"
+                                   ng-true-value="1" ng-false-value="0" class="onoffswitch-checkbox" id="{{$index}}" checked>
+                            <label class="onoffswitch-label assessment-switch mb-0" for="{{$index}}">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <hr>
+                    <li ng-if="categories.length>0">
+                        <a href="javascript:;"></a>
+                        <span class="gray">{{'providers.provider' | translate}}</span>
+                        <div class="onoffswitch pull-right">
+                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                    ng-init="question.provider_visibility = (question.provider_visibility == 1)? 1:0"
+                                    ng-model="question.provider_visibility"
+                                    ng-true-value="1" ng-false-value="0"
+                                    ng-checked="question.provider_visibility == 1"                                       
+                                    id="{{question.provider_visibility}}_{{question.id_question}}"
+                                    ng-disabled="question.question_status == 0">
+                            <label class="onoffswitch-label assessment-switch mb-0"
+                                    for="{{question.provider_visibility}}_{{question.id_question}}">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group col-sm-12">
+            <label class="gray">{{'questions.help_text' | translate}}</label>
+            <textarea type="text" name="help_text"  ng-model="question.help_text" class="form-control"></textarea>
+            <span class="error-message" ng-if="form.help_text.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group col-sm-6" ng-if="question.id_question">
+            <label class="gray">{{'contract.module_name' | translate}}</label>
+            <p>{{question.module_name | checkEmpty}}</p>
+        </div>
+        <div class="form-group col-sm-6" ng-if="question.id_question">
+            <label class="gray">{{'templates.template' | translate}}</label>
+            <p>{{question.template_name | checkEmpty}}</p>
+        </div>
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</div>

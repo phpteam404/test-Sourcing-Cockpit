@@ -1,0 +1,42 @@
+<h3 class="darkcolor clearfix pt5 border-bottom mb5">
+    <span class="display-inline-block f14 bold pt5">{{'attachment.attachments' | translate}} <span class="sky-blue bold">{{uploadedDocuments.length}}</span></span>
+    <a href="javascript:;" class="pull-right add-button mb10"
+       ng-click="quickAttachmentModal()">
+        <i class="fa fa-plus"></i>{{'general.ADD' | translate}}
+    </a>
+    <input class="f12 pull-right p2 mr8" type="text" ng-model="doc_search" placeholder="{{'general.all'| translate}}"/>
+</h3>
+<div class="col-lg-12 p0 clearfix" ng-scrollbars win-height wh-offset="176">
+
+    <div class="attachment-inv-wrap clearfix" ng-repeat="d in uploadedDocuments | filter:doc_search">
+        <div>
+             <span class="pull-left mr10 mt5" upload-file data-fileType="{{ d.document_mime_type }}"><i
+                     class=""></i></span>
+            <div class="darkcolor f12 bold">{{ d.document_name | getFileName:d.document_name }}
+                <a class="pull-right" href="{{d.full_path}}" download><span class="fa fa-download"> </span></a>
+            </div>
+            <div class="f12 gray">{{'general.created_by' | translate}} {{d.username}}, {{d.created_date_time|date:'date'}}
+                <!--<a
+                    class="pull-right"><span class="icon-trash tpoint-actions"></span></a>-->
+            </div>
+            <div class="attachement-inv-wrap-info" ng-if="d.document_description">
+                <span class="icon-info pull-left f14 sky-blue mr8"></span>
+                {{d.document_description}}
+            </div>
+        </div>
+        <div ng-if="d.versions.length >0">
+            <div class="line-heading-center"><span>{{'general.old_version' | translate}}</span></div>
+            <div class="attachement-inv-wrap-info-old" ng-repeat="v in d.versions">
+                <span class="word-icon pull-left mr10 mt5"></span>
+                <div class="darkcolor f12 bold">{{ v.document_name | getFileName:v.document_name }}</div>
+                <div class="f12 gray">{{'general.created_by' | translate}} {{v.username}}, {{v.created_date_time | utcToLocal:'date'}}
+                    <a class="ml15" href="{{v.full_path}}" download><span
+                        class="fa fa-download sky-blue f14"> </span></a></div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

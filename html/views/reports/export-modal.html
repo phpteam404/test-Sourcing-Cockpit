@@ -1,0 +1,78 @@
+<div class="modal-header" >
+    <h6 class="modal-title">{{'reports.export_options' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="exportForm" ng-submit="exportReport(export)">
+    <div class="modal-body clearfix">
+        <div class="col-sm-12 mb-1" ng-init="export.getSelected='all_contracts'">
+            <h6>{{'reports.export' | translate}} :</h6>
+            <label class="checkbox mr-1" for="check1">
+                <input type="radio" ng-model="export.getSelected" id="check1" ng-change="checkSelectedCounts(export.getSelected)"
+                       value="selected_contracts"> {{'reports.only_selected' | translate}}
+                <!--<a href="javascript:;" class="skyblue"><i class="icon-clock"></i></a>-->
+            </label>
+            <label class="checkbox" for="check2">
+                <input type="radio" ng-model="export.getSelected" value="all_contracts"
+                       id="check2" class=""> {{'reports.all_contracts' | translate}}
+                <!--<a href="javascript:;" class="skyblue"><i class="icon-clock"></i></a>-->
+            </label>
+        </div>
+        <div class="col-sm-12 mb-1">
+            <h6>{{'reports.display' | translate}} :</h6>
+            <label class="checkbox display-block" for="reviewDate" ng-init="export.latestReviewDate =1">
+                <input type="checkbox" name="inline-checkbox1" ng-model="export.latestReviewDate"
+                       ng-true-value="1" ng-false-value="0"
+                       id="reviewDate" class=""> {{'reports.latest_fm_date' | translate}}
+            </label>
+            <label class="checkbox display-block" for="status"  ng-init="export.status =1">
+                <input type="checkbox" name="inline-checkbox1" ng-model="export.status"
+                       ng-true-value="1" ng-false-value="0" id="status" > {{'reports.status' | translate}}
+            </label>
+            <label class="checkbox display-block" for="rag" ng-init="export.rag =1">
+                <input type="checkbox" name="inline-checkbox1" ng-model="export.rag"
+                       ng-true-value="1" ng-false-value="0" id="rag" class=""> {{'reports.rag_counts' | translate}}
+            </label>
+            <label class="checkbox display-block" for="actionItems" ng-init="export.actionItems =1">
+                <input type="checkbox" name="inline-checkbox1" ng-model="export.actionItems"
+                       ng-true-value="1" ng-false-value="0" id="actionItems" class=""> {{'reports.action_items' | translate}}
+            </label>
+            <label class="checkbox display-block" for="comments" ng-init="export.comments =1">
+                <input type="checkbox" name="inline-checkbox1" ng-model="export.comments"
+                       ng-true-value="1" ng-false-value="0" id="comments" class=""> {{'reports.comments' | translate}}
+            </label>
+        </div>
+        <div class="col-sm-12 mb-1">
+            <h6>{{'reports.export_to' | translate}} :</h6>
+            <label class="checkbox mr-1" for="xls" ng-init="export.file_type = 1">
+                <input type="checkbox" ng-disabled="true" ng-model="export.file_type" name="inline-checkbox1"
+                       id="xls" ng-true-value="1" ng-false-value="0" ng-checked="true"> {{'reports.xls' | translate}}
+            </label>
+           <!-- <label class="checkbox mr-1" for="pdf">
+                <input type="checkbox" name="inline-checkbox1" id="pdf" class="">pdf
+            </label>
+            <label class="checkbox" for="picture">
+                <input type="checkbox" name="inline-checkbox1" id="picture" class="">picture
+            </label>-->
+        </div>
+        <!--<div class="col-sm-12">
+            <button class="btn btn-sm btn-primary" type="submit">
+                <i class="icon-export2"></i>&nbsp; Export</button>
+        </div>-->
+        <div class="col-sm-6 mb-1">
+            <h6>{{'reports.export_review' | translate}} :</h6>
+            <select class="form-control" name="export_review" ng-init="export.export_review='0'" ng-model="export.export_review">
+                <!-- <option value="">--Select--</option> -->
+                <option value="1">{{'general.yes' | translate}}</option>
+                <option value="0">{{'general.no' | translate}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-group col-sm-12 text-center">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="icon-export2"></i>&nbsp;{{'reports.export' | translate}}</button>
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </div>
+</form>

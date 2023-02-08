@@ -1,0 +1,65 @@
+<div class="animated fadeIn">
+        <div class="row">
+            <div class="col-sm-12 yearly-clendar" style="padding: 0; display: flex;">
+                <div class="col-sm-6 pt15 pb15 cal-min-height">
+                    <div class="col-md-12 p0 cal-head">
+                        <h4 class="card-block text-sm-center display-inline-block">{{'calender.year' | translate}}
+                            {{currentYear}}</h4>
+                        <span class="pull-right"><a class="btn btn-sm btn-secondary" ui-sref="app.calender.view"><span
+                                    class="fc-icon fc-icon-left-single-arrow"></span>
+                                {{'calender.month_view' | translate}}</a></span>
+                    </div>
+                    <div class="col-sm-12 p0 white-bg bg-white cal-body">
+                        <div class="col-sm-12 p0 moth-calender-view">
+                            <div class="col-md-12 p0 card-block">
+                                <div class="col-md-3 pl10 border block120 monthly-div" ui-sref="app.calender.view"
+                                    ng-class="$index>=8?'last-four-mnths':''" ng-repeat="month in months" ng-click="monthClick(month,currentYear)">
+                                    <p class="text-sm-center bold f13 mb5">{{month.monthName}}</p>
+                                    <div class="width-full">
+                                        <span class="rel-cat mb2 display-block"
+                                            style="background-color: {{quadrantColor[a.relationship_category_quadrant]}}"
+                                            ng-repeat="a in month.relation_category_name" ng-if="a.relationship_count>0"
+                                            uib-tooltip="{{a.relationship_category_name}}">{{a.relationship_category_name}}
+                                            ({{a.relationship_count}})</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 month-view">
+                    <div class="row m-0 pt15 pb15">
+                        <!-- tabs start  -->
+                        <div class="card">
+                            <uib-tabset active="activeForm">
+                                <uib-tab index="0">
+                                    <uib-tab-heading>
+                                        {{'bussiness.bussiness_unit' | translate}}
+                                    </uib-tab-heading>
+                                </uib-tab>
+                                <uib-tab index="1">
+                                    <uib-tab-heading>
+                                        {{'providers.providers' | translate}}
+                                    </uib-tab-heading>
+                                </uib-tab>
+                            </uib-tabset>
+                        </div>
+                        <!-- tabs end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('.month-view .tab-pane.active').height($('.moth-calender-view').innerHeight() - 42);
+            }, 3000);
+            $('body').delegate('.uib-tab.nav-item', 'click', function () {
+                setTimeout(function () {
+                    $('.month-view .tab-pane.active').height($('.moth-calender-view').innerHeight() - 42);
+                }, 1500);
+            });
+        }); 
+    </script>

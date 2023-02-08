@@ -1,0 +1,196 @@
+<div class="card contract-attachment-version">
+<div class="modal-header versions-modal-header">
+    <h6 class="modal-title" id="modal-title"><span class="version-name">{{title | translate}}-
+
+         <span style="color: #EF904F;">{{versionDetails.name}}</span> 
+        </span>
+        <span class="template-name">{{'templates.template' | translate}} :
+            <span> {{versionDetails.masterStructureName}} - {{versionDetails.language}}</span>
+        </span>
+    </h6>
+</div>
+
+<div class="card m-0">
+    <form novalidate name="contractBuilderForm" style="display: grid;"
+        ng-submit="contractBuilderForm.$valid && addContractBuilder(builder)">
+        <div class="modal-body">
+            <div class="form-group version-formats row m-0" style="display:flex;    margin-bottom: 16px !important;">
+                <label>{{'normal.most_recent_version' | translate}}</label>
+                <div style="display: flex; width: 100%;" class="attachment-version">
+
+                <div ng-if="versionDetails.versions.length">
+                <span ng-if="mostRecentInfo.status=='finalized'"
+                class="text-secondary" style="color: #6bb143;font-weight: bold;text-decoration: underline;"
+                >{{'normal.final' | translate}} {{'v'}}{{mostRecentVersion}}</span>
+                <span ng-if="mostRecentInfo.status=='in_progress'">{{'v'}}{{mostRecentVersion}}</span>
+                    <span>(</span>
+                    <span>{{'By'}}</span>
+                    <span class="text-gray">{{mostRecentInfo.createdBy}}</span>
+                    <span>{{'on'}}</span>
+                    <span class="text-gray">{{mostRecentInfo.created | utcToLocal: 'date' | checkEmpty}}{{')'}}</span> 
+                </div>
+
+                <div class="form-group btns-group mb-0">
+                    <button class="btn btn-outline-secondary">
+                        <a href="javascript:;" class="icon-eye gray" style="font-size: 21px;" ng-click="getPreview(mostRecentInfo)"
+                            title="{{'general.preview' | translate}}"></a>
+                    </button>
+                    <button class="btn btn-sm btn-danger text-center form-submit-btn" ng-click="downloadPdf(mostRecentInfo)">
+                        {{'normal.pdf' | translate}}</button>
+                    <button  class="btn btn-sm btn-success text-center" ng-click="downloaddocx(mostRecentInfo)">
+                        {{'normal.docx' | translate}}</button>    
+                </div>
+                </div>
+            </div>
+            <div class="form-group version-formats row m-0" style="display:flex;   margin-bottom: 16px !important;">
+                <label>{{'normal.previous_versions' | translate}}</label>
+                <div style="width: 100%;">
+                    <div class="attachment-version" ng-repeat="ver in versionDetails.versions" style="display: flex; width: 100%;">
+                        <div>
+                            <span ng-if="ver.status=='finalized'"
+                            class="text-secondary" style="color: #6bb143;font-weight: bold;text-decoration: underline;"
+                            >{{'normal.final' | translate}} {{'v'}}{{ver.version}}</span>
+                            <span ng-if="ver.status=='in_progress'">{{'v'}}{{ver.version}}</span>
+                        <span>(</span>
+                        <span>{{'By'}}</span>
+                        <span class="text-gray">{{ver.createdBy}}</span>
+                        <span>{{'on'}}</span>
+                        <span  class="text-gray">{{ver.created | utcToLocal: 'date' | checkEmpty}}</span>{{')'}}
+                    </div>
+
+                        <div class="form-group btns-group">
+                            <button class="btn btn-outline-secondary">
+                                <a href="javascript:;" class="icon-eye gray" style="font-size: 21px;" ng-click="getPreview(ver)"
+                                    title="{{'general.preview' | translate}}"></a>
+                            </button>
+                            <button class="btn btn-sm btn-danger text-center form-submit-btn">
+                                {{'normal.pdf' | translate}}</button>
+                            <button ng-click="getDoc(ver)" class="btn btn-sm btn-success text-center">
+                                {{'normal.docx' | translate}}</button>        
+                        </div>
+                   </div>    
+                </div>
+                
+            </div>
+
+            <div class="contract-attachment-footer">
+                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                    <i class="fa fa-ban"></i> &nbsp;{{'general.cancel' | translate}}
+                </button>
+    
+            </div>
+
+            </body>
+
+            </html>
+        </div>
+    </form>
+</div>
+</div>
+<style>
+    .versions-modal-header .modal-title {
+        display: flex;
+        align-items: center;
+    }
+    .versions-modal-header .modal-title .template-name {
+        margin-left: auto;
+        padding-right: 8px;
+    }
+    .versions-modal-header .modal-title .version-name span {
+        color: #71ae4b;
+    }
+    
+    .versions-modal-header .modal-title>a {
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+    .version-formats label {
+        min-width: 150px;
+        margin: 0;
+        color: #000;
+    }
+    .version-formats .btns-group {
+        width: 39%;
+        margin-left: 10px;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-left: 5px;
+    }
+
+    .version-formats .btn-outline-secondary {
+        padding: 0px 10px;
+        border-color: #afabab;
+    }
+
+    .version-formats .btn-outline-secondary:hover {
+        background-color: #f1f1f1;
+    }
+    .version-formats .btns-group button {
+        margin-right: 5px;
+        height: max-content;
+    }
+    .version-formats .btns-group button:last-child {
+        margin-right: 0;
+    }
+    .version-formats .text-gray {
+        color: #979797;
+    }
+
+
+
+    /* .info-tabs-div .tab-content .tab-pane .contract-attachment-version{
+        border: 1px solid #ccc;
+    margin: 10px;
+    overflow: visible;
+    width: 98%;
+    max-height: inherit;
+    padding: 0;
+    }
+.info-tabs-div .tab-content .tab-pane .contract-attachment-version .card {
+    overflow: visible;
+    max-height: none;
+} */
+.contract-attachment-version .card  .version-formats .btns-group {
+    justify-content: end;
+    margin-bottom: 0;
+}
+/* .contract-attachment-version .card .version-formats>div{
+    justify-content: space-between;
+} */
+.contract-attachment-version .attachment-version{
+    justify-content: space-between;
+    margin-bottom: 15px; 
+    align-items: baseline;
+}
+.contract-attachment-version .version-formats .btns-group button {
+    height: auto;
+}
+.contract-attachment-version .contract-attachment-footer{
+    text-align: right;
+    margin: 0 -16px;
+    padding: 15px 15px 0 10px;
+    border-top: 1px solid #ccc;
+}
+/* .contract-attachment-version .modal-body {
+    padding: 0;
+} */
+.contract-attachment-version .version-formats .btns-group .btn-success {
+    background-color: #4472C4;
+    border-color: #4472C4;
+}
+.contract-attachment-version .version-formats .btns-group .btn-danger{
+    background-color: #C00000;
+    border-color: #C00000;
+}
+.contract-attachment-version {
+    margin: 10px;
+}
+.contract-attachment-version .card {
+    border: none;
+}
+.contract-attachment-version .versions-modal-header .modal-title .template-name,
+.contract-attachment-version .modal-title .version-name {
+    font-weight: 400;
+}
+    </style>

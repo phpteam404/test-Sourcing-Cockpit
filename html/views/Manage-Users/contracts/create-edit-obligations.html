@@ -1,0 +1,396 @@
+
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{title |translate}} {{'normal.obligation_rights' |translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f16"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <div class="card-blocks">
+            <form novalidate name="obligationForm" ng-submit="obligationForm.$valid && addObligationRights(obligations)">
+                <div class="form-group col-sm-12">
+                    <label>{{'obligations.Obligation_desc' | translate}} *</label>
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white"  data-ng-model="obligations.description"
+                             name="description" required/>
+                    </div>
+                    <span class="error-message" ng-if="obligationForm.description.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div> 
+
+                  <div class="form-group col-sm-4">
+                    <label>{{'obligations.obligation_type' | translate}} *</label>
+                    <select class="form-control"  ng-model="obligations.type" name="type" required>
+                        <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                        <option value="0">{{'documents.obligation'| translate}}</option>
+                        <option value="1">{{'documents.right'| translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="obligationForm.type.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div> 
+
+                <div class="form-group col-sm-6">
+                    <label>{{'obligations.obligation_applicable' | translate}}</label>
+                    <select class="form-control"  ng-model="obligations.applicable_to">
+                        <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                        <option value="0">{{'user.breadcrumb.customer'| translate}}</option>
+                        <option value="1">{{'user.breadcrumb.relation'|translate}}</option>
+                        <option value="2">{{'user.breadcrumb.mutual'|translate}}</option>
+                   </select>
+                </div>
+
+
+                <div class="input-group clearfix form-group-custom pl-1 pr-1">
+                    <label>{{'obligations.obligations_detailed_desc' | translate}}</label>
+                    <textarea type="text" class="form-control white-bg bg-white"  data-ng-model="obligations.detailed_description"
+                         name="detailed_desc"> </textarea>
+                </div>
+
+
+                
+                <div ng-init="indextab=0" class="mt-2 col-sm-12">
+                    <uib-tabset active="indextab" class="clearfix">
+                        <uib-tab index="0" heading="{{'normal.recurrence_rules' | translate}}">
+                            <div class="col-sm-12 m-t-3 form-group p0">
+
+                              
+
+                                <div class="clearfix"></div>
+                                <div class="form-group col-sm-6">
+                                    <label>{{'obligations.obligation_recurrence' | translate}}</label>
+                                    <select class="form-control"  ng-model="obligations.recurrence_id"
+                                       ng-options="item.id as item.name for item in recurrences" 
+                                       ng-change="getRecurrenceSelected(obligations.recurrence_id)">
+                                        <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                                    </select>
+                                </div>
+
+                                <div class="clearfix"></div>
+                               
+
+                             
+                                <div class="form-group col-sm-6">
+                                    <label>  {{'obligations.obligations_start_date'|translate}}      
+                                        <span ng-if="startFields">*</span>
+                                    </label>
+
+                                    <div class="input-group clearfix form-group-custom">
+                                        <input type="text" class="form-control white-bg bg-white" ng-change="getDate(obligations.recurrence_start_date)" uib-datepicker-popup="MMM dd yyyy"
+                                                data-ng-model="obligations.recurrence_start_date" popup-placement="bottom"  date-disabled="false" datepicker-options="options"
+                                                name="start_date" is-open="openCal1" show-weeks="false" show-button-bar="false"
+                                                readonly ng-required="startFields == '1'"/>
+                                      
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default border" ng-disabled="!defaultField" ng-click="openCal1 = true">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <span class="error-message" ng-if="obligationForm.start_date.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                                </div>
+
+                                
+
+                                <div class="form-group col-sm-6">
+                                    <label>  {{'obligations.obligations_end_date'|translate}} 
+                                        <span ng-if="calendarFields">*</span>
+                                    </label>
+                                    <!-- <label ng-if="calendarFields">  {{'obligations.obligations_end_date'|translate}} *</label> -->
+                                    <div class="input-group clearfix form-group-custom">
+                                        <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()" uib-datepicker-popup="MMM dd yyyy" date-disabled="false"
+                                            data-ng-model="obligations.recurrence_end_date" datepicker-options="options2" popup-placement="bottom"  ng-required="calendarFields == '1'"  name="end_date" is-open="openCal"
+                                            show-weeks="false"  show-button-bar="false" readonly/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default border" ng-disabled="!enddateField" ng-click="openCal = true">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <span class="error-message" ng-if="obligationForm.end_date.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                                </div> 
+                                
+                                <div class="col-sm-4">
+                                    <div class="">
+                                        <label class="">{{'user.breadcrumb.calendar'| translate}}</label>
+                                        <div class="onoffswitch" style="margin-left: 3px;">
+                                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                    ng-true-value="1" ng-false-value="0"
+                                                    ng-change="getCalenderSelected(obligations.calendar)"
+                                                    ng-model="obligations.calendar" ng-disabled="!anotherField"
+                                                    id="status">
+                                            <label class="onoffswitch-label assessment-switch mb-0"
+                                                    for="status">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>  
+                                </div> 
+
+
+                                
+                            </div>
+                        </uib-tab>
+                        <uib-tab index="1"  class="clearfix" heading="{{'normal.notification_rules' | translate}}">
+                          
+                            <div class="form-group col-sm-4">
+                                <label ng-if="!requiredFields">{{'obligations.obligations_days' | translate}} </label>
+                                <label ng-if="requiredFields">{{'obligations.obligations_days' | translate}} * </label>
+                                <div class="input-group clearfix form-group-custom">
+                                    <input type="text" class="form-control white-bg bg-white" maxlength="50" only-digits  data-ng-model="obligations.no_of_days"
+                                         name="no_of_days" ng-required="requiredFields == '1'" />
+                                </div>
+                                <span class="error-message" ng-if="obligationForm.no_of_days.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div> 
+                            <div class="form-group col-sm-4">
+                                <label ng-if="!requiredFields">{{'obligations.logic' | translate}}</label>
+                                <label ng-if="requiredFields">{{'obligations.logic' | translate}} *</label>
+                                <select class="form-control" name="logic" ng-model="obligations.logic" ng-required="requiredFields == '1'">
+                                    <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                                    <option value="0">{{'contract.before'| translate}}</option>
+                                    <option value="1">{{'contract.after'|translate}}</option>
+                               </select>
+                               <span class="error-message" ng-if="obligationForm.logic.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <label ng-if="!requiredFields">  {{'questions.date'|translate}} </label>
+                                <label ng-if="requiredFields">  {{'questions.date'|translate}} *</label>
+                                <div class="input-group clearfix form-group-custom">
+                                    <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()" uib-datepicker-popup="MMM dd yyyy" date-disabled="false"
+                                        data-ng-model="obligations.email_send_start_date"  ng-change="getEmaildate(obligations.email_send_start_date)" name="email_send_start_date" is-open="openCal3"
+                                        datepicker-options="options3"  show-weeks="false" show-button-bar="false" readonly ng-required="requiredFields == '1'" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default border"  ng-click="openCal3 = true">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <span class="error-message" ng-if="obligationForm.email_send_start_date.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+
+                            <div class="input-group clearfix form-group-custom pl-1 pr-1 form-group">
+                                <label ng-if="!requiredFields" class="d-block">{{'obligations.notificaton_message'|translate}}</label>
+                                <label ng-if="requiredFields" class="d-block">{{'obligations.notificaton_message'|translate}} *</label>
+                                <textarea type="text" class="form-control white-bg bg-white"  data-ng-model="obligations.notification_message"
+                                     name="notification_message" ng-required="requiredFields == '1'"> </textarea>
+                                     <span class="error-message" ng-if="obligationForm.notification_message.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+
+                           
+                            <div class="col-sm-4">
+                                <div class="">
+                                    <label class="">{{'obligations.email_notification'|translate}}</label>
+                                    
+                                    <div class="onoffswitch" style="margin-left: 3px;">
+                                        <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                ng-true-value="1" ng-false-value="0"
+                                                ng-model="obligations.email_notification"
+                                                checked
+                                                ng-change="getNotification(obligations.email_notification)"
+                                                id="notification">
+                                        <label class="onoffswitch-label assessment-switch mb-0"
+                                                for="notification">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>   
+                            </div>
+
+
+                           
+                                <div class="form-group col-sm-4">
+                                    <label ng-if="!requiredFields">{{'obligations.resend_recurrence' | translate}}</label>
+                                    <label ng-if="requiredFields">{{'obligations.resend_recurrence' | translate}} *</label>
+                                    <select class="form-control" ng-change="emailRecurrence(obligations.resend_recurrence_id)" ng-model="obligations.resend_recurrence_id" name="resend_recurrence_id"
+                                       ng-options="item.id as item.name for item in resend_recurrences" ng-required="requiredFields == '1'">
+                                        <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                                    </select>
+                                    <span class="error-message" ng-if="obligationForm.resend_recurrence_id.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                                </div>
+                           
+
+                             
+                                <div class="form-group col-sm-4">
+                                    <label >  {{'obligations.resend_email_date'|translate}} <span ng-if="requiredNotificationField"> *</span></label>
+                                    <div class="input-group clearfix form-group-custom">
+                                        <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()" popup-placement="bottom" 
+                                            uib-datepicker-popup="MMM dd yyyy" date-disabled="false"
+                                            data-ng-model="obligations.email_send_last_date"  show-weeks="false" name="email_send_last_date" is-open="openCal4"
+                                            datepicker-options="options4" show-button-bar="false" readonly ng-required="requiredNotificationField == '1'" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default border" ng-disabled="!enddateField" ng-click="openCal4= true">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                        <!-- <input type="text" class="form-control" uib-datepicker-popup="{{format}}" popup-placement="bottom" 
+                                               ng-model="dt"  is-open="openCal4" datepicker-options="dateOptions" ng-required="true" close-text="Close" 
+                                               alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="openCal4= true"><i class="fa fa-calendar"></i></button>
+                                        </span> -->
+                                    </div>
+                                    <span class="error-message" ng-if="obligationForm.email_send_last_date.$error.required && obligationForm.$submitted">{{'general.required_field' |translate}}</span>
+                                </div>
+                           
+
+                        </uib-tab>
+                    </uib-tabset> 
+                </div>
+               
+                <div class="obligation-form-btns col-sm-12 clearfix">
+                    <button class="btn btn-sm btn-primary" type="submit">
+                        <i class="fa fa-dot-circle-o"></i>&nbsp;{{bottom | translate}}
+                    </button>
+                    <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                        <i class="fa fa-ban"></i> &nbsp;{{'general.cancel' | translate}}
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+
+    </div>
+   
+<style>
+    
+    .loader-wrap {
+    z-index: 1060;
+    }
+
+
+    .accordion-default .panel-body {
+        padding: 0;
+    }
+
+    .nav-tabs .nav-item {
+        margin-bottom: 0px;
+        padding: 0;
+    }
+
+    .tab-content .tab-pane {
+        padding: 10px;
+        min-height: 55px;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+        background: #FFF;
+        color: #464646;
+        text-align: center;
+        min-width: 130px;
+        border: 1px solid #ccc;
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-item.active .nav-link {
+        background: #efefef5e;
+        border-bottom-color: #FFF;
+        border: 1px solid #ccc;
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: -1px;
+        position: relative;
+    }
+
+    .accordion-default .panel-body ul {
+        background: #fff;
+    }
+
+    .nav.nav-tabs li:last-child {
+        padding-right: 0px;
+        margin: 0;
+        margin-left: 0.2rem;
+    }
+
+    .accordion-default .panel-body ul {
+        padding: 0;
+        list-style: none;
+        background: #fff;
+    }
+
+    .accordion-default .panel-body ul li {
+        padding: 0;
+        border-color: transparent;
+        border-bottom: transparent;
+    }
+
+    .modal-dialog .nav-tabs {
+        background: #fff;
+    }
+
+    .modal-dialog .nav-tabs .nav-item .nav-link {
+        box-shadow: none;
+    }
+
+    .modal-dialog .nav-tabs .nav-item {
+        box-shadow: none;
+        margin-bottom: 0px;
+    }
+
+    .modal-dialog .tab-content {
+        border: 1px solid #ccc;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+        box-shadow: none;
+    }
+
+    .nav-tabs .nav-item {
+        box-shadow: none;
+        margin-bottom: 0px;
+    }
+
+    .tab-content {
+        border: 1px solid #ccc !important;
+        background-color: #f9f9f9;
+    }
+
+    .card-block .tab-content {
+        margin-top: 0;
+        height: 194px;
+        overflow-y: auto;
+    }
+
+
+    .card-blocks .tab-content {
+        margin-top: 0;
+        min-height: 250px;
+       
+    }
+    .card-blocks .tab-content .tab-pane:last-child {
+        min-height: 315px;
+       
+    }
+    .alternate-div-bag>div:nth-of-type(odd) {
+        background: #e0e0e047;
+    }
+
+    .pl5 {
+        padding-left: 5px;
+    }
+
+    .pr5 {
+        padding-right: 5px;
+    }
+
+    .hover-show-icon {
+        /* display: none; */
+        visibility: hidden;
+    }
+
+    .obligation-form-btns{
+        padding: 20px 15px 16px;
+    text-align: right;
+    }
+
+    @media(max-width:1199px){
+        .nav-tabs .nav-item .nav-link {
+            min-width: 140px;
+        }
+    }
+    @media(max-width:1080px){
+        .nav-tabs .nav-item .nav-link {
+            min-width: 110px;
+        }
+        .modal-dialog .nav-tabs .nav-item .nav-link {
+            min-width: 135px !important;
+        }
+    }
+</style>

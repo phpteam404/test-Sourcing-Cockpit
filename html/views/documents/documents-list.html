@@ -1,0 +1,235 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="getTemplateList" st-table="templateInfo">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="onlyactive1 pull-right " style="margin-top: -13px;">
+                                    <span class="mrg-space" style="font-size: 12px;">{{'general.active_only' | translate}}</span>
+                                    <div class="onoffswitch" style="margin-left: 3px;">
+                                        <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                ng-true-value="1" ng-false-value="0"
+                                                ng-model="status"
+                                                ng-checked="status == 1"
+                                                ng-change="getDocumentByAccess(status)"
+                                                id="status">
+                                        <label class="onoffswitch-label assessment-switch mb-0"
+                                                for="status">
+                                            <span class="onoffswitch-inner mt0"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary btn-radius" type="button" ng-click="createTemplate()">
+                                            <i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                    
+                                    <div class="col-sm-4 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="template_name" class="document_template_name">{{'documents.template_name'|translate}}</th>
+                        <th st-sort="available_for_all_customers" class="document_available">{{'documents.available' | translate}}</th>
+                        <th class="document_customers">{{'documents.select_customers' | translate}}</th>
+                        <th st-sort="no_of_fields" class="document_fields">{{'documents.no_fields' | translate}}</th>
+                        <th st-sort="status" class="document_status">{{'documents.status' | translate}}</th>
+                        <th class="document_actions">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!templateLoading">
+                    <tr ng-repeat="row in templateInfo">
+                        <td class="document_template_name custom-ellipsis">
+                            <span class="ellipsis-block" title="{{row.template_name}}">{{row.template_name}} </span>
+                        </td>
+                        <td class="document_available">
+                            
+                            <span>
+                                <div class="onoffswitch" style="margin-left: 3px;">
+                                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                            ng-true-value="1" ng-false-value="0" style="cursor:not-allowed;"
+                                            ng-checked="row.available_for_all_customers==1" >
+                                    <label class="onoffswitch-label assessment-switchs mb-0"
+                                            for="available_for_all_customers" disabled style="cursor:not-allowed;">
+                                        <span class="onoffswitch-inner" style="cursor:not-allowed;"></span>
+                                <span class="onoffswitch-switch" style="cursor:not-allowed;"></span>
+                                </label>
+                             </div>
+                        </span>
+                        </td>
+                        <td class="document_customers">
+                            <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.customers[0]">---</span>
+                            <span ng-if="!row.customers[1]" class="ellipsis-block" title="{{row.customers[0]}}">{{row.customers[0]}}</span>
+                                <a class="" ng-if="row.customers[1]">{{'general.multi_selected' | translate}}</a>
+                                <a ng-if="row.customers[1]" href="javascript:;" style="padding: 0px 0px 5px;" 
+                                    uib-popover-template="customerName.templateUrl" class="icon-plus-circle gray ml-h" 
+                                    popover-placement="right" popover-trigger="'outsideClick'" class="btn btn-default"></a>
+                        </td>
+                        <td class="document_fields text-left">{{row.no_of_fields}}</td>
+                        <td class="document_status">
+                            <span ng-if="row.status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span ng-if="row.status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td class="document_actions">
+                            <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}" ng-click="createTemplate(row)">
+                                <i class="icon-edit" ></i>
+                            </a>
+                            <a  href="javascript:;" ui-sref="app.documents.documents-intelligence-template({name:row.template_name,id:(row.id_intelligence_template |encode)})" class="mr-1 gray">
+                                <i class="icon-settings" title="Manage Template Questions"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="templateLoading">
+                    <tr>
+                        <td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="emptyTemplateTable">
+                    <tr>
+                        <td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8" >
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="templateCount>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPagesTemplate(displayCount)"
+                                         ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="templateForm.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{'documents.document_intellgence' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <div class="card-block p-0">
+            <form novalidate name="templateform" style="padding: 0px;" ng-submit="templateform.$valid && addTemplate(template)">
+                <div class="form-group col-sm-12 p-0">
+
+                    <div class="form-group col-sm-12">
+                        <label>{{'documents.templat_name' | translate}} * </label>
+                        <input type="text" class="form-control" name="template_name" ng-model="template.template_name"  required>
+                        <span class="error-message" ng-if="templateform.template_name.$error.required && templateform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>{{'general.status' | translate}}* </label>
+                        <select class="form-control" name="status" ng-model="template.status" required>
+                                <option value="">- {{'general.select' |translate}} -</option>
+                                <option value="1">{{'currency.active' | translate}}</option>
+                                <option value="0">{{'currency.inactive' | translate}}</option>
+                            </select>
+                            <span class="error-message" ng-if="templateform.status.$error.required && templateform.$submitted">{{'general.required_field' |translate}}</span>
+
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>{{'documents.available_custm' | translate}} </label>
+                        <div class="onoffswitch" style="margin-left: 3px;">
+                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                    ng-true-value="1" ng-false-value="0"
+                                     ng-model="template.available_for_all_customers"
+                                    ng-checked="template.available_for_all_customers == '1'"
+                                    ng-change="getCustomerVyAccess(template.available_for_all_customers)"
+                                    id="status">
+                            <label class="onoffswitch-label assessment-switch mb-0"
+                                    for="status">
+                                <span class="onoffswitch-inner mt0"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 selecteCustomers">
+                        <label>{{'documents.select_customers' | translate}} <span ng-if="!disableField"> *</span> </label>
+                        <select chosen id="add-chosen"  allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_customer_search' | translate}}'" 
+                                multiple ng-model="template.customer_id"  name="customer_name" size="1" class="chosen-choices"  
+                                ng-disabled="disableField" ng-required="disableField == '0'"
+                                ng-options="item.id_customer as item.company_name for item in customersList">
+                        </select>
+                            <span class="error-message" ng-if="templateform.customer_name.$error.required && templateform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+
+                <div class="modal-footer form-group col-sm-12 text-right m-t-3">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/ng-template" id="myPopoverCustomer.html">
+    <div class="" ng-repeat="item in row.customers track by $index">
+        <span >{{item}}</span>
+    </div>
+</script>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+
+<style>
+    .document_template_name{
+        width:25%;
+    }
+    .document_available{
+        width:15%;
+    }
+    .document_customers{
+        width:15%;
+    }
+    .document_fields{
+        width:15%;
+    }
+    .document_status{
+        width:15%;
+    }
+    .document_action{
+        width:15%;
+    }
+    .selecteCustomers .chosen-disabled .chosen-choices,
+    .selecteCustomers .chosen-disabled .chosen-choices input{ 
+        cursor: not-allowed;
+    }
+
+    .onlyactive1 .onoffswitch-inner:before, .onlyactive1 .onoffswitch-inner::after {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    }
+    .onlyactive1 .onoffswitch-switch {
+    width: 14px;
+    height: 12px;
+    margin-top: 4px;
+}
+
+
+</style>

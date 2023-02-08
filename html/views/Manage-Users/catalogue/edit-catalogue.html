@@ -1,0 +1,649 @@
+<div class="modal-body clearfix">
+    <div class="col-lg-12 p015">
+        <div class="row" ng-init="indextab=0">
+            <div class="col-sm-12 col-lg-12 p-0 info-tabs-div">
+               <div class="modal-closer-contract">
+                  <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+               </div>
+               
+                <uib-tabset active="indextab">
+                    <uib-tab index="0"  heading="{{'normal.catalogue_information' | translate}} ({{catalogue_info_count}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">                        
+                                <div class="clearfix">
+                                    <div class="col-md-12 p0" style="margin-top: 10px;">
+                                        <form novalidate name="catalogueForm"
+                                        ng-submit="catalogueForm.$valid && updateCatalogue(catalogueInfo)">
+                
+                                        <div class="form-group col-sm-4">
+                                            <label>{{'contract.Id' | translate}}</label>
+                                            <div class="input-group clearfix form-group-custom">
+                                                <input type="text" class="form-control white-bg bg-white"
+                                                    data-ng-model="catalogueInfo.catalogue_unique_id" name="catalogue_unique_id"
+                                                    ng-disabled="!disabled" />
+                                            </div>
+                                            <span class="error-message"
+                                                ng-if="catalogueForm.catalogue_unique_id.$error.required && catalogueForm.$submitted">{{'general.required_field'
+                                                |translate}}</span>
+                                        </div>
+                
+                                        <div class="form-group col-sm-4">
+                                            <label>{{'normal.catalogue_item_name' | translate}} *</label>
+                                            <input type="text" class="form-control" maxlength="50" name="catalogue_name"
+                                                ng-model="catalogueInfo.catalogue_name" required>
+                                            <span class="error-message"
+                                                ng-if="catalogueForm.catalogue_name.$error.required && catalogueForm.$submitted">{{'general.required_field'
+                                                |translate}}</span>
+                                        </div>
+                
+                                        <div class="clearfix"></div>
+                
+                                        <div class="form-group col-sm-4">
+                                            <label>{{'contract.currency' | translate}} *</label>
+                                            <select name="catalogue_curency" ng-model="catalogueInfo.currency_id" class="form-control"
+                                                ng-options="item.id_currency as item.currency_name for item in currencyList" required>
+                                                <option value="">-- {{'general.select' |translate}} --</option>
+                                            </select>
+                                            <span class="error-message"
+                                                ng-if="catalogueForm.catalogue_curency.$error.required && catalogueForm.$submitted">{{'general.required_field'
+                                                |translate}}</span>
+                                        </div>
+                
+                                        <div class="form-group col-sm-4">
+                                            <label>{{'general.status' | translate}}*</label>
+                                            <select class="form-control" name="status" ng-model="catalogueInfo.status" required>
+                                                <option value="">- {{'general.select' |translate}} -</option>
+                                                <option value="Active">{{'currency.active' | translate}}</option>
+                                                <option value="Closed">{{'general.closed' | translate}}</option>
+                                            </select>
+                                            <span class="error-message"
+                                                ng-if="catalogueForm.status.$error.required && catalogueForm.$submitted">{{'general.required_field'
+                                                |translate}}</span>
+                                        </div>
+                
+                                        <div class="clearfix"></div>
+                
+                                        <div class="form-group col-sm-12">
+                                            <label>{{'normal.catalogue_item_descreption' | translate}} *</label>
+                                            <textarea class="form-control" ng-model="catalogueInfo.description" name="description" required
+                                                style="height: 80px;"></textarea>
+                                            <span class="error-message"
+                                                ng-if="catalogueForm.description.$error.required && catalogueForm.$submitted">{{'general.required_field'
+                                                |translate}}</span>
+                                        </div>
+                
+                                        <div class="modal-footer" style="display: flex;justify-content: flex-end;">
+                                            <button class="btn btn-sm btn-primary" type="submit">
+                                                <i class="fa fa-dot-circle-o"></i> {{'general.update' | translate}}
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()" style="margin-left: 5px;">
+                                                <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                            </button>
+                                        </div>
+                                    </form>
+                                    </div>                                    
+                                   
+                                </div>
+                            </div>
+                        </div>
+   
+                       
+                    </uib-tab>
+                    <uib-tab index="1"  heading="{{'normal.catalogue_tags' | translate}} ({{catalogue_tags_count}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">
+                                <div class="clearfix">
+                                    <div class="col-md-12 p0" style="margin-top: 10px;">
+                                        <div class="col-sm-12 p0">
+    
+    
+                                            <div class="col-sm-12">
+                                                <table class="w-100 provider-tag-form">
+                                                    <thead>
+                                                        <tr>
+                                                           <th class="provider-name-th"></th>
+                                                           <th class="provider-radio-th"></th>
+                                                           <th class="provider-comment-th" ng-if="ragExist"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody ng-repeat="catalogueTags in tagsInfo track by $index">
+                                                        <tr ng-repeat="tag in catalogueTags.tag_details track by $index"  ng-if="tag.tag_type == 'rag' && tag.bu_name==null"> {{$index}}
+                                                            <td>{{tag.tag_text}}</td>
+                                                            <td class="provider-tag-radio" style="width:30%;">
+                                                               <div class="radio_widget">
+                                                                   <span ng-repeat="option in tag.options">  
+                                                                       <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                           checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                        <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                       <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                       <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                       <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                   </span>
+                                                                   <span style="padding-left: 50px;">
+                                                                     <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                     ng-click="tag.tag_answer=''"></i>
+                                                                </span>
+                                                               </div>
+                                                            </td>
+                                                            <td class="provider-comment-td" >
+                                                               <span>
+                                                                   <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                   ng-model="tag.comments">
+                                    
+                                                               </span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                           </div>
+                                        <div class="col-sm-12 custom-row tagsGrouping p-0 input-group m-0" style="margin: 0 15px;" ng-repeat="catalogueTags in tagsInfo" ng-if=" !catalogueTags.bu_name">
+                                            <div  class="form-group col-sm-4 catalog-multi" ng-repeat="tag in catalogueTags.tag_details" 
+                                             ng-if="tag.tag_type!='rag'">
+                                                <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                 <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                    
+                                              <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                   ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                </select>
+                                    
+                                    
+                                                <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                 <option value="">-- {{'general.select' |translate}} --</option>
+                                             </select>
+                                             
+                                            <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                             ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                              <option value="">-- {{'general.select' |translate}} --</option>
+                                          </select>
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                             ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                              <option value="">-- {{'general.select' |translate}} --</option>
+                                          </select>
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                             ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                              <option value="">-- {{'general.select' |translate}} --</option>
+                                          </select>
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                             ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                              <option value="">-- {{'general.select' |translate}} --</option>
+                                          </select>
+    
+    
+                                          <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                          chosen id="add-chosen" allow-single-deselect="true"
+                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                          ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                      </select>
+    
+                                          <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                          chosen id="add-chosen" allow-single-deselect="true"
+                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                          ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                      </select>
+    
+                                      <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                          chosen id="add-chosen" allow-single-deselect="true"
+                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                          ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                      </select>
+    
+                                      <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                          chosen id="add-chosen" allow-single-deselect="true"
+                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                          ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                      </select>
+    
+                                      <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                          chosen id="add-chosen" allow-single-deselect="true"
+                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                          ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                      </select>
+                                              <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                 <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                    ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                    show-button-bar="false" readonly>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                                
+                                            </div> 
+                                        </div>
+                                        </div>
+                                                <div class="col-sm-12 custom-row p-0 input-group" ng-repeat="catalogueTags in tagsInfo track by $index" ng-if="catalogueTags.bu_name">
+                                                    <uib-accordion class="widget2 inputs-accordion" style="margin-bottom:5px !important;width: 100%;" close-others="oneAtATime">
+                                                        <div uib-accordion-group class="panel-default" heading="Stakeholders"
+                                                            template-url="group-template0.html" ng-init="open=false;" is-open="open">
+                                                            <uib-accordion-heading ng-click="open= !open">
+                                                                <span style="width: 16px;">
+                                                                    <i class="glyphicon" 
+                                                                        ng-class="{'fa-solid fa-caret-down': open,'fa-solid fa-caret-right': !open}" style="color: #000;font-size: 18px;"></i>
+                                                                </span>
+                                                                <span style="z-index: 2;background-color: #fff;padding-right: 5px;">{{catalogueTags.bu_name}} ({{catalogueTags.count}})</span>
+                                                                <span ng-if="catalogueTags.status==0" style="background: #fff;z-index: 1;padding-right: 4px;">({{'general.inactive' | translate}})</span>
+                                                            </uib-accordion-heading>
+
+                                                            <div class="card-block" style="padding:15px;">
+                                                                <table class="w-100 provider-tag-form">
+                                                                    <thead>
+                                                                        <tr>
+                                                                           <th class="provider-name-th"></th>
+                                                                           <th class="provider-radio-th"></th>
+                                                                           <th class="provider-comment-th"></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    
+                                                                       
+                                                                         <tbody>
+                                                                            <tr ng-repeat="tag in catalogueTags.tag_details"  ng-if="tag.tag_type == 'rag' && tag.bu_name!=null">
+                                                                                <td>{{tag.tag_text}}</td>
+                                                                                <td class="provider-tag-radio" style="width:30%;">
+                                                                                   <div class="radio_widget">
+                                                                                       <span ng-repeat="option in tag.options">  
+                                                                                           <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                                               checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                                            <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                                           <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                                           <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                                           <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                                       </span>
+                                                                                       <span style="padding-left: 50px;">
+                                                                                         <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                                         ng-click="tag.tag_answer=''"></i>
+                                                                                    </span>
+                                                                                   </div>
+                                                                                </td>
+                                                                                <td class="provider-comment-td" >
+                                                                                   <span>
+                                                                                       <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                                       ng-model="tag.comments">
+                                                        
+                                                                                   </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody> 
+                                                                    </table>
+
+                                                                    
+                                                            </div>
+                                                            <div class="card-block" style="padding:0px;">
+                                                                        <div class="col-md-12 p-0 tagsGrouping">
+                                                                        <div  class="form-group col-sm-4 catalog-multi" ng-repeat="tag in catalogueTags.tag_details" ng-if="tag.tag_type!='rag'">
+                                                                        <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                                        <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                                        <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                                        <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                                            
+                                                                    <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+                                                            
+                                                            
+                                                                        <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                                    </select>
+                                                                    
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                    ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                                </select>
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                    ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                                </select>
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                    ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                                </select>
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                    ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                                </select>
+    
+    
+                                                                <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                                                    chosen id="add-chosen" allow-single-deselect="true"
+                                                                    multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                    ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                </select>
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                                                chosen id="add-chosen" allow-single-deselect="true"
+                                                                multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                            </select>
+    
+                                                            <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                                                chosen id="add-chosen" allow-single-deselect="true"
+                                                                multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                            </select>
+    
+                                                            <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                                                chosen id="add-chosen" allow-single-deselect="true"
+                                                                multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                            </select>
+    
+                                                            <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                                                chosen id="add-chosen" allow-single-deselect="true"
+                                                                multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                            </select>
+    
+                                                    
+                                                                    
+                                                                    <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                                            ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                                            show-button-bar="false" readonly>
+                                                                        <span class="input-group-btn">
+                                                                            <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                                                <i class="fa fa-calendar"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                        
+                                                                    </div>
+                                                                        
+                                                                    
+                                                                </div>
+                                                                        </div>
+                                                            </div>
+                                                        </div>
+                                                    </uib-accordion>
+                                                </div>
+                                                <div ng-if="tagsInfo.length ==0" class="text-sm-center">
+                                                    {{ 'tags.no_tags_found' |translate}}
+                                                </div>
+    
+                                            <div class="clearfix"></div>
+                                            <div class="modal-footer form-group col-sm-12 mb-0"  style="margin: 0 10px;display: flex;justify-content: flex-end;" ng-if="tagsInfo.length>0">
+                                                <button type="submit" class="btn btn-sm btn-primary"
+                                                    ng-click="updateTags(tagsInfo)">
+                                                    <i class="fa fa-dot-circle-o"></i> {{'general.update' |
+                                                    translate}}</button>
+                                                <button type="button" ng-click="cancel()" style="margin-left: 5px;" class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' |
+                                                    translate}}</button>
+                                            </div>
+    
+    
+    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="2"  heading="{{'normal.catalogue_attachments' | translate}} ({{catalogue_attach_count}})">
+                        <div class="card">
+                            <div class="card-block card-space">                                
+                                <div>
+                                    <form novalidate name="attachmentForm">
+                                        <uib-tabset active="active" class="clearfix" style="padding: 10px;" ng-init="active=0;">
+                                            <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                                                <div class="col-sm-12 m-t-3 form-group p0">
+                                                    <attachment-files ng-model="fdata.file.attachments" ng-if="!isView">
+                                                    </attachment-files>
+                                                </div>
+                                                <div class="p-b-1">
+                                                    <p ng-if="catalogue.attachment.documents.length>0"
+                                                        ng-repeat="a in catalogue.attachment.documents">
+                                                        <a download="{{a.document_name}}" target="_blank" href="#"
+                                                            ng-click="getDownloadUrl(a)" download="{{a.document_name}}"
+                                                            class="ellipis" style="width: 90%;">
+                                                            <i class="fa fa-download"
+                                                                style="vertical-align: middle;margin-right: 6px;"></i>{{a.document_name}}</a>
+            
+                                
+                                                            <span class="tss-lock" style="color: red; position:absolute; right:75px;cursor:pointer; font-size:20px;"
+                                                                  ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1">
+                                                            </span>
+                                                            <span class="tss-unlock" style="color: green; position:absolute; right:75px;cursor:pointer;font-size:20px;" 
+                                                                   ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0">
+                                                            </span>
+                                                        
+                                                        <a href="#" class="gray">
+                                                            <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'"
+                                                                class="pull-right icon-trash m-t-1"
+                                                                title="{{'general.delete' | translate}}" style="font-size: 20px;"
+                                                                ng-click="deleteAttachment(a.id_document,a.document_name)">
+                                                            </i>
+                                                        </a>
+                                                        <span class="display-block f12 pl20">
+                                                            <span class="gray">{{'attachment.uploaded_by' |
+                                                                translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                            <span class="gray">{{'general.on' |
+                                                                translate}}:</span>&nbsp;<span>{{a.uploaded_on |
+                                                                utcToLocal:'toLocalDate'}}</span>
+                                                        </span>
+                                                    </p>
+                                                    <p ng-show="catalogue.attachment.documents.length==0" class="text-sm-center">
+                                                        {{'attachment.no_files' | translate}}</p>
+                                                </div>
+                                                <div class="modal-footer" style="display: flex;justify-content: flex-end;">
+                                                    <button class="btn btn-sm btn-primary" type="submit"
+                                                        ng-click="uploadAttachment(fdata,data)"> <i class="fa fa-dot-circle-o"></i> {{'general.update' | translate}}
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()" style="margin-left: 5px;">
+                                                        <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                                    </button>
+                                                </div>
+                                            </uib-tab>
+                                            <uib-tab index="1" class="clearfix" heading="{{'links.ad_link' | translate}}">
+                                                <div class="clearfix" style="background: #EEEDF5; padding: 10px;">
+                                                    <ng-form name="linkForm" class="modalUniqCls">
+                                                        <div class="col-md-5 pl-0">
+                                                            <input type="text" class="form-control" name="title"
+                                                                placeholder="{{'normal.placeholder_title' | translate}}"
+                                                                ng-model="catalogueLink.title" required>
+                                                        </div>
+                                                        <div class="col-md-7 pl-0"
+                                                            style="display:-webkit-inline-box; padding-right: 5px;">
+                                                            <input type="text" style="width:86.5%" class="form-control"
+                                                                ng-model="catalogueLink.url" required
+                                                                placeholder="{{'normal.placeholder_add_link_url' | translate}}">
+                                                            <span>
+                                                                <button style="padding: 0.03rem 0.5rem;" type="button"
+                                                                    title="{{'contract.verify_link' | translate}}"
+                                                                    ng-disabled="!linkForm.$valid" class="btn btn-success"
+                                                                    ng-click="verifyLink(catalogueLink)">
+                                                                    <span class="fa fa-plus"></span>
+                                                                    <p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' |
+                                                                        translate}}</p>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </ng-form>
+                                                   
+                                                    <div class="col-sm-12 p0 mt-1" ng-if="catalogueLinks.length && !isLink"
+                                                        style="overflow-y: scroll;">
+                                                        <div class="list-header clearfix">
+                                                            <label class="text-capitalize f14">{{'links.attached_links' |
+                                                                translate}}</label>
+                                                        </div>
+                                                        <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                                            <ul class="list-items files-list">
+                                                                <li class="clearfix"
+                                                                    ng-repeat="link in catalogueLinks track by $index">
+                                                                    <div class="col-sm-11 p0">
+                                                                        <p class="f12 text-line m-0 p-h" title="{{link.url}}">
+                                                                            {{link.title}}
+                                                                            <span class="pl-h skyblue">( {{link.url}} )</span>
+                                                                        </p>
+                                                                    </div>
+            
+                                                                    <div class="col-sm-1 pull-right">
+                                                                        <a href="javascript:;" class="display-inline-block p-h"
+                                                                            title="Remove" ng-click="removeLink($index)"> <i
+                                                                                class="icon-trash gray"></i> </a>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="p-b-1" style="padding-top: 25px;">
+                                                    <p ng-if="catalogue.attachment.links.length>0"
+                                                        ng-repeat="a in catalogue.attachment.links" style="position:relative">
+                                                        <a ng-click="redirectUrl(a.document_source)" href="javascript:;"
+                                                            class="ellipis" title="{{a.document_source}}"
+                                                            style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i>
+                                                            {{a.document_name}}</a>
+                                                        <a href="#" class="gray">
+                                                            <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'"
+                                                                class="pull-right icon-trash m-t-1"
+                                                                title="{{'general.delete' | translate}}"style="font-size: 20px;"
+                                                                ng-click="deleteAttachment(a.id_document,a.document_name)">
+                                                            </i>
+                                                        </a>
+                                                        <span>
+                                                            <span class="tss-lock" style="color: red;position:absolute; right:30px;cursor:pointer;font-size:20px;" ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span>
+                                                            <span class="tss-unlock" style="color: green;position:absolute; right:30px;cursor:pointer;font-size:20px;" ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                        </span>
+                                                        <span class="display-block f12 pl20">
+                                                            <span class="gray">{{'links.uploaded_by' |
+                                                                translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                            <span class="gray">{{'general.on' |
+                                                                translate}}:</span>&nbsp;<span>{{a.uploaded_on |
+                                                                utcToLocal:'toLocalDate'}}</span>
+                                                        </span>
+                                                    </p>
+                                                    <p ng-show="catalogue.attachment.links.length==0" class="text-sm-center pt20">
+                                                        {{'links.no_links' | translate}}</p>
+                                                </div>
+                                                <div class="modal-footer" style="display: flex;justify-content: flex-end;">
+                                                    <button class="btn btn-sm btn-primary" type="submit"
+                                                        ng-click="catalogueLinks && uploadLinks(catalogueLinks,data)"
+                                                        style="margin-left: 5px;"> <i class="fa fa-dot-circle-o"></i> {{'general.update' | translate}}
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()"
+                                                        style="margin-left: 5px;">
+                                                        <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                                    </button>
+                                                </div>
+                                            </uib-tab>
+                                        </uib-tabset>
+                                    </form>    
+                                </div>                                
+                            </div>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+                <!-- tabs 1 end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="group-template0.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display: flex;align-items: center;">
+                            {{heading}}
+                        <i class="glyphicon" ng-class="{'fa-solid fa-caret-down': open, 'fa-solid fa-caret-right': !open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body p-0" ng-transclude></div>
+        </div>
+    </div>
+</script>
+
+
+<style>
+    .custom-row{
+            display: flex;
+            flex-wrap: wrap;
+        }
+    .chosen-container{
+        width:100% !important;
+    }
+    .contract-list-popup .modal-dialog{
+        max-width: 1060px !important;
+    }
+    .modal-dialog .nav-tabs .nav-item .nav-link {
+        min-width: 145px !important;
+    }
+    .p015{
+        padding: 0 15px;
+    }
+    .modal-body {
+        position: relative;
+        padding: 5px;
+    }
+    .modal-closer-contract{
+        position: absolute;
+        right: 3px;
+        top: 8px;
+        cursor: pointer;
+    }
+    .info-tabs-div .nav-tabs .nav-link {
+        padding: 0.5em 0.9em;
+    }
+    .info-tabs-div .tab-content .tab-pane {
+        background-color: #fff;
+    }
+
+    .icon-trash{
+        font-size: 20px;
+        position: relative;
+        top:0px;
+    }
+    .nav-tabs .nav-item .nav-link {
+       background: #f9f9f9 !important;
+    }
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        background: #ffff !important;
+        border-bottom: 1px solid #fff !important;
+    }
+    
+   
+    .chosen-container .chosen-results li.active-result {
+        border-bottom: 0 !important;
+        padding: 5px;
+    }
+    
+    .tab-content {
+        border: 1px solid #ccc !important;
+    }
+    .info-tabs-div .nav-tabs .nav-item .nav-link {
+        border: 1px solid #ccc !important;
+        margin-right: 4px;
+    }
+    .info-tabs-div .nav-tabs {
+        background-color: transparent;
+    }
+    .info-tabs-div .nav-tabs .nav-item {
+        margin-bottom: -1px;
+    }
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        border-bottom: 1px solid #fff !important; 
+    }
+    .info-tabs-div .chosen-container-multi .chosen-choices li.search-field input[type=text] {
+        width: unset !important;
+    }
+    .provider-tag-form th, .provider-tag-form td {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .info-tabs-div .accordion-default .panel-title {
+        padding-left: 0 !important;
+    }
+    .accordion-default .panel-body ul li {
+        border-bottom: 0px solid #cfd8dc;
+    }
+    
+</style>

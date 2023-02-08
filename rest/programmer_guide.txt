@@ -1,0 +1,98 @@
+Flags:
+--------------
+0 => annus
+1 => itako
+2 => udner
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+Key Words:
+--------------
+review_edit_access => reaaer
+is_edit_access => ieaaei
+edit_access => eaae
+is_reporting_owner =>iroori
+delete_access => daad
+review_access => raar
+view_access => vaav
+export_access => exaaxe
+is_discussion_exist => ideedi
+is_discussion_access => idaadi
+status_change_access =>  scaacs
+is_discussion_id_exist => idieeidi
+discussion_initiate_allowed => diaaid
+discussion_checkbox_allowed => dcaacd
+discussion_close_allowed => dclaalcd
+discussion_comment_allowed => dcmaamcd
+discussion_save_allowed => dsaasd
+is_other_business_unit => iobuuboi
+is_module_review_editable => imreermi
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+dev.sourcingcockpit.com : 185.115.218.213
+port: 22
+ssh-user: threshadmin
+password: with!2017
+Host name : 185.115.218.213
+
+DB details:
+Port : 3306
+User Name: admin
+Password  : WithBro2017
+
+Browser Authentication :
+Username : threshold
+Password : with2017!
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+demo.sourcingcockpit.com :
+port: 22
+user: threshadmin
+password: with!2017
+Host name : demo.sourcingcockpit.com
+DB:
+Port : 3306
+User Name: admin
+Password  : WithBro2017
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+test.sourcingcockpit.com :
+port: 22
+user: threshadmin
+password: with!2017
+Host name : test.sourcingcockpit.com
+DB:
+Port : 3306
+User Name: admin
+Password  : WithBro2017
+
+Authentication:
+Username : - threshold
+Password : - With!2018
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Production: www.sourcingcockpit.com
+IP : 178.208.57.81
+user: threshadmin@sourcingcockpit.com
+port: 222
+password: with2017!
+DB : with_bro_tool
+PHPMYADMIN URL :  http://178.208.57.81/phpmyadmin/index.php https://www.sourcingcockpit.com/phpmyadmin/index.php
+Username : admin
+Password : BRO#2017
+Authentication :
+Username : threshold
+Password : with2017!
+
+Stake holders Guide
+Default lables created on contract creation
+
+->Account Managers
+->Delivery Managers
+->Contract Managers
+
+        1                                           2
+internal_contract_sponsor                   provider_contract_sponsor
+        3                                           4
+internal_partner_relationship_manager       provider_partner_relationship_manager
+        5                                           6
+internal_contract_responsible               provider_contract_responsible

@@ -1,0 +1,266 @@
+<div class="modal-header">
+    <h6 class="modal-title lh14" id="modal-title">
+        <span ng-if="data.action_item">{{data.action_item}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+        </span>
+        <span ng-if="!data.action_item">{{'contract.action_item' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+        </span>
+        <span class="display-block pt4 mb4 pb-0" ng-if="data.created_by_name">
+            <span class="f11 gray">{{'contract.created_by' | translate}}:</span>
+            <span class="f11">{{data.created_by_name}}</span>
+            <span class="f11 gray">{{'general.on' | translate}}:</span>
+            <span class="f11">{{data.created_on | utcToLocal:'date'}}</span>
+        </span>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <span ng-show="type=='view'">
+        <form novalidate name="actionItemForm1" ng-submit="actionItemForm1.$valid && addReviewActionItem(data)">
+            <div class="col-sm-12 p0">
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.provider_name' | translate}}</label>
+                    <label class="gray">{{data.provider_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.contract_name' | translate}}</label>
+                    <label class="gray">{{data.contract_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'module.module' | translate}}</label>
+                    <label class="gray">{{data.module_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.topic' | translate}}</label>
+                    <label class="gray">{{data.topic_name  | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.responsible_user_id' | translate}}</label>
+                    <label class="gray">{{data.user_name}}</label>
+                </div>
+                <div class="form-group col-sm-12 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.external_notification' | translate}}</label>
+                    <label class="gray">{{data.external_users}}</label>
+                </div>
+                
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.due_date' | translate}}</label>
+                    <label class="gray">{{data.due_date | utcToLocal:'date' | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.original_date' | translate}}</label>
+                    <label class="gray">{{data.original_date | utcToLocal:'date' | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.priority' | translate}}</label>
+                    <label class="gray">{{data.priority | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-12 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.description' | translate}}</label>
+                    <label class="gray">{{data.description | checkEmpty}}</label>
+                </div>
+                <div class="clearfix"></div>
+                <label class=" form-control-label" for="textarea-responsibility1">{{'contract.comment' | translate}} *</label>
+                <div class="form-group col-sm-12 p0 mh-200 overflow-y-auto">
+                    <div ng-show="data.comments_log.length>0">
+                        <table class="table table-custom table-striped table-hover">
+                            <tbody>
+                                <tr ng-repeat="val in data.comments_log" ng-if="val.comments">
+                                    <td>
+                                        <span class="clearfix">{{val.comments}}</span>
+                                        <span style="display: block;font-size: 10px" class="pull-right">
+                                            <span class="font-italic gray">
+                                                <span style="color:black">{{'general.by'| translate}}</span> {{val.user_name}}</span>
+                                            <span class="font-italic gray">
+                                                <span style="color:black">{{'general.on' | translate}}</span>
+                                                {{val.updated_on | utcToLocal:'date' | checkEmpty}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12 p0" ng-if="data.status != 'completed' && ((data.responsible_user_id == user.id_user) || (data.created_by == user.id_user))">
+                    <textarea ng-if="!data.comments_log" id="textarea-responsibility1" ng-model="data.comments" name="comments" rows="3" class="form-control"
+                        required></textarea>
+                    <textarea ng-if="data.comments_log" ng-init="data.comments = ''" id="textarea-responsibility2" ng-model="data.comments" name="comments"
+                        rows="3" class="form-control" required></textarea>
+                    <span class="error-message" ng-if="actionItemForm1.comments.$error.required && actionItemForm1.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12 text-center p0">
+                    <button type="submit" class="btn btn-sm btn-primary" ng-if="data.status != 'completed' && ((data.responsible_user_id == user.id_user) || (data.created_by == user.id_user)) && user1.access !='eu'"
+                        ng-click="data.is_finish='1'">
+                        <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                    <button type="submit" class="btn btn-sm btn-primary" ng-if="data.status != 'completed' && ((data.responsible_user_id == user.id_user) || (data.created_by == user.id_user))"
+                        ng-click="data.is_finish='0'">
+                        <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                    <button ng-show="user1.id_user==data.created_by && data.status != 'completed' && (data.created_by == user.id_user)"
+                        type="button" ng-click="type='add'; bottom='general.save';goToEdit(data)" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-ban"></i> {{'general.edit' | translate}}</button>
+                </div>
+            </div>
+        </form>
+    </span>
+    <span ng-show="type=='add'">
+        <form novalidate name="addActionItemForm" class="p0" style="padding:0px !important;" ng-submit="addActionItemForm.$valid && addReviewActionItem(data)">
+            <div class="form-group col-sm-12">
+                <label>{{'contract.action_item' | translate}} *</label>
+                <input type="text" class="form-control" name="action_item" ng-model="data.action_item" required>
+                <span class="error-message" ng-if="addActionItemForm.action_item.$error.required && addActionItemForm.$submitted">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12 resposibleUser">
+                <label>{{'contract.responsible_user_id' | translate}} *</label>
+                <select chosen class="form-control chosen-choices"  id="add-chosen"
+                    onchange="chosen()"
+                    allow-single-deselect="true"
+                    placeholder-text-single="'{{'normal.placeholder_responsible_user' | translate}}'"
+                    name="responsible_user_id" required
+                    ng-model="data.responsible_user_id" 
+                    ng-options="item.id_user as item.name for item in userList">
+                </select>
+                <span class="error-message" ng-show="addActionItemForm.responsible_user_id.$error.required && addActionItemForm.$submitted">{{'general.required_field' | translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12">
+                <label>{{'contract.external_notification' | translate}}
+                    <span class="font-italic gray" style="font-size: 10px;"> ( {{'contract.enter_multiple_emails' | translate}} )</span>
+                </label>
+                <input type="text" class="form-control" ng-pattern="/^(\s?[^\s,]+@[^\s,]+\.[^\s,]+\s?,)*(\s?[^\s,]+@[^\s,]+\.[^\s,]+)$/"
+                    name="external_users" ng-model="data.external_users">
+                <span class="error-message" ng-if="addActionItemForm.external_users.$error.pattern && addActionItemForm.$submitted">{{'general.invalid_input' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-6">
+                <label>{{'contract.due_date' | translate}} *</label>
+                <div class="input-group clearfix form-group-custom">
+                    <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                         name="due_date"  ng-model="data.due_date" is-open="openCal" datepicker-options="{showWeeks:false}" show-button-bar="false" readonly required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </span>
+                </div>
+                <!-- <span class="error-message" ng-if="addActionItemForm.due_date.$error.required && addActionItemForm.$submitted">{{'general.required_field' | translate}}</span> -->
+            </div>
+            <div class="form-group col-sm-6">
+                <label>{{'contract.priority' | translate}}</label>
+                <select class="form-control" id="priority" name="priority" size="1" ng-model="data.priority">
+                    <option value="">-{{'general.select' | translate}}-</option>
+                    <option value="Urgent">{{'contract.urgent' | translate}}</option>
+                    <option value="Medium">{{'contract.medium' | translate}}</option>
+                    <option value="Low">{{'contract.low' | translate}}</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12">
+                <label class=" form-control-label" for="textarea-responsibility">{{'contract.description' | translate}} </label>
+                <textarea id="textarea-responsibility" ng-model="data.description" name="description" rows="3" class="form-control"></textarea>
+            </div>
+            <div class="clearfix"></div>
+            <!-- <div class="form-group col-sm-12 text-center modal-footer"> -->
+                <div class="action-item-buttons col-sm-12 clearfix">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                <!-- <button type="button" ng-show="!addaction" ng-click="type='view'; bottom='contract.finish'" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button> -->
+                <button type="button" ng-show="addaction" ng-click="cancel()" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+        </form>
+    </span>
+    <span ng-show="type=='noAction'">
+        <form novalidate name="actionItemForm2" ng-submit="actionItemForm2.$valid && addReviewActionItem(data)">
+            <div class="col-sm-12 p0">
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.provider_name' | translate}}</label>
+                    <label class="gray">{{data.provider_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.contract_name' | translate}}</label>
+                    <label class="gray">{{data.contract_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'module.module' | translate}}</label>
+                    <label class="gray">{{data.module_name | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.topic' | translate}}</label>
+                    <label class="gray">{{data.topic_name  | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.responsible_user_id' | translate}}</label>
+                    <label class="gray">{{data.user_name}}</label>
+                </div>
+                <div class="form-group col-sm-12 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.external_notification' | translate}}</label>
+                    <label class="gray">{{data.external_users}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.due_date' | translate}}</label>
+                    <label class="gray">{{data.due_date | utcToLocal:'date' | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-6 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.priority' | translate}}</label>
+                    <label class="gray">{{data.priority | checkEmpty}}</label>
+                </div>
+                <div class="form-group col-sm-12 p0">
+                    <label class="col-sm-12 p0 mb5">{{'contract.description' | translate}}</label>
+                    <label class="gray">{{data.description | checkEmpty}}</label>
+                </div>
+                <div class="clearfix"></div>
+                <label class=" form-control-label" for="textarea-responsibility1">{{'contract.comment' | translate}} *</label>
+                <div class="form-group col-sm-12 p0 mh-200 overflow-y-auto">
+                    <div ng-show="data.comments_log.length>0">
+                        <table class="table table-custom table-striped table-hover">
+                            <tbody>
+                                <tr ng-repeat="val in data.comments_log">
+                                    <td>
+                                        <span class="clearfix">{{val.comments}}</span>
+                                        <span style="display: block;font-size: 10px" class="pull-right">
+                                            <span class="font-italic gray">
+                                                <span style="color:black">{{'general.by'| translate}}</span> {{val.user_name}}</span>
+                                            <span class="font-italic gray">
+                                                <span style="color:black">{{'general.on' | translate}}</span>
+                                                {{val.updated_on | utcToLocal:'date' | checkEmpty}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12 p0" ng-if="data.status != 'completed' && ((data.responsible_user_id == user.id_user) || (data.created_by == user.id_user))">
+                    <textarea ng-if="!data.comments_log" disabled id="textarea-responsibility1" ng-model="data.comments" name="comments" rows="3" class="form-control"
+                        required></textarea>
+                    <textarea ng-if="data.comments_log" disabled ng-init="data.comments = ''" id="textarea-responsibility2" ng-model="data.comments" name="comments"
+                        rows="3" class="form-control" required></textarea>
+                    <span class="error-message" ng-if="actionItemForm2.comments.$error.required && actionItemForm2.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix"></div>                
+            </div>
+        </form>
+    </span>
+</div>
+<style>
+    .chosen-single {
+        height: 28px !important;
+        border-radius: 0px !important;
+    }
+    .action-item-buttons{
+        padding: 20px 15px 16px;
+    text-align: right;
+    }
+</style>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>

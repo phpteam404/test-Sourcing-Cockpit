@@ -1,0 +1,105 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                <thead>
+                    <tr>
+                        <td colspan="7">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="onlyactive1">
+                                        <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                    ng-true-value="1" ng-false-value="0"
+                                                    ng-model="req.status"
+                                                    ng-checked="req.status == 1"
+                                                    ng-change="getModulesByStatus(req.status)"
+                                                    id="status">
+                                            <label class="onoffswitch-label assessment-switch mb-0"
+                                                    for="status">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary btn-radius" ng-click="updateModule()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="module_name" class="st-sort-ascent st-sort-descent">{{'module.module_name' | translate}}</th>
+                        <th st-sort="topic_count" class="st-sort-ascent st-sort-descent">{{'module.topic_count' | translate}}</th>
+                        <th st-sort="question_count" class="st-sort-ascent st-sort-descent">{{'module.question_count' | translate}}</th>
+                        <th st-sort="relation_question_count" class="st-sort-ascent st-sort-descent">{{'normal.no_of_relation_questions' | translate}}</th>
+                        <th st-sort="module_status">{{'general.status' | translate}}</th>
+                        <th class="hand-symbol">{{'general.static' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-show="displayed.length>0" ng-repeat="row in displayed">
+                        <td>{{row.module_name}}</td>
+                        <td>{{row.topic_count}}</td>
+                        <td>{{row.question_count}}</td>
+                        <td>{{row.relation_question_count}}</td>
+                        <td>
+                            <span  ng-if="row.module_status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span  ng-if="row.module_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td>
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                    ng-init="row.static = (row.static == 1) ? 1:0"
+                                       ng-model="row.static"
+                                       ng-true-value="1" ng-false-value="0"
+                                       ng-checked="row.static == '1'"
+                                       ng-change="updateModuleStatic(row)"
+                                       id="{{row.id_module}}_{{row.static}}" checked>
+                                <label class="onoffswitch-label assessment-switch mb-0"
+                                       for="{{row.id_module}}_{{row.static}}">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:;" title="{{'general.edit' | translate}}" class="gray icon-edit mr-1" ng-click="updateModule(row)"></a>
+                            <a ng-if="row.module_status == 1" href="javascript:;" title="{{'module.manage_topic' | translate}}" ng-click="manageTopics(row)" class="mr-h gray"><i class="icon-gear"></i></a>
+                        </td>
+                    </tr>
+                    <tr ng-show="displayed.length<=0"><td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

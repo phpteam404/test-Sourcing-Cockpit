@@ -1,0 +1,466 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                <div class="card" st-pipe="callServer" st-table="contractsList">
+                    <div class="button-icon">
+                        <div>
+                            <button  class="btn btn-sm btn-default pointer filter-icon"
+                                    type="button"  ng-click="advancedFilterArchive()">
+                                    <i class="tss-filter-search"></i>
+                                    <i class="icon-times" ng-if="filterCross"></i>
+                                    </button>
+                        </div>
+                    <div class="col-sm-12 tableSelect-header">
+                        <div class="col-sm-8 p-0 tableSelect-header-left">
+                            <div ng-repeat="row in filterList" class="filter-archive">
+    
+                            <div class="filter-archive-list" ng-if="row.field_type!='numeric_text' && row.field_type!='date'">
+                                    <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="filter-archive-list-value">
+                                    <p ng-if="row.filter_display_value=='Multiple Selected'" 
+                                    uib-tooltip-html="row.value_names_string" tooltip-class="customClass" tooltip-placement="bottom">{{row.filter_display_value}}</p>
+                                    
+                                    <p title="{{row.filter_display_value}}" ng-if="row.filter_display_value!='Multiple Selected'">{{row.filter_display_value}}</p>
+                                    <div class="filter-archive-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+       
+                            <div class="filter-archive-list" ng-if ="row.field_type=='date'">
+                                    <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="filter-archive-list-value">
+                                    <p title="{{row.filter_display_value | utcToLocal:'date'}}">{{row.filter_display_value | utcToLocal:'date'}}</p>
+                                    <div class="filter-archive-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+           
+                            <div class="filter-archive-list" ng-if="row.field_type=='numeric_text'">
+                                <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="form-group filter-archive-list-value">                    
+                                    <input type="text" class="form-control"  name="value"
+                                    ng-model="row.filter_display_value" ui-number-mask="0" title="{{row.filter_display_value}}">
+                                    <div class="filter-archive-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+       
+                            </div>
+                            </div>
+                        <!-- <div class="form-group col-sm-2 pl0 custom-field pt10  wid-filter r-padding">
+                            <select class="form-control" id="select" name="select1" size="1" ng-model="id_business_unit" ng-class="(business_unit_id)?'active-filter':''"
+                                st-input-event="change" st-search="id_business_unit" ng-change="getProviderList(id_business_unit);" ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit">
+                                <option value="" class="font-italic">-{{'bussiness.bussiness_unit'| translate}}-</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2 pl0 custom-field pt10 pr5 r-padding" style="width: 105px;">
+                            <select class="form-control" id="select0" name="select0" size="1" 
+                                ng-model="relationship_category_id" 
+                                ng-class="(relationship_category_id)?'active-filter':''" st-search="relationship_category_id"
+                                st-input-event="change" st-search="relationship_category_id" 
+                                ng-options="opt.id_relationship_category as opt.relationship_category_name group by opt.type
+                                                for opt in relationshipCategoryList">
+                                <option value="" class="font-italic">- {{'contract.category'| translate}} -</option>
+                            </select>
+                        </div>
+                        <div class="clearfix form-group col-sm-2 custom-field pl0 pt10  wid-filter r-padding">
+                            <select class="form-control" id="select1" name="select2" size="1" 
+                                ng-model="provider_name"
+                                ng-class="(provider_name)?'active-filter':''"
+                                st-input-event="change" st-search="provider_name" 
+                                ng-change="getStatuses();" 
+                                ng-options="item.provider_name as item.provider_name for item in providerList | orderBy:'provider_name'">
+                                <option value="" class="font-italic">- {{'contract.provider' | translate}} -</option>
+                            </select>
+                        </div>    -->
+                        <!-- For Activity type open-->
+                        <!-- <div class="form-group col-sm-2 custom-field pt10 pl0  wid-filter r-padding">
+                            <select class="form-control" id="select6" name="select6" size="1" ng-model="activity_type" 
+                                ng-class="(activity_type)?'active-filter':''"
+                                st-input-event="change" ng-change="filterType(activity_type)">
+                                <option value="" class="font-italic">-{{'Activity Type' | translate}}-</option>
+                                <option value="0">{{'Contract' | translate}}</option>
+                                <option value="1">{{'Project' | translate}}</option>
+                            </select>
+                        </div>    -->
+                        <!-- For Activity type close-->                  
+                        <!-- <div class="form-group col-sm-2 custom-field pt10 pl0 wid-filter r-padding">
+                            <select class="form-control" id="select7" name="select7" size="1" ng-model="activity_topic" 
+                                ng-class="(activity_topic)?'active-filter':''"
+                                st-input-event="change" ng-change="filterActivityType(activity_topic)">
+                                <option value="" class="font-italic">-{{'contract.activity_topic' | translate}}-</option>
+                                <option value="0">{{'calender.review' | translate}}</option>
+                                <option value="1">{{'calender.workflow' | translate}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2 custom-field pt10 pl0  wid-filter w145 r-padding">
+                            <select class="form-control" id="select3" name="select5" size="1" ng-model="date_field"
+                                ng-class="(date_field)?'active-filter':''" disabled
+                                st-input-event="change" ng-change="filterDateType(date_field)">
+                                <option value="" class="font-italic">-Contract Date-</option>
+                                <option value="cr.updated_on" selected>Review Date</option>
+                            </select> -->
+                            <!-- <span>Review Date : </span> -->
+                        <!-- </div>
+                        <div class="form-group col-sm-2 custom-field pt10 pl0 wid-filter r-padding">
+                            <select class="form-control" id="select4" name="select4" size="1" ng-model="date_period" ng-class="(date_period)?'active-filter':''"
+                                st-input-event="change" ng-change="filterDatePeriod(date_period)">
+                                <option value="" class="font-italic">-Condition-</option>
+                                <option value="<=">Before</option>
+                                <option value=">=">After</option>
+                                <option value="=">On</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2 custom-field pt10 pl0 wid-filter pr5">
+                            <input type="text" class="form-control" id="created_date" uib-datepicker-popup="dd-MM-yyyy" ng-model="updated_on" is-open="openCal1"
+                                show-weeks="false" show-button-bar="false"  ng-class="(updated_on)?'active-filter':''" 
+                                datepicker-options="dateOptions" ng-required="true" placeholder="dd-mm-yyyy" 
+                                close-text="Close" current-text="111" ng-change="selectDate(updated_on)"/>
+                           
+                            <span class="input-group-btn calanderIconCls">
+                            <button type="button" class="btn btn-default border p-0" ng-click="openCal1 = true"><i class="fa fa-calendar"></i></button>
+                            <button type="button" class="btn btn-basic border reset-icon-cls p-0" ng-click="clear();selectDate()"  
+                                title="Reset" ng-if="(activity_topic==0 || activity_topic==1) || relationship_category_id || updated_on || id_business_unit || provider_name || date_period" >
+                                <i class="fa fa-undo f14" style="cursor: pointer;"></i></button>
+                            </span>
+                        </div> -->
+                        <div class="col-sm-4 p0 table-search pull-right pr0 w220" style="padding-top: 16px; padding-right: 4px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                        </div>
+                    </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover contact-view-table ">
+                        <thead>
+                            <tr>
+                                <th st-sort="providerName" class="scr-providerName">{{'contract.provider' | translate}}</th>
+                                <th st-sort="contract_name" class="scr-contractName">{{'contract.activity_name' | translate}}</th>
+                                <th class="scr-handSymbol">{{'contract.category' | translate}}</th>
+                                <th st-sort="bu_name" class="scr-buName">{{'bussiness.bussiness_unit' | translate}}</th>
+                                <th st-sort="type" class="scr-type" >{{'contract.activity_type' | translate}}</th>
+                                <th st-sort="is_workflow"  class="scr-isWorkflow">{{'contract.activity_topic' | translate}}</th>
+                                <th st-sort="ReviewDate" class="scr-ReviewDate">{{'contract.review_date' | translate}}</th>
+                                <th st-sort="templateName"  class="scr-templateName">{{'templates.template' | translate}}</th>
+                                <th st-sort="owner_name" class="scr-ownerName">{{'contract.owner' | translate}}</th>
+                                <th st-sort="delegate_name" class="scr-delegateName">{{'contract.delegate' | translate}}</th>
+                                <th class="hand-symbol scr-score" >{{'contract.score' | translate}}</th>
+                                <th class="hand-symbol scr-fileLink">{{'contract.files_links' | translate}}</th>
+                                <th class="hand-symbol scr-handsymbal-elipses"></th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="contractsList.length>0">
+                            <tr ng-repeat="row in contractsList">                                
+                                <td class="scr-providerName custom-ellipsis">
+                                    <a href="javascript:;" ng-click="filterByProvider(row)" class="ellipsis-block"
+                                        title="{{row.providerName}}" 
+                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:100%">
+                                        {{row.providerName | checkEmpty}}
+                                    </a>
+                                </td>                                
+                                <td class="scr-contractName custom-ellipsis">
+                                    <span title="{{row.contract_name}}"class="ellipsis-block">
+                                        {{row.contract_name | checkEmpty}}</span>
+                                </td>
+                                <td class="scr-handSymbol">
+                                    <span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name | checkEmpty}}</span>
+                                </td>
+                                <td class="scr-buName custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.bu_name}}">{{row.bu_name | checkEmpty}}</span>
+                                </td>
+                                <td class="scr-type custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.type}}">{{row.type | capitalize}}</span>
+                                </td>
+                                <td class="scr-isWorkflow">
+                                    <span ng-if="row.is_workflow=='0'" class="orange" title="{{'calender.review' | translate}}">{{'contract.review' | translate}}</span>
+                                    <span ng-if="row.is_workflow=='1'" class="green" title="{{'calender.workflow' | translate}}">{{'workflows.workflow' | translate}}</span>
+                                    <span ng-if="row.is_workflow==null" class="">---</span>
+                                </td>
+                                <td class="scr-ReviewDate">
+                                    <span ng-if="row.type=='contract'">
+                                        <a class="skyblue" href="javascript:;" ng-click="getDataByReviewDate(row)">{{row.ReviewDate | utcToLocal: 'date' | checkEmpty}}</a>
+                                    </span>
+                                    <span ng-if="row.type=='project'">
+                                        <a class="skyblue" href="javascript:;" ng-click="getDataByProjectDate(row)">{{row.ReviewDate | utcToLocal: 'date' | checkEmpty}}</a>
+                                    </span>
+                                </td>
+                                <td  class="scr-templateName custom-ellipsis">
+                                    <span title="{{row.templateName}}" class="ellipsis-block">{{row.templateName | checkEmpty}}</span>
+                                </td>
+                                <td class="scr-ownerName custom-ellipsis">
+                                    <span title="{{row.owner_name}}" class="ellipsis-block">  {{row.owner_name | checkEmpty}}</span>
+                                </td>
+                                <td class="scr-delegateName custom-ellipsis">
+                                    <span  title="{{row.delegate_name}}" class="ellipsis-block"> {{row.delegate_name | checkEmpty}}</span>  
+                                            
+                                </td>
+                                <td class="scr-score">
+                                    <div class="status-widget font-weight-bold" style="line-height: 6px;text-align:center;">
+                                        <span ng-if="row.review_score == 'Amber'" class="amber-active"></span>
+                                        <span ng-if="row.review_score == 'Red'" class="red-active" ></span>
+                                        <span ng-if="row.review_score == 'Green'" class="green-active"></span>
+                                        <span ng-if="!row.review_score" class=""></span>
+                                        <span ng-if="row.review_score == 'N/A'" class="">{{row.review_score}}</span>
+                                    </div>
+                                </td>
+                                <td  class="scr-fileLink text-center">
+                                    <a class="skyblue" href="javascript:;" ng-if="row.file_count>0" ng-click="getArchiveFiles(row)">{{row.file_count | number}}</a>
+                                    <span class="text-center" ng-if="row.file_count==0">0</span>
+                                </td>                                                               
+                                <td class="scr-handsymbal-elipses">
+                                    <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right" >
+                                        <a href uib-dropdown-toggle class="font-sm" ng-if="row.is_workflow=='0'">
+                                            <span class="fa fa-ellipsis-v"></span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                            <li ng-click="goToContractDashboard(row)">
+                                                <a href="javascript:;" >{{'contract.dashboard' | translate}}</a>
+                                            </li>
+                                        </ul>                                   
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="isLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="totalRecords==0">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="pagination.html">
+<div class="pagination" ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+        </li>
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+        </li>
+    </ul>
+</div>
+</script>
+<style>
+    .w155 {
+        width: 155px;
+        padding-right: 5px !important;
+    }
+    .w90{
+        width: 90px !important;
+    }
+    .w145{
+        width: 145px !important;
+    }
+    .w220{
+        width: 220px !important;
+    }
+     .calanderIconCls {
+        position: absolute;
+        top: 1px;
+        right: -40px;
+    }
+    .calanderIconCls button{
+        padding: 4px 10px;
+    }
+    .gray-text{
+        color: #ccc;
+    }
+    .status-widget span{
+        height: 5px;
+    }
+    .contractShowHideChart{
+        right: 65px;
+    }
+    .onlyactive1 .onoffswitch-inner:before, .onlyactive1 .onoffswitch-inner::after {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    }
+    .onlyactive1 .onoffswitch-switch {
+        width: 14px;
+        height: 12px;
+        margin-top: 4px;
+    }
+    .onlyactive1 {
+        margin-top: -11px;
+        margin-left: 20px;
+    }
+    .tableSelect-header span.pr40{
+        padding-right: 22px !important;
+    }
+    .onlyactive1 .mrg-space{
+        padding-right: 0px !important;
+    }
+    .onoffswitch-inner{
+        margin-top: 0px !important;
+    }
+    .table-striped tbody tr:nth-of-type(even):hover{
+        background-color: #E7F4FD;
+    }
+    .scr-providerName,.scr-contractName{
+        width: 10%;
+    }
+    .scr-handSymbol{
+        width: 5%;
+    }
+    .scr-buName,.scr-ReviewDate{
+        width: 9%;
+    }
+    .scr-isWorkflow{
+        width: 9%;
+    }
+    .scr-type{
+        width: 10%;
+    }
+   .scr-templateName{
+        width: 8%;
+    }
+    .scr-fileLink{
+        width: 12%;
+    }
+    .scr-ownerName,.scr-delegateName{
+        width: 7%;
+    }
+    .scr-score{
+        width: 4%;  
+    }
+    .scr-handsymbal-elipses{
+        width: 2%;  
+    }
+    .st-sort-ascent:after {
+        margin-left: 3px;
+        font-size: 9px;
+   }
+    .tableSelect-header span {
+         margin-top: 15px;
+    }
+
+    .filter-archive {
+    width: 25%;
+    }
+    .filter-archive .filter-archive-list {
+        margin: 3px 3px 4px 3px;
+        line-height: 17px;
+    }
+    .filter-archive-list-value {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 0px 8px 0px 8px;
+        border: 1px solid #c1c0c0;
+        height: 24px;
+    }
+    .filter-archive .filter-archive-list .form-control{
+        background-color: transparent;
+        border: none;
+        color: #000;
+        padding: 0;
+        font-size: 14px;
+        line-height: 15px;
+        width: calc(100% - 20%);
+    }
+    .filter-archive-list-value p{
+        color: #000;
+        font-size: 14px;
+        margin: 0;
+        line-height: 16px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: calc(100% - 20%);
+        padding-bottom: 2px;
+    }
+    .filter-archive .filter-archive-list label {
+        color: #000;
+        margin: 0;
+        font-size: 12px;
+        padding-left: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+
+    .filter-archive .filter-archive-list i{
+        font-size: 11px;
+        font-weight: 900;
+        margin-left: 3px;
+    }
+    .tableSelect-header {
+        margin: 0 0 0 7px;
+}
+.tableSelect-header .form-group {
+    margin: 0;
+}
+.filter-archive-list-icons {
+    width: 20%;
+}
+.tableSelect-header-left{
+    display: flex;
+    flex-wrap: wrap;
+}
+.button-icon{
+    align-items: flex-start;
+}
+.filter-icon {
+    position: relative;
+    margin:6px 0px;
+
+}
+.filter-icon i.icon-times {
+    position: absolute;
+    top: 5px;
+    font-size: 6px;
+    right: 6px;
+    background-color: #db441d;
+    color: #fff;
+    border-radius: 30px;
+    height: 12px;
+    width: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+</style>

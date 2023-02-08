@@ -1,0 +1,409 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12 p0 contract-overview">
+            <div class="card" st-pipe="callServer" st-table="ActionItemsList">
+                <div class="button-icon">
+                        <div>
+                            <button  class="btn btn-sm btn-default pointer filter-icon"
+                                    type="button"  ng-click="advancedFilterActionItem()">
+                                    <i class="tss-filter-search"></i>
+                                    <i class="icon-times" ng-if="filterCross"></i>
+                                    </button>
+                        </div>
+                <div class="col-sm-12 tableSelect-header">
+                    <div class="col-sm-8 p-0 tableSelect-header-left">
+                        <div ng-repeat="row in filterList" class="filter-action-item">
+
+                        <div class="filter-action-item-list" ng-if="row.field_type!='numeric_text' && row.field_type!='date'">
+                                <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                            <div class="filter-action-item-list-value">
+                                <p ng-if="row.filter_display_value=='Multiple Selected'" 
+                                uib-tooltip-html="row.value_names_string" tooltip-class="customClass" tooltip-placement="bottom">{{row.filter_display_value}}</p>
+
+                                <p title="{{row.filter_display_value}}" ng-if="row.filter_display_value!='Multiple Selected'">{{row.filter_display_value}}</p>
+                                <div class="filter-action-item-list-icons">
+                                    <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                    <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                </div>
+                            </div>
+                        </div>
+   
+                        <div class="filter-action-item-list" ng-if ="row.field_type=='date'">
+                                <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                            <div class="filter-action-item-list-value">
+                                <p title="{{row.filter_display_value | utcToLocal:'date'}}">{{row.filter_display_value | utcToLocal:'date'}}</p>
+                                <div class="filter-action-item-list-icons">
+                                    <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                    <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                </div>
+                            </div>
+                        </div>
+       
+                        <div class="filter-action-item-list" ng-if="row.field_type=='numeric_text'">
+                            <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                            <div class="form-group filter-action-item-list-value">                    
+                                <input type="text" class="form-control"  name="value"
+                                ng-model="row.filter_display_value" ui-number-mask="0" title="{{row.filter_display_value}}">
+                                <div class="filter-action-item-list-icons">
+                                    <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                    <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                </div>
+                            </div>
+                        </div>
+   
+                        </div>
+                        </div>
+                    <!-- start -->
+                    <!-- <div class="form-group col-sm-2 pl0 custom-field pt10 w198">
+                        <select class="form-control" id="select" name="select1" size="1" ng-model="filters.provider_name" ng-class="(filters.provider_name)?'active-filter':''" ng-change="getByProvider(filters.provider_name);" ng-options="item.provider_name as item.provider_name for item in providers">
+                            <option value="">--{{'contract.provider'| translate}}--</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2 custom-field pl0 pt10 w198">
+                        <select class="form-control" id="select1" name="select2" size="1" ng-model="filters.contract_id" ng-class="(filters.contract_id)?'active-filter':''" ng-change="getByContracts(filters.contract_id);" ng-options="item.contract_id as item.contract_name for item in contracts">
+                            <option value="">--{{'contract.contract' | translate}}--</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2 custom-field pt10 pl0 w198">
+                        <select class="form-control" id="select2" name="select3" size="1" ng-model="filters.item_status" ng-change="getByStatus(filters.item_status)" ng-class="(filters.item_status)?'active-filter':''">
+                            <option value="">--{{'general.status' | translate}}--</option>
+                            <option value="all">{{'contract.all' | translate}}</option>
+                            <option value="completed">{{'contract.completed' | translate}}</option>
+                            <option value="open">{{'contract.open' | translate}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2 custom-field pt10 pl0 w198">
+                        <select class="form-control" id="select4" name="select4" size="1" ng-model="filters.priority" ng-class="(filters.priority)?'active-filter':''" ng-change="getByPriority(filters.priority)">
+                            <option value="">--{{'contract.priority' | translate}}--</option>
+                            <option value="Urgent">{{'contract.urgent' | translate}}</option>
+                            <option value="Medium">{{'contract.medium' | translate}}</option>
+                            <option value="Low">{{'contract.low' | translate}}</option>
+                            <option value ="Not-classified">{{'contract.unclassified'|translate}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-sm-2 custom-field pl0 pt10 w198">
+                        <select class="form-control" id="select5" name="select5" size="1" ng-model="filters.show_my_action_items" ng-class="(filters.show_my_action_items)?'active-filter':''" ng-change="getByAssignedType(filters.show_my_action_items)">
+                            <option value="">--{{'general.select' | translate}}--</option>
+                            <option value="assigned_to_me">{{'Assigned to me' | translate}}</option>
+                            <option value="created_by_me">{{'Created by me' | translate}}</option>
+                        </select>
+                    </div> -->
+                    
+
+                    <div class="pull-right" style="display: flex;">
+                        <div class="col-sm-2 p0 table-search  w198" style="top: 15px; padding-right: 5px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search"></i>
+                        </div>
+                        <span  ng-if="(user.access!='eu' && user.access!='ro')">                         
+                            <button type="button" class="btn btn-sm btn-primary btn-radius ng-scope"  ng-click="createActionItem()">
+                                <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}} 
+                            </button>
+                         </span>
+                    </div>
+                    
+                   
+
+                </div>
+                </div>
+                <table class="table table-custom table-striped table-hover action-items-table" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th st-sort="action_item" class="action-items-list">{{'contract.action_item' | translate}}</th>
+                            <th st-sort="priority" class="action-items-list-priority">{{'contract.priority' | translate}}</th>
+                            <th st-sort="user_name" class="action-items-list-responsible-user">{{'contract.responsible' | translate}}</th>
+                            <th st-sort="first_name" class="action-items-list-created-by">{{'contract.created_by' | translate}}</th>
+                            <th st-sort="original_date" class="action-items-list-original-date">{{'contract.original_date' | translate}}</th>
+                            <th st-sort="due_date" class="action-items-list-due-date">{{'contract.due_date' | translate}}</th>
+                            <th st-sort="status" class="action-items-list-status" style="text-align: right;">{{'contract.status' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in ActionItemsList">
+                            <td class="action-items-list">
+                                <p class="mb-0">
+                                    <!-- <span class="lh16 display-block"> -->
+                                    <a class="skyblue custom-td-ellipsis" href="javascript:;" id="{{row.id_contract_review_action_item}}" title="{{row.action_item}}" ng-click="updateContractReview(row,'view')">{{row.action_item}}
+                                        </a>
+                                    <!-- </span> -->
+                                </p>
+                                <p class="mb-0">
+                                    <span class="custom-td-ellipsis lh16 f12 gray display-block" title="{{row.module_name}} / {{row.topic_name}} / {{row.question_text}}">
+                                    {{row.module_name | checkEmpty}} / {{row.topic_name | checkEmpty}}
+                                        <span ng-if="row.question_text!='-'">/
+                                            <a ng-click="goToQuestion(row)" class="skyblue" href="javascript:;">{{row.question_text}}</a>
+                                        </span>
+                                    </span>
+                                </p>
+                                <p class="mb-0">
+                                    <span class="custom-td-ellipsis lh16 f12 gray display-block" title="{{row.provider_name}} / {{row.contract_name}}">
+                                        {{row.provider_name | checkEmpty}} / {{row.contract_name | checkEmpty}}</span>
+                                </p>
+                            </td>
+                            <td class="action-items-list-priority"><span>{{row.priority | checkEmpty}}</span></td>
+                            <td class="action-items-list-responsible-user"><span class="custom-td-ellipsis orange f13" title="{{row.user_name}}">{{row.user_name}}</span></td>
+
+                            <td class="action-items-list-created-by"><span class="custom-td-ellipsis f13" title="{{row.created_by_name}}"> {{row.created_by_name}}</span></td>
+
+
+                            <td class="action-items-list-original-date">
+                                <span>{{row.original_date | utcToLocal:'date' |checkEmpty}}</span>
+                            </td>
+                            <td class="action-items-list-due-date">
+                                <span ng-class="(row.overdue=='1') ?'overdue-date': ''">{{row.due_date | utcToLocal:'date'}}</span>
+                            </td>
+
+                            <td class="action-items-list-status" style="text-align: right;"><span>{{row.status}}</span></td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="isLoading">
+                        <tr>
+                            <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="emptyTable">
+                        <tr>
+                            <td colspan="8" class="text-sm-center" style="width: 100%;">{{'general.no_data' | translate}} </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-center" colspan="8">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center" st-template="pagination.html"></span>
+                                    <span class="paginator-dropdown">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="pagination.html">
+        <div class="pagination" ng-if="pages.length >= 2">
+            <ul class="pagination">
+                <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+                </li>
+            </ul>
+        </div>
+    </script>
+    <script type="text/ng-template" id="create-action-items.html">
+        <div class="modal-header">
+            <h6 class="modal-title" id="modal-title"> {{'contract.add_action_item' |translate}} :
+                <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+            </h6>
+        </div>
+        <form class="form-horizontal profile-form" name="actionform" novalidate ng-submit="actionform.$valid && addActionItem(action)">
+            <div class="modal-body clearfix" id="modal-body">
+                <div class="form-group col-sm-4">
+                    <label>{{'contract.connect_to' | translate}} *</label>
+                    <select class="form-control" ng-model="action.type_id" name="type_id" ng-change="getSelectedValue(action.type_id)">
+                    <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                    <option value="1">{{'events.contract' | translate}}</option>
+                    <option value="2">{{'events.project' | translate}}</option>
+                    <option value="3">{{'user.breadcrumb.relation'|translate}}</option>
+                </select>
+                </div>
+
+
+
+
+                <div class="form-group col-sm-8" ng-if="idInfo=='1'">
+                    <div class="col-sm-12 dashboard-action-mutliple p-0">
+                        <label> </label>
+                        <select chosen id="add-chosen" ng-change="getSelectedContract('contract_id')" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_more_contracts' | translate}}'" multiple ng-model="action.contract_id" name="contract_id" size="1" class="chosen-choices"
+                            required ng-options="item.id_contract as item.contract_name for item in contractNames">
+                    </select>
+                        <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-sm-8" ng-if="idInfo=='2'">
+                    <div class="col-sm-12 dashboard-action-mutliple p-0">
+                        <label> </label>
+                        <select chosen id="add-chosen" ng-change="getSelectedContract('project_id')" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_more_projects' | translate}}'" multiple ng-model="action.contract_id" name="contract_id" size="1" class="chosen-choices"
+                            required ng-options="item.id_contract as item.contract_name for item in projectNames">
+                    </select>
+                        <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-8" ng-if="idInfo=='3'">
+                    <div class="col-sm-12 dashboard-action-mutliple p-0">
+                        <label> </label>
+                        <select chosen id="add-chosen" ng-change="getSelectedContract('provider_id')" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_more_relations' | translate}}'" multiple ng-model="action.contract_id" name="contract_id" size="1" class="chosen-choices"
+                            required ng-options="item.id_provider as item.provider_name for item in providers">
+                    </select>
+                        <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label>{{'contract.action_item' | translate}} *</label>
+                    <input type="text" class="form-control" name="action_item" ng-model="action.action_item" required>
+                    <span class="error-message" ng-if="actionform.action_item.$error.required && actionform.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12 resposibleUser">
+                    <label>{{'contract.responsible_user_id' | translate}} *</label>
+                    <select chosen class="form-control chosen-choices" id="add-chosen" onchange="chosen()" allow-single-deselect="true" placeholder-text-single="'{{'normal.placeholder_responsible_user' | translate}}'" name="responsible_user_id" required ng-model="action.responsible_user_id"
+                        ng-options="item.id_user as item.name for item in userList"> {{item.name}}
+                </select>
+                    <span class="error-message" ng-show="actionform.responsible_user_id.$error.required && actionform.$submitted">{{'general.required_field' | translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label>{{'contract.due_date' | translate}} *</label>
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" date-disabled="false" name="due_date" ng-model="action.due_date" is-open="openCal" datepicker-options="{showWeeks:false}" show-button-bar="false" readonly required/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </span>
+                    </div>
+                    <span class="error-message" ng-if="actionform.due_date.$error.required && actionform.$submitted">{{'general.required_field' | translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label>{{'contract.priority' | translate}}</label>
+                    <select class="form-control" id="priority" name="priority" size="1" ng-model="action.priority">
+                    <option value="">-{{'general.select' | translate}}-</option>
+                    <option value="Urgent">{{'contract.urgent' | translate}}</option>
+                    <option value="Medium">{{'contract.medium' | translate}}</option>
+                    <option value="Low">{{'contract.low' | translate}}</option>
+                </select>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12">
+                    <label class=" form-control-label" for="textarea-responsibility">{{'contract.description' | translate}} </label>
+                    <textarea id="textarea-responsibility" ng-model="action.description" name="description" rows="3" class="form-control"></textarea>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+            </button>
+                <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+                {{'general.cancel' | translate}}
+            </button>
+            </div>
+        </form>
+    </script>
+
+    <script>
+        function chosen() {
+            $("#add-chosen").trigger("chosen:updated");
+        }
+    </script>
+</div>
+<style>
+
+
+.filter-action-item {
+    width: 25%;
+    }
+    .filter-action-item .filter-action-item-list {
+        margin: 3px 3px 4px 3px;
+        line-height: 17px;
+    }
+    .filter-action-item-list-value {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 0px 8px 0px 8px;
+        border: 1px solid #c1c0c0;
+        height: 24px;
+    }
+    .filter-action-item .filter-action-item-list .form-control{
+        background-color: transparent;
+        border: none;
+        color: #000;
+        padding: 0;
+        font-size: 14px;
+        line-height: 15px;
+        width: calc(100% - 20%);
+    }
+    .filter-action-item-list-value p{
+        color: #000;
+        font-size: 14px;
+        margin: 0;
+        line-height: 16px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: calc(100% - 20%);
+        padding-bottom: 2px;
+    }
+    .filter-action-item .filter-action-item-list label {
+        color: #000;
+        margin: 0;
+        font-size: 12px;
+        padding-left: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+
+    .filter-action-item .filter-action-item-list i{
+        font-size: 11px;
+        font-weight: 900;
+        margin-left: 3px;
+    }
+    .tableSelect-header {
+        margin: 0 0 0 7px;
+}
+.tableSelect-header .form-group {
+    margin: 0;
+}
+.filter-action-item-list-icons {
+    width: 20%;
+}
+.tableSelect-header-left{
+    display: flex;
+    flex-wrap: wrap;
+}
+.button-icon{
+    align-items: flex-start;
+}
+.filter-icon {
+    position: relative;
+    margin:6px 0px;
+
+}
+.filter-icon i.icon-times {
+    position: absolute;
+    top: 5px;
+    font-size: 6px;
+    right: 6px;
+    background-color: #db441d;
+    color: #fff;
+    border-radius: 30px;
+    height: 12px;
+    width: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+     @media(max-width:1336px){
+         .w198{
+             width:15% !important;
+         }
+        .table-search.w198{
+            width: 150px !important;
+        }
+     }
+</style>

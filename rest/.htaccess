@@ -1,0 +1,37 @@
+Options -Indexes
+php_value upload_max_filesize 200M
+php_value post_max_size 200M
+php_value max_input_time 4600
+php_value max_execution_time 4600
+
+php_flag  log_errors on
+php_value error_log  logs/PHP_ERRORS.log
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    #RewriteBase /rest
+
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+    #Remove access to system folder
+    RewriteCond $1 ^system.*
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+
+    # Remove access to system folder
+    #RewriteCond $1 ^assets/cms/cache.*
+    #RewriteRule ^(.*)$ /index.php/$1 [L]
+
+    # Check if user is accessing a file or folder that already exists
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteRule . /Index.php [L]
+      RewriteRule ^(.*)$ index.php/$1 [L]
+
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    # If we don't have mod_rewrite installed, all 404's
+    # can be sent to Index.php and everything works as normal.
+    ErrorDocument 404 /index.php
+</IfModule>

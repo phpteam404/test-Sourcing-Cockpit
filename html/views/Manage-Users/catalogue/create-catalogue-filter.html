@@ -1,0 +1,358 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <div class="card-block p-0">
+        <form novalidate name="filterContractForm" style="padding: 0px;" ng-submit="filterContractForm.$valid && addContractFilter(filterCreate)">  
+            <div class="row">
+            <div class="form-group col-sm-6">
+                <label>{{'contract.domain' | translate}} *</label>
+                <select class="form-control"  name="domain" ng-model="filterCreate.master_domain_id" 
+                    ng-change="getContractDomainFieldList(filterCreate.master_domain_id)"  ng-disabled="disable"
+                    ng-options="item.id_master_domain as item.domain for item in contractFilter" required>
+                    <option value="">--{{'events.select_domain' | translate}}--</option>
+                        </select>
+                <span ng-if="filterContractForm.domain.$error.required && filterContractForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-6">
+                <label>{{'contract.field' | translate}} *</label>
+                <select class="form-control"  name="field_id" ng-model="filterCreate.master_domain_field_id" 
+                    ng-change="getContractCondition(filterCreate.master_domain_field_id)" ng-disabled="disable"
+                    ng-options="item.id_master_domain_fields as item.field_name for item in contractField" required>
+                    <option value="">--{{'events.select_field' | translate}}--</option>        
+                </select>
+                <span ng-if="filterContractForm.field_id.$error.required && filterContractForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label>{{'contract.condition' | translate}} *</label>
+                <select class="form-control" name="condition" ng-model="filterCreate.condition" required>
+                    <option value="">--{{'events.select_conditon' | translate}}--</option>
+                    <option value="=" ng-if="(feldName!='Attachment file name' && feldName!='Link Name' && feldName!='Link URL') && domainType!='Catalogue Attachments'">{{'contract.equals' | translate}}</option>
+                    <option value="like" ng-if="fieldType=='numeric_text' || fieldType=='free_text' || domainType=='Catalogue Attachments'">{{'contract.contain' | translate}}</option>
+                    <option value="<" ng-if="(fieldType=='date' || fieldType=='numeric_text') && domainType!='Catalogue Attachments'">{{'contract.smallerthan' | translate}}</option>
+                    <option value=">" ng-if="(fieldType=='date' || fieldType=='numeric_text') && domainType!='Catalogue Attachments'">{{'contract.greaterthan' | translate}}</option>
+                </select>
+                <span ng-if="filterContractForm.condition.$error.required && filterContractForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12" ng-if="filterCreate.master_domain_field_id">
+                <div ng-if="fieldType=='free_text'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <textarea type="text" ng-model="filterCreate.value" maxlength="100" class="form-control" name="value"  style="height: 80px;" required></textarea>
+                    <span ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='numeric_text'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <input type="text" class="form-control" maxlength="30" name="value" ui-number-mask="0"
+                        ng-model="filterCreate.value" required>
+                    <span ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                </div>
+                
+                <div  class="form-group col-sm-6 pl-0"ng-if ="fieldType=='date'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()" uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                            data-ng-model="filterCreate.value"  name="dateField" is-open="openCal"
+                            datepicker-options="{showWeeks:false}" show-button-bar="true" close-text="Close" readonly required/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <span class="error-message" ng-if="filterContractForm.dateField.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+                
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Relation name' && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" 
+                        ng-options="item.id_provider as item.provider_name for item in providerList | orderBy:'provider_name'" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Business Unit'  && (domainType=='Catalogue Information' || domainType=='Service Catalogue' )">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple  ng-model="filterCreate.value" name="value" class="chosen-choices" 
+                        ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Category '  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" 
+                        ng-options="opt.id_relationship_category as opt.relationship_category_name group by opt.type
+                                            for opt in relationshipCategoryList" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Template'  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" 
+                        ng-options="item.id_template as item.template_name for item in templateList" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Currency'  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_currency as item.currency_name for item in currencyList" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Owner'  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_user as item.name for item in buOwnerUsers" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Delegate'  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_user as item.user_name for item in delegates" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && domainType=='Catalogue Tags' && !fieldSelect">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_tag_option as item.tag_option_name for item in tagsDropdownList" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && fieldSelect=='contract' && domainType=='Catalogue Tags'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_contract as item.contract_name for item in selectedInfoContract" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && fieldSelect=='project' && domainType=='Catalogue Tags'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_project as item.contract_name for item in selectedInfoProject" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && fieldSelect=='relation' && domainType=='Catalogue Tags'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && fieldSelect=='catalogue' && domainType=='Catalogue Tags'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+
+
+
+                <!-- <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && domainType=='Catalogue Tags' && edittag!='1'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select  ng-model="filterCreate.value" class="form-control" name="value" required  
+                        ng-options="item.tag_option_name as item.tag_option_name for item in tagsDropdownList">
+                            <option value="">-- {{'general.select' | translate}} --</option>
+                        </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+
+                <div class="form-group col-sm-6 pl-0" ng-if="fieldType=='drop_down' && domainType=='Catalogue Tags' && edittag=='1'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select  ng-model="filterCreate.value[0]" class="form-control" name="value" required  
+                        ng-options="item.tag_option_name as item.tag_option_name for item in tagsDropdownList">
+                            <option value="">-- {{'general.select' | translate}} --</option>
+                        </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div> -->
+
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Recurrence'  && domainType=='Obligation & Rights'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id as item.name for item in recurrences"  required>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Notification Resend Recurrence'  && domainType=='Obligation & Rights'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id as item.name for item in resend_recurrences" required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Payment Periodicity'  && domainType=='Service Catalogue'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_payment_periodicity as item.payment_periodicity_name for item in periodicity"required>
+                    </select>
+                <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Responsible User'">
+                    <label>{{'contract.responsible_user_id' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true" 
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices w-100" 
+                        ng-options="item.id_user as item.name for item in eventResponsibleUsers" required>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Type'">
+                    <label>{{'general.type' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="">-{{'general.select' | translate}}-</option>
+                        <option value="Meeting">{{'providers.meeting' | translate}}</option>
+                        <option value="Email">{{'providers.email' | translate}}</option>
+                        <option value="Call">{{'providers.call' | translate}}</option>
+                        <option value="Follow-up">{{'providers.follow_up' | translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Status'  && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="Active">{{'general.active' | translate}}</option>
+                        <option value="Closed">{{'general.closed' | translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Invoice Status'  && domainType=='Contract Value'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="0">{{'contract.contract_dispute' | translate}}</option>
+                        <option value="1">{{'contract.contract_partial' | translate}}</option>
+                        <option value="2">{{'contract.contract_activated' | translate}}</option>
+                        <option value="3">{{'contract.contract_overdue' | translate}}</option>
+                        <option value="4">{{'contract.contract_draft' | translate}}</option>
+                        <option value="5">{{'contract.contract_paid' | translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Type' && domainType=='Obligation & Rights'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="Obligation">{{'documents.obligation'| translate}}</option>
+                        <option value="Right">{{'documents.right'| translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Applicable To' && domainType=='Obligation & Rights'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="Customer">{{'user.breadcrumb.customer'| translate}}</option>
+                        <option value="Relation">{{'user.breadcrumb.relation'|translate}}</option>
+                        <option value="Mutual">{{'user.breadcrumb.mutual'|translate}}</option>
+                        </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+
+                <div class="form-group col-sm-6 pl-0" ng-if="feldName=='Hierarchy' && domainType=='Catalogue Information'">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="single">{{'events.single' | translate}}</option>
+                        <option value="parent">{{'events.parent' | translate}}</option>
+                        <option value="sub">{{'events.sub' | translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6 pl-0" ng-if="(feldName=='Automatic Prolongation' && domainType=='Catalogue Information')||((feldName=='Email Notification'|| feldName=='Calendar')  && domainType=='Obligation & Rights')">
+                    <label>{{'contract.value' | translate}} *</label>
+                    <select chosen id="add-chosen" allow-single-deselect="true"
+                        multiple ng-model="filterCreate.value" name="value" class="chosen-choices" required>
+                        <option value="1">{{'general.yes' | translate}}</option>
+                        <option value="0">{{'general.no' | translate}}</option>
+                    </select>
+                    <span class="error-message" ng-if="filterContractForm.value.$error.required && filterContractForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer form-group col-sm-12 text-right m-t-3 mb-0 pr-1">
+                <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                            <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+            <div>
+        </form>
+    </div>
+</div>
+<style>
+ /* .advanced-filter-modal-header{
+    margin: 0 15px;
+    padding: 10px 0px;
+    border-bottom: 2px solid #cbcaca;
+} */
+/* .advanced-filter-modal-list i {
+    color: #a3a2a2;
+}
+.advanced-filter-modal-list i.fa-trash{
+    font-size: 16px;
+}  */
+.modal-footer{
+    padding-bottom: 0px;
+}
+.uib-button-bar button{
+    margin-right: 5px;
+}
+.uib-button-bar .btn-group,
+.uib-close{
+    float: none;
+}
+.uib-button-bar{
+    padding-bottom: 10px;
+}
+</style>

@@ -1,0 +1,243 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 col-md-12 p0">
+        <div class="row">
+            <div class="col-sm-12 pr0 clearfix" ng-if="discussionData.closed_discussions" ng-init="discussion_log=''">
+                <div class="form-group pull-right col-sm-4 pr0 mb5 clearfix" ng-if="discussionData.closed_discussions!=''">
+                    <select class="form-control" ng-model="discussion_log" ng-change="showbtn = true;getClosedDiscussions(discussion_log)" ng-options="item.id_contract_review_discussion as item.option_name for item in discussionData.closed_discussions">
+                        <option value=""> {{'discussion.view_old_disc' | translate}} </option>
+                    </select>
+                </div>
+                <div ng-show="showbtn" class="form-group pull-right col-sm-8 pr0 mb5 text-sm-right">
+                    <button class="btn btn-primary" ng-click="reloadDiscussions();showbtn=false">
+                        <i class="fa fa-arrow-left"></i>&nbsp;{{'discussion.curr_disc' | translate}}
+                    </button>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div ng-if="!loading" class="col-sm-12 white-bg p-1 card text-sm-center">
+                {{'general.loading' | translate}}
+            </div>
+            <div ng-show="!discussionData.review_discussion[0]" class="col-sm-12 white-bg p-1 card text-sm-center">
+                {{'discussion.no_discussions' | translate}}
+            </div>
+            <uib-accordion close-others="oneAtATime" ng-repeat="module in discussionData.review_discussion">
+                <div uib-accordion-group class="panel-default mb-h" heading="{{module.id_module}}" template-url="group-template.html" is-open="module.open"
+                style="border: 1px solid #ccc;">
+                    <uib-accordion-heading ng-click="module.open = !module.open" id="{{module.id_module}}" class="panel-title pointer bg-white">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': module.open, 'fa fa-plus-square-o': !module.open}"></i>
+                        <span class=" f16">{{module.module_name}} </span>
+                        <span class="f12 not-bold" ng-if="module.discussion_created_by">&nbsp;&nbsp;-&nbsp;{{'discussion.inited_by' | translate}} :&nbsp;
+                            <span class="gray f11">{{module.discussion_created_by}}</span>
+                        </span>
+                        <span class="f12 not-bold" ng-if="module.discussion_created_on">&nbsp;&nbsp;{{'discussion.date' | translate}} :&nbsp;
+                            <span class="gray f11">{{module.discussion_created_on | utcToLocal:'toLocalDate'}}</span>
+                        </span>
+                        <span class="f12 pull-right mr-1 green" ng-if="module.discussion_closed_on">&nbsp;&nbsp;{{'discussion.date' | translate}} :&nbsp;
+                            <span class="gray f11">{{module.discussion_closed_on | utcToLocal:'toLocalDate'}}</span>
+                        </span>
+                        <span class="f12 pull-right mr-1 green" ng-if="module.discussion_closed_by">{{'discussion.disc_closed_by' | translate}} :&nbsp;
+                            <span class="gray f11">{{module.discussion_closed_by}}</span>
+                        </span>
+                    </uib-accordion-heading>
+                    <button ng-if="module.diaaid == 'itako' && user1.iroori != 'itako'" class="btn btn-primary pull-right" type="submit" ng-click="saveQuestionComments(module,'init')">
+                        <i class="fa fa-dot-circle-o"></i>&nbsp;{{'contract.initiate' | translate}} {{'discussion.discussion' | translate}}
+                    </button>
+                    <button ng-if="((module.dclaalcd == 'itako' && user1.iroori != 'itako') && 
+                                    (contractInfo.contract_user_access=='bo' || contractInfo.contract_user_access=='bd' || contractInfo.contract_user_access=='ca'))"
+                        class="btn btn-danger pull-right" type="button" ng-click="closeDiscussion(module,$event)">
+                        <i class="fa fa-ban"></i>&nbsp;{{'discussion.close_discussion' | translate}}
+                    </button>
+                    <button ng-if="module.dsaasd == 'itako' && user1.iroori != 'itako'" class="btn btn-primary pull-right mr-1" type="submit"
+                        ng-click="saveQuestionComments(module,'save')">
+                        <i class="fa fa-save"></i>&nbsp;{{'discussion.save_discussion' | translate}}
+                    </button>
+                    <!--view for contributors-->
+                    <ul class="mb-0">
+                        <!-- <button ng-if="module.discussion_initiate_allowed == 1" class="btn btn-primary pull-right" type="submit"
+                                  ng-click="saveQuestionComments(module)">
+                             <i class="fa fa-dot-circle-o"></i>&nbsp;{{'contract.initiate' | translate}} {{'discussion.discussion' | translate}}
+                         </button>
+                         <button ng-if="module.discussion_close_allowed == 1"
+                                 class="btn btn-danger pull-right" type="button"
+                                 ng-click="closeDiscussion(module)">
+                             <i class="fa fa-ban"></i>&nbsp;{{'discussion.close_discussion' | translate}}
+                         </button>
+                         <button  ng-if="module.discussion_save_allowed == 1"
+                                  class="btn btn-primary pull-right mr-1" type="submit"
+                                  ng-click="saveQuestionComments(module)">
+                             <i class="fa fa-save"></i>&nbsp;{{'discussion.save_discussion' | translate}}
+                         </button>
+                        <span class="f14 pull-right mr-1" ng-if="module.discussion_closed_on">&nbsp;&nbsp;{{'general.on' | translate}} :&nbsp;
+                            <span class="gray f13">{{module.discussion_closed_on | utcToLocal:'date'}}</span></span>
+                        <span class="f14 pull-right mr-1" ng-if="module.discussion_closed_by">{{'discussion.disc_closed_by' | translate}} :&nbsp;
+                            <span class="gray f13">{{module.discussion_closed_by}}</span></span>-->
+                        <li ng-repeat="topic in module.topics" id="{{topic.id_topic}}">
+                            <span class="gray bold pl9 f15">{{$index+1}} . {{topic.topic_name | capitalize}}</span>
+                            <ul class="discuss_list pl24">
+                                <li ng-repeat="question in topic.questions" ng-init="iconShow[question.id_question]=question.status; row=b;"  id="{{question.id_question}}">
+                                    <div>
+                                        <label style="display: inline;" class="checkbox mb-0 f13" ng-if="module.dcaacd == 'itako'" 
+                                            ng-init="question.status = (question.status==1)?1:0"></label>
+                                            <input -ng-if="module.dcaacd == 'itako'" type="checkbox" ng-model="question.status" ng-false-value="0" ng-true-value="1" ng-checked="question.id_contract_review_discussion_question !=null"
+                                                name="{{question.id_question}}"> 
+                                                <span class="skyblue pointer" ng-if="module.dcaacd == 'itako'" 
+                                                ng-click="goFromDiscussion(question.id_question,topic,module)">{{question.question_text}}</span>
+                                        
+                                        <label style="display: inline;"  class="checkbox mb-0 skyblue pointer" ng-click="goFromDiscussion(question.id_question,topic,module)"
+                                            ng-if="module.dcaacd == 'annus' || user1.iroori == 'itako'">
+                                            {{$index+1}} . {{question.question_text}}
+                                        </label>
+
+                                        <a href="javascript:;" id="question_{{question.id_question}}_{{question.id_contract_review_discussion_question}}" ng-init="showIcon=(question.id_contract_review_discussion_question !=null) ? true:false;
+                                          showText = (question.status == 0)?false:true" ng-click="showme[question.id_question] = ! showme[question.id_question]"
+                                            ng-show="question.status == 1 && (!module.discussion_closed_by)">
+                                            <i class="icon-comment2" uib-tooltip="Comments"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-12 p0 form-group discussionAnswerParent">
+                                        <div class="col-sm-8 p0 discussionAnswer"  style="padding-left: 18px;">
+                                            <div class="col-sm-6 p0" style="margin-bottom: 5px;color: #080808;">
+                                                <label class="hand-symbol">{{'contract.current_value' | translate}} :</label>
+                                                <span ng-if="question.question_type == 'input'">
+                                                    <input type="text" class="form-control" readonly placeholder="{{'contract.module_questions.answer' | translate}}" ng-model="question.question_answer">
+                                                </span>
+                                                <span ng-if="question.question_type == 'dropdown' || question.question_type == 'radio'">
+                                                    <select class="form-control" ng-disabled="true" ng-model="question.question_answer" ng-options="item.option_value as item.option_name for item in question.options">
+                                                        <option value="">--{{'general.select' | translate}}--</option>
+                                                    </select>
+                                                </span>
+                                                <span ng-if="question.question_type == 'rag'">
+                                                    <div class="radio_widget">
+                                                        <span ng-repeat="option in question.options">
+                                                            <input type="radio" id="radio1_{{$index}}_{{question.id_question}}" name="same_{{question.id_question}}" value="{{option.option_value}}"
+                                                                checked ng-model="question.question_answer" disabled>
+                                                            <label disabled ng-if="option.option_name == 'G'" for="radio1_{{$index}}_{{question.id_question}}" class="first_label" uib-tooltip="Green"></label>
+                                                            <label disabled ng-if="option.option_name == 'A'" for="radio1_{{$index}}_{{question.id_question}}" class="sec_label" uib-tooltip="Amber"></label>
+                                                            <label disabled ng-if="option.option_name == 'R'" for="radio1_{{$index}}_{{question.id_question}}" class="third_label" uib-tooltip="Red"></label>
+                                                            <label disabled ng-if="option.option_name == 'N/A'" for="radio1_{{$index}}_{{question.id_question}}" class="fourth_label"
+                                                                uib-tooltip="Not Applicable"></label>
+                                                        </span>
+                                                    </div>
+                                                </span>
+                                                <span ng-if="question.question_type == 'date'">
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                                                            ng-model="question.question_answer" name="date" is-open="openCal2" style="padding:8px 5px !important"
+                                                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly/>
+                                                        <span class="input-group-btn ">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-6" style="margin-bottom: 5px;">
+                                                <label class="hand-symbol" style="padding-left: 10px;color: #080808;">{{'contract.second_opinion' | translate}} :</label>
+                                                <span ng-if="question.question_type === 'input'">
+                                                    <input type="text" class="form-control" ng-readonly="true" readonly placeholder="{{'contract.module_questions.answer' | translate}}" ng-model="question.second_opinion">
+                                                </span>
+                                                <span ng-if="question.question_type === 'dropdown' || question.question_type === 'radio'">
+                                                    <select class="form-control" ng-model="question.second_opinion" disabled ng-options="item.option_name as item.option_name for item in question.options" value="item.option_name">
+                                                        <option value="">--{{'general.select' | translate}}--</option>
+                                                    </select>
+                                                </span>
+                                                <span ng-if="question.question_type === 'rag'">
+                                                    <div class="radio_widget">
+                                                        <span ng-repeat="option in question.options track by $index" disabled>
+                                                            <input type="radio" id="radio2_{{module.id_module}}-{{$index}}-{{question.id_question}}" name="radio2_{{question.id_question}}"
+                                                                disabled value="{{option.option_name}}" ng-model="question.second_opinion"
+                                                                checked>
+                                                            <label disabled ng-if="option.option_name == 'G'" for="radio2_{{module.id_module}}-{{$index}}-{{question.id_question}}" class="first_label"
+                                                                uib-tooltip="Green"></label>
+                                                            <label disabled ng-if="option.option_name == 'A'" for="radio2_{{module.id_module}}-{{$index}}-{{question.id_question}}" class="sec_label"
+                                                                uib-tooltip="Amber"></label>
+                                                            <label disabled ng-if="option.option_name == 'R'" for="radio2_{{module.id_module}}-{{$index}}-{{question.id_question}}" class="third_label"
+                                                                uib-tooltip="Red"></label>
+                                                            <label disabled ng-if="option.option_name == 'N/A'" for="radio2_{{module.id_module}}-{{$index}}-{{question.id_question}}"
+                                                                class="fourth_label" uib-tooltip="Not Applicable"></label>
+                                                        </span>
+                                                    </div>
+                                                </span>
+                                                <span ng-if="question.question_type === 'date'">
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                                                            ng-model="question.second_opinion" name="date" is-open="openCal2" style="padding:8px 5px !important"
+                                                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly/>
+                                                        <span class="input-group-btn ">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ng-form name="questionForm" ng-show="showme[question.id_question] && user1.iroori != 'itako'" class="pb-1">
+                                        <div class="form-group" id="question_{{question.id_question}}" ng-show="((question.status == 1) || showme[question.id_question]) && (module.dcmaamcd == 'itako')">
+                                            <textarea ng-if="recent_remarks" class="form-control" name="id_question" cols="30" rows="3" ng-init="question.remarks = ''"
+                                                placeholder="{{'contract.comment' | translate}}" ng-model="question.remarks" required></textarea>
+                                            <textarea ng-if="!recent_remarks" class="form-control" name="id_question" cols="30" rows="3" placeholder="{{'contract.comment' | translate}}" ng-model="question.remarks"
+                                                required></textarea>
+                                            <span class="error-message" ng-show="myForm.$submitted && questionForm.id_question.$error.required">
+                                                {{'general.required_field' |translate}}</span>
+                                        </div>
+                                    </ng-form>
+                                    <div ng-init="recent_remarks = question.remarks" ng-class="(recent_remarks)? 'discussion_comments':''">
+                                        <div class="black pl-1 f12 discussion_by" ng-if="question.change_log" ng-repeat="log in question.change_log">
+                                            <div class="black font-italic" ng-if="log.remarks">{{log.remarks}}</div>
+                                            <span style="font-size: 11px;" class="font-italic gray" ng-if="log.created_by_name">
+                                                <span style="color:black" class="">{{'general.by' | translate}}</span>&nbsp; {{log.created_by_name}}</span>
+                                            <span style="font-size: 11px;" class="font-italic gray" ng-if="log.created_by_name">
+                                                <span style="color:black" class="">{{'discussion.date' | translate}}</span>&nbsp;{{log.created_on | utcToLocal:'toLocalDate'|checkEmpty}}</span>
+                                        </div>
+                                        <div class="black pl-1 f13 font-italic ">{{recent_remarks}}</div>
+                                        <div class="pl-1 f11 discussion_by" ng-if="recent_remarks">
+                                            <span class="font-italic gray" ng-if="question.created_by">
+                                                <span style="color:black" class="">{{'general.by' | translate}}</span>&nbsp; {{question.created_by}}</span>
+                                            <span class="font-italic gray" ng-if="question.created_by">
+                                                <span style="color:black" class="">{{'discussion.date' | translate}}</span>&nbsp;{{question.created_on | utcToLocal:'toLocalDate'|checkEmpty}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- Finalised comments -->
+                    <div ng-if="module.is_auto_close==1 && discussionData.review_information[0].finalize_comments" class="p0 finalised_comments_div">
+                        <div class="display-inline-block mb-0 f14 bold">
+                            <i class="fa fa-comment f11 gray" style="font-size: 11px"></i>&nbsp;{{'contract.finalised_comments' | translate}}</div>
+                        <div class="finalised_comments black pl-1 f13 font-italic">
+                            {{discussionData.review_information[0].finalize_comments}}
+                            <span class="f12 pull-right mr-1 black" ng-if="discussionData.review_information[0].updated_on">{{'contract.date' | translate}} :&nbsp;
+                                <span class="gray f11">{{discussionData.review_information[0].updated_on|utcToLocal:'date'}}</span>
+                            </span>
+                            <span class="f12 pull-right mr-1 black" ng-if="discussionData.review_information[0].updated_user_name">{{'contract.by' | translate}} :&nbsp;
+                                <span class="gray f11">{{discussionData.review_information[0].updated_user_name}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title pointer  bg-white" ng-click="toggleOpen()" id="id_{{heading}}">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': module.open, 'fa fa-plus-square-o': !module.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body pt-0" ng-transclude></div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,539 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div ng-if="dashboardData.contract_review_id == 0" class="col-sm-12  white-bg p-1  text-sm-center card"
+                style="margin-top: 20px;">
+                {{'dashboard.no_reviews' | translate}}
+            </div>
+            <div class="col-lg-8 pl0 large-widget"
+                ng-if="((isNaN(dashboardData.contract_review_id)===false && dashboardData.contract_review_id != 0) || (isNaN(dashboardData.contract_review_id)===true && dashboardData.contract_review_id.length > 0))">
+                <div class="card col-lg-12 p0">
+                    <h5>{{contractInfo.contract_name}}</h5>
+                    <div class="card-block border-left-none">
+                        <div class="h4 m-b-0">{{'contract.status' | translate}}</div>
+                        <span class="widget-span orange">{{dashboardData.data.review_status | capitalize}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'contract.review_date' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'contract.execute_date' | translate}}</div>
+                        <span
+                            class="widget-span">{{dashboardData.data.review_date | utcToLocal: 'date' | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0">{{'contract.current_status' | translate}}</div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.review_score == 'Red'">
+                            <span class="red-active"></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.review_score == 'Amber'">
+                            <span class=""></span>
+                            <span class="amber-active"></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.review_score == 'Green'">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class="green-active"></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="!dashboardData.review_score">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <span class="" ng-if="dashboardData.review_score=='N/A'">{{dashboardData.review_score}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'templates.template_name' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'workflows.workflow_name' | translate}}</div>
+                        <span class="widget-span">{{dashboardData.template_name | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block" ng-if="(dashboardData.prev !=0) || (dashboardData.next !=0)">
+                        <div class="prev-next-btns text-sm-right">
+                            <a href="#" ng-if="dashboardData.prev !=0" class="prev-btn"
+                                ng-click="goToPrev(dashboardData)">
+                                <i class="fa fa-angle-double-left"></i>
+                                {{'contract.module_questions.prev' | translate}}</a>
+                            <a href="#" ng-if="dashboardData.next !=0" class="next-btn"
+                                ng-click="goToNext(dashboardData)">
+                                {{'contract.module_questions.next' | translate}} <i
+                                    class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 p0 mb-h">
+                    <div class="outer">
+                        <div class="inner1">
+                            <div class="table contract-list-view fixed-layout-cls1">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="report-contract-cls1" style="width: 180px;">&nbsp;</th>
+                                            <th>Dec 01, 2017</th>
+                                            <th>Feb 28, 2018</th>
+                                            <th>May 03, 2018</th>
+                                            <th>Jan 03, 2019</th>
+                                            <th>Apr 23, 2019</th>
+                                            <th class="report-contract-cls2">{{'dashboard.current_score' | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="inside-table-body1">
+                                        <tr class="border-list contract-list-view-border" ng-repeat-start="module in dashboardData.modules">
+                                            <td class="td-view-heading report-contract-cls1" 
+                                                style="width: 209px;text-align: left;">
+                                                <span style="text-overflow: ellipsis;overflow: hidden;
+                                                        white-space: nowrap;display:inline-block;
+                                                        width:208px;font-size:12px;" title="{{module.module_name}}">
+                                                    {{module.module_name}}
+                                                </span>
+                                            </td>                                            
+                                            <td>
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class="red-active"></span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class="green-active"></span>
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class="amber-active"></span>
+
+                                                </div>
+                                            </td>
+                                            <td >
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class=""></span>
+                                                </div>
+                                            </td>
+                                            <td >
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class="red-active"></span>
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="status-widget font-weight-bold ng-scope">
+                                                    <span class="red-active"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr class="border-space"></tr> -->
+                                        <tr ng-repeat-end class="child-topics">
+                                            <td colspan="7" style="border-right: 1px solid #cfd8dc;" class="border-space">
+                                                <table>
+                                                    <tbody>
+                                                        <tr ng-repeat="topic in module.topics" class="border-list-child">
+                                                            <td class="td-view-sub-heading report-contract-cls1" title="{{topic.topic_name}}"
+                                                                style="width: 204px;text-align: left;">
+                                                                <span style="text-overflow: ellipsis;overflow: hidden;
+                                                                            white-space: nowrap;display:inline-block;
+                                                                            width:204px;font-size:12px;">
+                                                                        {{topic.topic_name}}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class="green-active"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class="red-active"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class="green-active"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class="amber-active"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class="red-active"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="status-widget font-weight-bold ng-scope">
+                                                                    <span class=""></span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- <tr class="border-list contract-list-view-border">
+                                            <td class="td-view-heading report-contract-cls1"><span>0.</span>Opinion Sheet</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td class="report-contract-cls2">&nbsp;</td>
+                                            <div class="tr-inside-table">
+                                                <tbody class="inside-table-body">
+                                                    <tr>
+                                                        <td class="td-view-sub-heading report-contract-cls1">
+                                                            <div>Opinion procurement</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                        <td class="report-contract-cls2">
+                                                            <div class="status-widget font-weight-bold ng-scope"
+                                                                ng-if="dashboardData.review_score == 'Red'">
+                                                                <span class="red-active"></span>
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-view-sub-heading report-contract-cls1">
+                                                            <div>Opinion legal</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion</div>
+                                                        </td>
+                                                        <td class="report-contract-cls2">
+                                                            <div></div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-view-sub-heading report-contract-cls1">
+                                                            <div>Opinion risk management</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                        <td class="report-contract-cls2">
+                                                            <div>Opinion1</div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </div>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 icons-widget pr0"
+                ng-if="((isNaN(dashboardData.contract_review_id)===false && dashboardData.contract_review_id != 0) || (isNaN(dashboardData.contract_review_id)===true && dashboardData.contract_review_id.length > 0))">
+                <div class="card-group">
+                    <!-- <div class="card" ng-click="exportReview()">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-dashboard5"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.report' | translate}}</small>
+                        </div>
+                    </div> -->
+                    <div class="card" ng-click="exportDashboardData()">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-export2"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.export' | translate}}</small>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-dashboard5"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.dashboard' | translate}}</small>
+                        </div>
+                    </div>
+                    <!-- <div class="card" ng-click="goToChangeLog()" ng-if="(user.user_type!='external')">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-template-manage"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.change_log' | translate}}</small>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+   
+    .outer {
+        position: relative;
+    }
+
+    tr.border-list-child td:first-child{
+        padding-left: 6px;
+    }
+    .contract-list-view table {
+        width: 100%;
+    }
+
+    .contract-list-view thead tr th {
+        color: #2196f3;
+        border-bottom: 0px solid #cfd8dc;
+
+    }
+
+    .contract-list-view table th,
+    .contract-list-view table td {
+        border-top: 0px solid #cfd8dc;
+    }
+
+    .contract-list-view table tbody .border-list {
+        border-top: 0px solid #cfd8dc;
+        border-bottom: 1px solid #cfd8dc;
+    }
+
+    .contract-list-view table tr:last-child {
+        border-bottom: 0px solid #cfd8dc;
+    }
+
+    .contract-list-view thead tr th:last-child {
+        color: #464646;
+    }
+
+    .contract-list-view tbody tr td {
+        background-color: #fff;
+    }
+
+    .contract-list-view tbody tr td:first-child {
+        border-left: 1px solid #cfd8dc;
+        border-right: 0px solid #cfd8dc;
+    }
+
+    .contract-list-view tr td:last-child {
+        border-right: 1px solid #cfd8dc;
+    }
+
+    .contract-list-view .td-view-heading span {
+        padding: 0px 5px 0px 0px;
+    }
+
+    .contract-list-view .td-view-heading {
+        font-weight: 600;
+    }
+
+    .contract-list-view .td-view-sub-heading {
+        padding: 3px 0px 3px 5px;
+        color: #2196f3;
+    }
+
+    .contract-list-view tbody tr:last-child .td-view-sub-heading {
+        padding-bottom: 3px;
+    }
+
+    .child-topics{
+        border-bottom: 10px solid #efefef;
+    
+    }
+    .child-topics:after{
+        content: '';
+    display: block;
+    height: 10px;
+    position: relative;
+    background-color: #efefef;
+    width: 100%;  
+    }
+
+    .child-topics tbody tr td{
+        text-align: center;
+    }
+
+    .child-topics tbody tr td:first-child {
+        border-left: none;
+    }
+    .child-topics tbody tr{
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .child-topics tbody tr:last-child{
+        border-bottom: none;
+    }
+    .child-topics tbody tr td:last-child {
+        border-right: none;
+    }
+
+    .contract-list-view tr td div {
+        border-right: 0px solid #ccc;
+        border-left: 0px solid #ccc;
+    }
+
+
+    .inside-table-body::after {
+        content: '';
+        display: block;
+        height: 10px;
+        background-color: #efefef;
+    }
+
+    .contract-list-view tbody tr td {
+        padding: 3px 0px 0px;
+        text-align: center;
+    }
+
+    .contract-list-view tbody tr:first-child td:last-child {
+        padding-right: 1px;
+    }
+
+    /* .contract-list-view tbody tr:last-child td {
+        padding-bottom: 10px;
+    } */
+
+    /* .contract-list-view tbody tr td:last-child {
+        padding-right: 10px;
+        padding-left: 10px;
+    } */
+
+
+    .fixed-layout-cls1 {
+        table-layout: fixed;
+        width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .contract-list-view thead tr th {
+        font-size: 12px;
+        font-weight: normal;
+        padding-bottom: 4px;
+        text-align: center;
+    }
+
+    .contract-list-view tbody {
+        background-color: #fff;
+    }
+
+    .border-list tr td {
+        padding: 0.45rem;
+    }
+
+    .border-list tr td:first-child {
+        padding-left: 0.45rem;
+    }
+
+    .border-list tr td:last-child {
+        padding-right: 0.45rem;
+    }
+
+    .border-list td:first-child {
+        padding-left: 0.45rem !important;
+    }
+
+
+
+    .border-list td:first-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+
+    .border-list td:last-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+
+    .border-list td {
+        border-top: 1px solid #efefef;
+    }
+
+    .tr-inside-table tr:last-child td {
+        border-bottom: 1px solid #efefef !important;
+    }
+.report-contract-cls1{
+
+}
+.child-topics table{
+    border-bottom: 1px solid #cfd8dc !important;
+}
+tr.contract-list-view-border td:first-child{
+    padding-bottom: 4px !important;
+    padding-top: 8px !important;
+}
+.border-list td{
+    padding: 0px;
+}
+.border-list td div{
+    padding: 6px !important;
+    border-top:  1px solid #cfd8dc !important;
+}
+.contract-list-view table tbody .border-list td{
+    padding: 0px !important
+}
+.contract-list-view table tbody .border-list .td-view-heading span{
+    padding: 6px 0px 4px 5px!important;
+    border-top:  1px solid #cfd8dc !important;
+    font-size: 12px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //  $("tr.border-space").after('<tr class="tr-spacer"/>');
+
+});
+
+</script>

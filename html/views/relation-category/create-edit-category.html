@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'category-relation.category' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="categoryForm" ng-submit="categoryForm.$valid && save(category)">
+<div class="modal-body clearfix" id="modal-body">
+
+    <div class="col-md-12 form-group">
+        <label>{{'category-relation.name' | translate}} *</label>
+        <input type="text" ng-model="category.relationship_category_name" class="form-control" name="relationship_category_name" required/>
+        <span class="error-message" ng-if="categoryForm.relationship_category_name.$error.required && categoryForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    <div class="form-group col-sm-6">
+        <label >{{'category-relation.quadrant' | translate}} *</label>
+        <select class="form-control"  ng-model="category.relationship_category_quadrant" name="relationship_category_quadrant" required>
+            <option value="">-- {{'general.select' | translate}} --</option>
+            <option value="Q1">{{'category-relation.Q.1' | translate}}</option>
+            <option value="Q2">{{'category-relation.Q.2' | translate}}</option>
+            <option value="Q3">{{'category-relation.Q.3' | translate}}</option>
+            <option value="Q4">{{'category-relation.Q.4' | translate}}</option>
+        </select>
+        <span class="error-message" ng-if="categoryForm.relationship_category_quadrant.$error.required && categoryForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    <div class="form-group col-sm-6" ng-if="isEdit">
+        <label >{{'general.status' | translate}} *</label>
+        <select class="form-control"  ng-model="category.relationship_category_status" required>
+            <option value="">-- {{'general.select' | translate}} --</option>
+            <option value="1">{{'general.active' | translate}}</option>
+            <option value="0">{{'general.inactive' | translate}}</option>
+        </select>
+        <span class="error-message" ng-if="categoryForm.relationship_category_quadrant.$error.required && categoryForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-primary">
+    <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+    <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+</div>
+</form>

@@ -1,0 +1,147 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12 p0 contract-overview">
+            <div class="card" st-pipe="callServer" st-table="contributors">
+                <div class="col-sm-12 tableSelect-header" >
+                   <!-- start -->
+                    <div class="form-group col-sm-2 pl0 custom-field pt10 w155">                        
+                        <select class="form-control" id="select" name="select1" size="1" 
+                             ng-model="contribution_type"  ng-change ="filterByContributorRole(contribution_type)">
+                            <option value="">--{{'contract.contributorRole'| translate}}--</option>
+                            <option value="0"> {{'general.expert' | translate}} </option>
+                            <option value="1"> {{'general.validator' | translate}}</option>
+                            <option value="3"> {{'user.breadcrumb.relation' | translate}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 p0 table-search pull-right " style="top: 10px;">
+                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                               st-search="search_key" st-input-event ="change">
+                        <i class="fa icon-search"></i>
+                    </div>
+                </div>
+                <table class="table table-custom table-striped table-hover action-items-table">
+                    <thead>
+                        <tr>
+                            <th st-sort="name" class="contributor_name">{{'customer.admin.name' | translate}}</th>
+                            <th st-sort="bu_name" class="contributor_business_name">{{'bussiness.bussiness_company' | translate}} </th>
+                            <th st-sort="email" class="contributor_email">{{'user.profile.email' | translate}}</th>
+                            <th st-sort="contract_name" class="contributor_contract_name">{{'contract.contract_project_name' | translate}}</th>
+                            <th st-sort="" class="contributor_activity_topic">{{'contract.activity_topic' |translate}}</th>
+                            <th class="hand-symbol" class="contributor_module_name">{{'contract.module_name' | translate}}</th>
+                            <th class="contributor_contribution">{{'contract.contribution' | translate}}</th>
+                            <th st-sort="user_status" class="contributor_status">{{'general.status' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in contributors">
+                            <td class="contributor_name custom-ellipsis">
+                                <span class="ellipsis-block" title="{{row.name}}"> {{row.name | checkEmpty}}</span>
+                            </td>
+                            <td class="contributor_business_name">
+                                    <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                                    <span class="contributor-multi-selected">
+                                        <a class="ellipis"  style="width:175px;" title="{{row.bu_name[0]}}" ng-if="!row.bu_name[1]">{{row.bu_name[0]}}</a>
+                                        <a class="ellipis"  ng-if="row.bu_name[1]" >{{'general.multi_selected' | translate}}</a>
+                                        <a ng-if="row.bu_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h "
+                                            uib-popover-template="dynamicPopover.templateUrl"
+                                            popover-placement="right" popover-trigger="'outsideClick'"
+                                            class="btn btn-default"></a>
+                                    </span>
+                                </td>
+                            <td class="contributor_email custom-ellipsis">
+                                <span class="ellipsis-block" title="{{row.email}}"> {{row.email  | checkEmpty}}</span>
+                            </td>
+                            <td  class="contributor_contract_name custom-ellipsis skyblue pointer" ng-click="goToCurrentModulePage(row)">
+                                <span class="ellipsis-block" title="{{row.contract_name}}">{{row.contract_name  | checkEmpty}}</span>
+                                
+                            </td>
+                            <td class="contributor_activity_topic custom-ellipsis skyblue pointer" title="{{row.review_name}}" ng-click="goToCurrentReviewPage(row)">
+                                <span class="ellipsis-block">{{row.review_name|checkEmpty}}</span>
+                            </td>
+                            <td class="contributor_module_name">
+                                <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.module_name[0]">---</span>
+                                <span class="contributor-multi-selected">
+                                    <a class="ellipis"  style="width: 130px;" title="{{row.module_name[0]}}" ng-if="!row.module_name[1]">{{row.module_name[0]}}</a>
+                                    <a class="ellipis"  ng-if="row.module_name[1]" >{{'general.multi_selected' | translate}}</a>
+                                    <a ng-if="row.module_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h "
+                                        uib-popover-template="dynamicPopover1.templateUrl"
+                                        popover-placement="right" popover-trigger="'outsideClick'"
+                                        class="btn btn-default"></a>
+                                </span>
+                            </td>
+                            <td class="contributor_contribution">{{row.contribution_type  | checkEmpty}}</td>
+                            <td class="contributor_status">
+                                <span ng-if="row.user_status == 1" class="green">{{'general.active' | translate}}</span>
+                                <span ng-if="row.user_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    <tbody ng-if="isLoading">
+                        <tr><td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                    </tbody>
+                    <tbody ng-if="emptyTable">
+                        <tr><td colspan="8" class="text-sm-center" style="width: 100%;">{{'general.no_data' | translate}} </td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-sm-center" colspan="8">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <!-- <div class="" ng-repeat="item in row.bu_name track by $index" ng-if=" $index != 0"> -->
+    <div class="" ng-repeat="item in row.bu_name" >
+        <span>{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="myPopoverTemplate1.html">
+    <!-- <div class="" ng-repeat="item in row.bu_name track by $index" ng-if=" $index != 0"> -->
+    <div class="" ng-repeat="item in row.module_name" >
+        <span>{{item}}</span>
+    </div>
+</script>
+<style>
+    .contributor_name{
+        width:11%;
+    }
+    .contributor_business_name{
+        width:16%;
+    }
+    .contributor_email{
+        width:12%;
+    }
+    .contributor_contract_name{
+        width:14%;
+    }
+    .contributor_activity_topic{
+        width:19%;
+    }
+    .contributor_module_name{
+        width:10%;
+    }
+    .contributor_contribution{
+        width:10%;
+    }
+    .contributor_status{
+        width:6%;
+    }
+    .contributor-multi-selected{
+        display: flex;
+        align-items: center;
+    }
+</style>

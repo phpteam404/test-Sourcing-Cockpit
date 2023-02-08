@@ -1,0 +1,97 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="card">
+    <form novalidate name="documentpdfForm" ng-submit="documentpdfForm.$valid && addDocumentPdf(documentpdf)">
+       <div class="modal-body">
+        <div class="col-sm-12 m-t-3 form-group p0">
+            <attachment-files ng-model="file.attachment" name="file"></attachment-files>
+            <attachment-list-template get-data="documentpdf.attachment.documents" ng-model="file.delete"></attachment-list-template>
+        </div>
+     
+        <div class="clearfix"></div>
+   
+      
+         <!-- <div> -->
+            <div class="form-group col-sm-4">
+                <label>{{'contract.bu_owner' | translate}} *</label>
+                <select chosen class="form-control chosen-choices"
+                    id="add-chosen"
+                    onchange="chosen()" 
+                    placeholder-text-single="'Search bussiness Unit Owner(s) with Name/Email/Business Unit/User Role'"
+                    name="owner_id" ng-model="documentpdf.owner_id" 
+                    ng-options="item.id_user as item.name for item in buOwnerUsers"
+                    required>
+                    <option value="">-- {{'general.select' |translate}} --</option>
+                </select>
+              
+        </select>
+                <span class="error-message" ng-if="documentpdfForm.owner_id.$error.required && documentpdfForm.$submitted">{{'general.required_field' |translate}}</span>
+            </div> 
+            
+            
+        
+
+        <div class="form-group col-sm-4" >
+            <label>{{'contract.delegates' | translate}} </label>
+            <select chosen class="form-control chosen-choices"  id="add-chosen" onchange="chosen()"  allow-single-deselect="true"
+                placeholder-text-single="'Search bussiness Unit Delegate(s) with Name/Email/Business Unit/User Role'"
+                name="delegate" ng-model="documentpdf.delegate_id" ng-options="item.id_user as item.user_name for item in delegates">
+            <option value="">-- {{'general.select' |translate}} --</option>
+        </select>
+            
+        </div>
+       
+     
+        
+        <div class="form-group col-sm-4">
+            <label>{{'documents.template_name' | translate}} *</label>
+            <select chosen class="form-control chosen-choices" required allow-single-deselect="true" style="height: 40px;" placeholder-text-single="'Search Delegate User(s) with Name/Email/Business Unit/User Role'"
+            ng-model="documentpdf.id_intelligence_template" name="template_id" ng-options="item.id_intelligence_template as item.template_name for item in templates">
+             <option value="">-- {{'general.select' |translate}} --</option> 
+        </select>
+        <span class="error-message" ng-if="documentpdfForm.template_id.$error.required && documentpdfForm.$submitted">{{'general.required_field' |translate}}</span>
+        </div>
+       
+        
+        
+        <div class="clearfix"></div>
+  </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success">
+                {{bottom | translate}}
+                <i class=" fa fa-play-circle-o" style="color: black; font-size: 15px;"></i> </button>  
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+             
+        </div>
+
+
+    </form>
+    
+</div>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<style>
+    .chosen-single {
+        height: 34px !important;
+        border-radius: 0px !important;
+    }
+
+    .chosen-single span {
+        padding: 3px !important;
+    }
+    /* .modal-content{
+    padding: 0px 20px;
+    border: 1px solid #ccc;
+        } */
+    .modal-content .card{
+       border: none;
+       margin: 0;
+    }  
+</style>

@@ -1,0 +1,100 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="card">
+    <form novalidate name="documentpdfForm" ng-submit="documentpdfForm.$valid && addDocumentPdf(document)">
+        <div class="p-1">
+            <div class="p-b-2">
+                <p>
+                    <a download="{{document.original_document_name}}" target="_blank" href="#" ng-click="downloadPdf(pdfInfo,'pdf')" download="{{document.original_document_name}}" class="ellipis" style="width: 99%;">
+                        <i class="fa fa-download" style="vertical-align: middle;margin-right: 6px;"></i>{{document_name}}</a>
+                    <span class="display-block f12 pl20">
+                        <span class="gray">{{'attachment.uploaded_by' | translate}}:</span>&nbsp;<span>{{uploaduser}}</span>
+                        <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{uploadOn | utcToLocal:'toLocalDate'}}</span>
+                    </span>
+                </p>
+                <p ng-show="document.length==0" class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+            </div>
+
+   <hr>
+      
+        
+            <div class="form-group col-sm-4 pl-0">
+                <label>{{'contract.bu_owner' | translate}} *</label>
+                <select chosen class="form-control chosen-choices"
+                    id="add-chosen"
+                    onchange="chosen()" 
+                    placeholder-text-single="'{{'normal.placeholder_business_owner_role' | translate}}'"
+                    name="owner_id" ng-model="document.owner_id" 
+                    ng-options="item.id_user as item.name for item in buOwnerUsers"
+                    required>
+                    <option value="">-- {{'general.select' |translate}} --</option>
+                </select>
+              
+        </select>
+                <span class="error-message" ng-if="documentpdfForm.owner_id.$error.required && documentpdfForm.$submitted">{{'general.required_field' |translate}}</span>
+            </div> 
+            
+            
+    
+
+        <div class="form-group col-sm-4" >
+            <label>{{'contract.delegates' | translate}} </label>
+            <select chosen class="form-control chosen-choices"  id="add-chosen" onchange="chosen()"  allow-single-deselect="true"
+                placeholder-text-single="'{{'normal.placeholder_business_delegate_role' | translate}}'"
+                name="delegate" ng-model="document.delegate_id" ng-options="item.id_user as item.user_name for item in delegates">
+            <option value="">-- {{'general.select' |translate}} --</option>
+        </select>
+            
+        </div>
+       
+     
+        
+        <div class="form-group col-sm-4">
+            <label>{{'documents.template_name' | translate}} *</label>
+            <select chosen class="form-control chosen-choices" required allow-single-deselect="true" style="height: 40px;" 
+            placeholder-text-single="'{{'normal.placeholder_delegate_Search' | translate}}'"
+            ng-model="document.intelligence_template_id" name="template_id" ng-options="item.id_intelligence_template as item.template_name for item in templates">
+             <option value="">-- {{'general.select' |translate}} --</option> 
+        </select>
+        <span class="error-message" ng-if="documentpdfForm.template_id.$error.required && documentpdfForm.$submitted">{{'general.required_field' |translate}}</span>
+        </div>
+       
+        
+        
+        <div class="clearfix"></div>
+    </div>
+        <div class="modal-footer">           
+            <button type="submit" class="btn btn-sm btn-success">
+                {{bottom | translate}}
+                <i class=" fa fa-play-circle-o" style="color: black; font-size: 15px;"></i> </button>   
+                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+    
+</div>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<style>
+    .chosen-single {
+        height: 34px !important;
+        border-radius: 0px !important;
+    }
+
+    .chosen-single span {
+        padding: 3px !important;
+    }
+    /* .modal-content{
+    padding: 0px;
+        } */
+        .modal-content .card{
+    border: none;
+    margin: 0;
+        }
+</style>

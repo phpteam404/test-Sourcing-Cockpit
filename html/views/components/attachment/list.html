@@ -1,0 +1,30 @@
+<div ng-form="a_form" class="form-horizontal form-bordered" novalidate>
+    <div class="clearfix">
+        <div class="col-sm-12 attachment-list p0 mt-h" ng-show="uploadedDocuments.length">
+            <div class="list-header clearfix ">
+                <label class="col-sm-6 pl0 p-t-3 f16 m-0">{{title}}</label>
+            </div>
+            <div class="list-table">
+                <ul class="list-items">
+                    <li class="clearfix border-b" ng-repeat="row in uploadedDocuments">
+                        <div class="touch-attacment-box p-h clearfix">
+                            <div class="touch-attacment-box-icon"
+                                 data-fileType="{{row.document_mime_type}}"><i class=""></i>
+                            </div>
+                            <a class="col-sm-6 p0">
+                                <p class="f14 text-line m-0" title="{{row.document_name}}">{{row.document_name}}</p>
+                            </a>
+                            <div class="">
+                                <a href="javascript:;" uib-tooltip="Delete"
+                                   ng-click="deleteFile($index,row)"
+                                   class="link-icon-blue"><i class="icon-trash f13"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div ng-hide="uploadedDocuments.length  > 0" class="text-center"><p class="f12">{{'attachment.no_attachment' | translate}}</p> </div>
+            </div>
+        </div>
+    </div>
+</div>

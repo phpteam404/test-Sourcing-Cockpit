@@ -1,0 +1,110 @@
+<span>
+    <div class="form-group col-sm-4 mb-0 pl0 p-t-3 template-filter">
+        <select class="form-control"
+                ng-model="topic.template_module_id"
+                ng-change="topicListTable(topic)"
+                ng-options="item.id_template_module as item.module_name for item in topicModules">
+            <!--<option value="">&#45;&#45;{{'templates.select_module' | translate}}&#45;&#45;</option>-->
+        </select>
+    </div>
+    <table class="table table-custom table-striped table-hover">
+        <!--<table ng-show="topicModuleId" class="table table-custom table-striped table-hover">-->
+        <thead>
+        <tr>
+            <td colspan="8">
+                <div class="col-sm-12 clearfix p0">
+                    <!--<div class="form-group col-sm-4 mb-0 pl0 p-t-3">
+                        <select class="form-control"
+                                ng-model="topicModuleId"
+                                st-input-event="change"
+                                st-search="topicModuleId"
+                                ng-options="item.id_template_module as item.module_name for item in topicModules">
+                            <option value="">&#45;&#45;{{'templates.select_module' | translate}}&#45;&#45;</option>
+                        </select>
+                    </div>-->
+                    <div class="action-head mb0 pt-h clearfix">
+                                <span class="pull-right ml-h" ng-if="topic.template_module_id!='all'">
+                                    <button class="btn btn-sm btn-primary" type="button" ng-click="loadTopicModal(topic.template_module_id)">
+                                        <i class="icon-plus"></i>{{'general.add' | translate}}</button>
+                                </span>
+                        <div class="col-sm-3 p0 table-search pull-right">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                   ng-model="topic.search"
+                                   ng-change="topicListTable(topic)">
+                            <i class="fa icon-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>{{'topic.topic_name' | translate}}</th>
+            <th ng-if="topic.template_module_id=='all'">{{'module.module_name' | translate}}</th>
+            <th>#{{'module.question_count' | translate}}</th>
+            <th>{{'general.actions' | translate}}</th>
+        </tr>
+        </thead>
+        <tbody ng-show="!isLoading" ng-if="topic.template_module_id=='all'">
+        <tr ng-repeat="row in topicList">
+            <td>{{row.topic_name}}</td>
+            <td>{{row.module_name}}</td>
+            <td>{{row.topics_questions_count}}</td>
+            <td>
+                <a href="#" title="{{'general.delete' | translate}}" class="icon-trash gray" ng-click="deleteTemplateTopic(row)"></a>
+            </td>
+        </tr>
+        </tbody>
+        <tbody ng-show="!isLoading" ng-if="topic.template_module_id!='all'" ui-sortable="sortableOptions" ng-model="topicList">
+        <tr ng-repeat="row in topicList">
+            <td>{{row.topic_name}}</td>
+            <td>{{row.topics_questions_count}}</td>
+            <td>
+                <a href="#" title="{{'general.delete' | translate}}" class="icon-trash gray" ng-click="deleteTemplateTopic(row)"></a>
+            </td>
+        </tr>
+        </tbody>
+        <tbody ng-show="isLoading">
+        <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+        </tbody>
+        <tbody ng-show="emptyTable">
+        <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+        </tbody>
+        <!-- <tfoot>
+             <tr>
+                 <td class="text-center" colspan="8">
+                     <div st-pagination="" class="text-sm-center"></div>
+                 </td>
+             </tr>
+         </tfoot>-->
+    </table>
+</span>
+<script type="text/ng-template" id="templates-topic-modal.html">
+    <div class="modal-header" >
+        <h6 class="modal-title">{{title | translate}} {{'topic.topic' | translate}}
+            <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="topicForm" ng-submit="addTopics(topics)">
+        <div class="modal-body clearfix" ng-if="allTopics[0].topic_name">
+            <ul>
+                <li ng-repeat="topic in allTopics">
+                    <label class="checkbox" for="{{topic.$index}}">
+                        <input type="checkbox" id="{{topic.$index}}"
+                               ng-model="topics[topic.id_topic]"
+                               ng-true-value="1"
+                               ng-false-value="0"
+                               name="inline-checkbox1">{{topic.topic_name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="!allTopics[0].topic_name">
+            <div class="text-sm-center text-center pb-1 pt-1">{{'general.no_data'|translate}}</div>
+        </div>
+        <div class="modal-footer">
+            <button  ng-if="allTopics[0].topic_name" type="submit"
+                     class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>

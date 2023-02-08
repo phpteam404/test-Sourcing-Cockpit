@@ -1,0 +1,47 @@
+<div>
+    <form  novalidate name="editorForm"class="editor-form" ng-submit="saveEditorContent(question)">
+        <div>
+            <!-- <textarea name="editor1"  ng-model="question"></textarea> -->
+            <textarea ckeditor="" ng-model="question" class="width-full min-height100 f12 p10 darkcolor" ></textarea>   
+            <div class="editor-bottom">
+            <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="fa fa-dot-circle-o"></i> {{'general.ok' | translate}}</button>
+                <button type="button" ng-click="closeEditor()" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.close' | translate}}</button>
+            </div>
+        </div>
+    </form>
+</div>
+    
+    <!-- 
+    <script>
+        var editor = CKEDITOR.replace( 'editor1' );
+    console.log( 'Total bytesbefore: ' + CKEDITOR.instances.editor1.getData().length );
+    
+    editor.on( 'change', function( evt,question) {
+    
+        var modifiedData= evt.editor.getData();
+        console.log("oooo",modifiedData);
+    
+        console.log( 'Total bytes after: ' + evt.editor.getData().length );
+        console.log( 'Total bytes after: ' + evt.editor.getData());
+    
+    });
+    </script> -->
+    
+    <style>
+
+        .editor-form .cke_textarea_inline{
+            margin-bottom: 60px;
+        }
+        .editor-form{
+            min-height: 300px;
+            padding: 20px;
+        }
+        .editor-bottom{
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+    

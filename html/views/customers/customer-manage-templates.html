@@ -1,0 +1,82 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="templateList">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary" ng-click="showForm()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'customer.link_template' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{'templates.template_name' | translate}}</th>
+                        <th>{{'templates.assigned' | translate}}</th>
+                        <th>{{'general.status' | translate}}</th>
+                        <th>{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody  ng-show="!isLoading">
+                    <tr ng-repeat="row in templateList">
+                        <td>{{row.template_name}}</td>
+                        <td>
+                            <span href="javascript:;"  style="padding-left: 5px;" ng-if="!row.customer[0].assigned_to">---</span>
+                            <a href="javascript:;" target="_blank"
+                                ui-sref="app.customer.edit-customer({name:row.customer[0].assigned_to,id:(row.customer[0].customer_id | encode)})">
+                                {{row.customer[0].assigned_to}}</a>
+                            <span ng-if="row.customer[1].assigned_to">..</span>
+                            <a ng-if="row.customer[1].assigned_to" href="javascript:;" class="icon-plus-circle gray ml-h"  uib-popover-template="dynamicPopover.templateUrl"
+                               popover-placement = "right"
+                               popover-trigger="'outsideClick'" class="btn btn-default"></a>
+                        </td>
+                        <td><span class="green" ng-if="row.template_status == 1">{{'general.active' | translate}}</span>
+                            <span class="red"  ng-if="row.template_status == 0">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td>
+                            <!-- <a href="javascript:;" ng-click="createTemplate(row)" class="icon-pencil gray mr-1" title="{{'general.edit' | translate}}"></a> -->
+                            <!-- <a href="javascript:;" ng-if="row.template_status == 1"
+                               ui-sref="app.templates.templates-view({name:(row.template_name),id:(row.id_template | encode),type:'module'})"
+                               class="icon-gear gray mr-1" title="Manage Templates"></a> -->
+                            <a href="javascript:;"
+                                ui-sref="app.templates.templates-preview({name:(row.template_name),id:(row.id_template | encode),type:'module'})"
+                                class="icon-eye gray mr-1" title="{{'general.preview' | translate}}"></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr><td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<!-- Navbar -->
+<div ng-include="'views/common/navbar.html'"></div>
+<!-- Navigation -->
+<div ng-include="'views/common/sidebar-nav.html'"></div>
+<!-- Main content -->
+<main class="main">
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb {{breadcrumbcolor}}" breadcrumb>
+        <!-- <i class="{{icon}}"></i> -->
+        <!-- <span style="{{class}}">{{icon}}</span>
+        <h6 ng-show="displayName"><span class="bold gray">{{module}}</span>  -<span class="orange"> {{displayName}} </span></h6>
+        <ncy-breadcrumb></ncy-breadcrumb> -->
+        <span class="{{class}}" style="font-size: 12px;">{{icon}}</span>
+        <div>
+            <h6 ng-show="displayName"><span class="bold gray">{{module}}</span>  -<span class="orange"> {{displayName}} </span></h6>
+            <ncy-breadcrumb></ncy-breadcrumb>
+        </div>
+    </ol>
+    <div class="container-fluid">
+        <div class="loader-wrap" ng-hide="!hidePreloader">
+            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            <!-- <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i> -->
+        </div>
+        <div id="loader" class="loader-wrap" data-loading>
+            <!-- <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i> -->
+            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+        </div>
+
+        <ui-view></ui-view>
+
+    </div>
+    <!-- /.conainer-fluid -->
+</main>
+<div ng-include="'views/common/footer.html'"></div>

@@ -1,0 +1,19 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+.idea
+.idea/*
+.vscode
+.vscode/*
+*.iml
+out
+gen
+
+
+/html/node_modules/
+/html/dist/
+/html/bower_components/
+/rest/uploads/
+/rest/application/logs/
+/rest/downloads/
+/rest/temp
+
+

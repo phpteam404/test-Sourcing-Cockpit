@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'module.module' | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="moduleForm" ng-submit="moduleForm.$valid && save(module)">
+    <div class="modal-body clearfix" id="modal-body">
+        <div class="col-md-12 form-group">
+            <label>{{'module.module_name' | translate}} *</label>
+            <input type="text" ng-model="module.module_name" class="form-control" name="module_name" required/>
+            <span class="error-message" ng-if="moduleForm.module_name.$error.required && moduleForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="col-md-12 form-group">
+            <label>{{'templates.template_name' | translate}}</label>
+            <select class="form-control" ng-init="getTemplates()" ng-model="module.template_id" name="template_id"
+                    ng-options="item.id_template as item.template_name for item in templates">
+                <option value="">-- {{'templates.all_templates' | translate}} --</option>
+            </select>
+        </div>       
+        <div class="form-group col-sm-4" ng-if="isEdit">
+            <label>{{'general.status' | translate}} *</label>
+            <select class="form-control" ng-model="module.module_status" name="module_status" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="1">{{'general.active' | translate}}</option>
+                <option value="0">{{'general.inactive' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="moduleForm.module_status.$error.required && moduleForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="form-group col-sm-4" ng-if="isEdit">
+            <label>{{'general.static' | translate}} *</label>            
+            <div class="onoffswitch form-inline mt0">
+                <input type="checkbox" name="onoffswitch_toggle"
+                        ng-init="module.static = (module.static == 1) ? 1:0"
+                        ng-model="module.static"
+                        ng-true-value="1" ng-false-value="0" 
+                        class="onoffswitch-checkbox" id="{{module.module_id}}" checked>
+                <label class="onoffswitch-label assessment-switch mb-0" for="{{module.module_id}}">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+        </button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+            {{'general.cancel' | translate}}
+        </button>
+    </div>
+</form>
+

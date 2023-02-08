@@ -1,0 +1,137 @@
+<div class="animated fadeIn">
+    <div class="row" ng-if="permission['update']">
+        <div class="col-md-12 user-profile p0" ng-if="permission['view']">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{'user.profile.my_profile' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form name="form" class="form-horizontal profile-form" ng-submit="form.$valid && updateProfile(user)" novalidate>
+                        <div class="col-md-12 p-0">
+                            <div class="col-md-2">
+                                <div class="form-group ">
+                                    <label class="control-label display-block">{{'general.profile_photo' | translate}}</label>
+                                    <div class="image-wrap mt5 cursor-pointer" ngf-select="uploadUserImage($file)"
+                                         ngf-pattern="'image/*'" >
+                                        <img ngf-thumbnail="userImage" ng-show="userImage!=''" class="image-view" />
+                                        <img ng-show="userImage==undefined || userImage==''"
+                                             ngf-thumbnail="user.profile_image || 'img/default-img.png'" class="image-view" alt="Image"/>
+                                        <div class="image-actions"><i class="fa fa-pencil"></i></div>
+                                    </div>
+                                    <a ng-show='trash' uib-tooltip="Delete" href="javascript:;" class="delete-img" ng-click="userLogoRemove()"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-md-10 p0 pt-2">
+                                <div class="form-group col-md-6 pl0">
+                                    <label class="col-md-3 form-control-label">{{'user.profile.f_name' | translate}} *</label>
+                                    <div class="col-md-9 p-0">
+                                        <input type="text" name="first_name" ng-model="user.first_name" class="form-control has-danger" placeholder="{{'user.profile.f_name' | translate}}" required>
+                                        <span class="error-message" ng-if="form.first_name.$error.required && form.$submitted"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 p-0">
+                                    <label class="col-md-3 form-control-label">{{'user.profile.l_name' | translate}} *</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="last_name" ng-model="user.last_name"
+                                               class="form-control" placeholder="{{'user.profile.l_name' | translate}}" required>
+                                        <span class="error-message" ng-if="form.last_name.$error.required && form.$submitted"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6 p-0">
+                                <label class="col-md-3 form-control-label">{{'user.profile.gender'| translate}}</label>
+                                <div class="col-md-9 p-0" style="display:flex;"
+                                    ng-init="user.gender = (user.gender=='')?'female':'male'">
+                                    <label class="radio-inline mr-1">
+                                        <input type="radio" ng-model="user.gender" name="gender" value="male"
+                                            ng-change="getValue(user.gender)"> {{'user.profile.male' | translate}}
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="user.gender" name="gender" value="female"
+                                            ng-change="getValue(user.gender)"> {{'user.profile.female' |
+                                        translate}}
+                                    </label>
+                                    <label class="radio-inline otherGender pl-1" style="padding-right:5px;">
+                                        <input type="radio" name="gender" value="other" ng-model="user.gender"
+                                            ng-change="getValue(user.gender)">
+                                    </label>
+                                    <span>
+                                        <input type="text" class="form-control" ng-disabled="disableField" value="Other"
+                                            ng-required="user.gender=='other'" name="otherGender"
+                                            ng-model="user.other_gender_value">
+                                        <span class="error-message"
+                                            ng-if="form.otherGender.$error.required && form.$submitted">{{'general.required_field'
+                                            |translate}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                                <div class="form-group col-md-6 p-0">
+                                    <label class="col-md-3 form-control-label">{{'user.profile.email' |translate}} *</label>
+                                    <div class="col-md-9">
+                                        <input type="email" name="email" ng-model="user.email" class="form-control" required ng-readonly="!(user.access=='wa' || user.access=='ca')">
+                                        <!--<span class="error-message" ng-if="form.email.$error.required && form.$submitted"></span>-->
+                                        <span ng-if="form.email.$error.email && form.$submitted" class="error-message">{{'general.enter_valid_email' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-9 p0" style="padding-left: 6px" ng-if ="access =='bo' || access =='bd'">
+                                        <div>
+                                        <label>{{'obligations.additional_rights' | translate}}</label>
+                                    </div>
+                                        <label class="checkbox d-block" for="contribution_type">
+                                            <input type="checkbox" name="inline-checkbox1" id="contribution_type" ng-disabled="true" ng-model="user.contribution_type" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.admin.validation_role' | translate}}
+                                        </label>
+                                        <label class="checkbox d-block" for="content_administator_relation">
+                                            <input type="checkbox" name="inline-checkbox1" id="content_administator_relation" ng-disabled="true" ng-model="user.content_administator_relation" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.content_administrator_relation' | translate}}
+                                        </label>
+                                        <label class="checkbox d-block" for="content_administator_review_templates">
+                                            <input type="checkbox" name="inline-checkbox1" id="content_administator_review_templates" ng-disabled="true" ng-model="user.content_administator_review_templates" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.content_administrator_review' | translate}}
+                                        </label>
+                                        <label class="checkbox d-block" for="content_administator_task_templates">
+                                            <input type="checkbox" name="inline-checkbox1" id="content_administator_task_templates" ng-disabled="true" ng-model="user.content_administator_task_templates" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.content_administrator_task' | translate}}
+                                        </label>
+                                        <label class="checkbox d-block" for="content_administator_currencies">
+                                            <input type="checkbox" name="inline-checkbox1" id="content_administator_currencies" ng-disabled="true" ng-model="user.content_administator_currencies" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.content_administrator_currencies' | translate}}
+                                        </label>
+                                        <label class="checkbox d-block" for="content_administator_catalogue">
+                                            <input type="checkbox" name="inline-checkbox1" id="content_administator_catalogue" ng-disabled="true"
+                                                ng-model="user.content_administator_catalogue" ng-true-value="1" ng-false-value="0">
+                                            {{'normal.content_administrator_catalogue' | translate}}
+                                        </label>
+                                                <label class="checkbox d-block" for="legal_and_content_administator">
+                                            <input type="checkbox" name="inline-checkbox1" id="legal_and_content_administator" ng-disabled="true" ng-model="user.legal_and_content_administator" ng-true-value="1"
+                                                ng-false-value="0"> {{'customer.legal_contract_Administrator' | translate}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6 p-0" ng-if="access!='wa'">
+                                    <label class="col-md-3 form-control-label">{{'customer.language' | translate}} *</label>
+                                    <div class="col-md-9">
+                                    <select class="form-control" style="margin-left: -17px;" name="language_id" ng-model="user.language_id" required 
+                                        ng-options="item.id_language as item.language_name for item in language">
+                                        <option value="">-{{'general.select' | translate}}-</option>
+                                    </select>
+                                    <span class="error-message" ng-if="form.language_id.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                                </div> 
+                                </div>
+                                        <div class="form-group col-md-12 text-xs-right pt-2" ng-if="permission['update']">
+                                    <button type="submit" class="btn btn-sm btn-primary">{{'general.update' | translate}}</button>
+                                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger" style="padding-right:10px"> {{'general.cancel'|translate}}</button>
+                                        <!--<a type="button" class="btn btn-sm btn-danger" ui-sref="app.main">{{'general.cancel' | translate}}</a>-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

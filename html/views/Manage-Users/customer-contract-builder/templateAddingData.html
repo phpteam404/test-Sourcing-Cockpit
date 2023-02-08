@@ -1,0 +1,25 @@
+
+
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{name}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f16"></a>
+        </h6>
+    </div>
+
+    <div class="modal-body clearfix">
+    <form  novalidate name="templateData"  ng-submit="saveModuleContent(question)">
+        <div>
+        <label>{{enter_name}}</label>
+        <input type="text" class="form-control white-bg bg-white" ng-model="question">
+    </div>
+
+    <div class="pull-right" style="padding-top :10px;">
+        <button class="btn btn-sm btn-primary" type="submit">
+            <i class="fa fa-dot-circle-o"></i>&nbsp;{{bottom | translate}}
+        </button>
+        <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+            <i class="fa fa-ban"></i> &nbsp;{{'general.cancel' | translate}}
+        </button>
+    </div>
+    </form>
+    </div>

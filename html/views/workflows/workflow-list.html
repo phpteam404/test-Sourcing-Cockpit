@@ -1,0 +1,210 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="workflowList">
+                <thead>
+                    <tr>
+                        <td colspan="7">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="onlyactive1">
+                                        <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                    ng-true-value="1" ng-false-value="0"
+                                                    ng-model="req.status"
+                                                    ng-checked="req.status == 1"
+                                                    ng-change="getModulesByStatus(req.status)"
+                                                    id="status">
+                                            <label class="onoffswitch-label assessment-switch mb-0"
+                                                    for="status">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>                                    
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary btn-radius" ng-click="updateWorkflow()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                    <span class="pull-right ml-h" ng-if="import_access ==1 && user.access=='ca'">
+                                        <button class="btn btn-sm btn-success" ng-click="importWorkflows()" type="button"><i class="fa fa-download"></i>&nbsp;
+                                            {{'general.import' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>                                   
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="module_name" class="st-sort-ascent st-sort-descent">{{'workflows.workflow_name' | translate}}</th>
+                        <th st-sort="topic_count" class="st-sort-ascent st-sort-descent">{{'module.topic_count' | translate}}</th>
+                        <th st-sort="question_count" class="st-sort-ascent st-sort-descent">{{'module.question_count' | translate}}</th>
+                        <th st-sort="relation_question_count" class="st-sort-ascent st-sort-descent">{{'normal.no_of_relation_questions' | translate}}</th>
+                        <th st-sort="module_status">{{'general.status' | translate}}</th>
+                        <th class="hand-symbol"  ng-if="user.access=='wa'">{{'general.import' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-show="workflowList.length>0" ng-repeat="row in workflowList">
+                        <td>{{row.module_name}}</td>
+                        <td>{{row.topic_count}}</td>
+                        <td>{{row.question_count}}</td>
+                        <td>{{row.relation_question_count}}</td>
+                        <td>
+                            <span  ng-if="row.module_status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span  ng-if="row.module_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>                        
+                        <td  ng-if="user.access=='wa'">
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                        ng-init="row.import_status = (row.import_status == '1') ? 1:0"
+                                           ng-model="row.import_status"
+                                           ng-true-value="1" ng-false-value="0"
+                                           ng-checked="row.import_status == 1"
+                                           ng-change="updateModuleStatic(row,false)"
+                                           id="{{row.module_name}}_{{row.import_status}}" checked>
+                                    <label class="onoffswitch-label assessment-switch mb-0"
+                                           for="{{row.module_name}}_{{row.import_status}}">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </td>
+                        <td>
+                            <a href="javascript:;" title="{{'general.edit' | translate}}" class="gray icon-edit mr-1" ng-click="updateWorkflow(row)"></a>
+                            <a ng-if="row.module_status == 1" href="javascript:;" title="{{'module.manage_topic' | translate}}" ng-click="manageTopics(row)" class="gray mr-1"><i class="icon-gear"></i></a>
+                            <a ng-if="row.module_status == 1" href="javascript:;" title="Manage Workflow" ng-click="manageWorkflow(row)" class="mr-h gray"><i class="fa fa-sort-alpha-asc"></i></a>
+                            <!-- <a ng-if="row.module_status == 1" href="javascript:;" title="Preview Workflow" ng-click="previewWorkflow(row)" class="mr-h gray"><i class="icon-eye"></i></a> -->
+                        </td>
+                    </tr>
+                    <tr ng-show="workflowList.length<=0"><td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+<select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="workflow-modal.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{title | translate}} {{'workflows.workflow' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="workflowForm" ng-submit="workflowForm.$valid && save(module)">
+        <div class="modal-body clearfix" id="modal-body">
+            <div class="col-md-12 form-group">
+                <label>{{'workflows.workflow_name' | translate}} *</label>
+                <input type="text" ng-model="module.module_name" class="form-control" name="module_name" required/>
+                <span class="error-message" ng-if="workflowForm.module_name.$error.required && workflowForm.$submitted">{{'general.required_field' | translate}}</span>
+            </div>             
+            <div class="form-group col-sm-4" ng-if="isEdit">
+                <label>{{'general.status' | translate}} *</label>
+                <select class="form-control" ng-model="module.module_status" name="module_status" required>
+                    <option value="">-- {{'general.select' | translate}} --</option>
+                    <option value="1">{{'general.active' | translate}}</option>
+                    <option value="0">{{'general.inactive' | translate}}</option>
+                </select>
+                <span class="error-message" ng-if="workflowForm.module_status.$error.required && workflowForm.$submitted">{{'general.required_field' | translate}}</span>
+            </div>
+            <div class="form-group col-sm-4" ng-if="isEdit && user.access=='wa'">
+                <label>{{'general.import' | translate}} *</label>            
+                <div class="onoffswitch form-inline mt0">
+                    <input type="checkbox" name="onoffswitch_toggle"
+                            ng-init="module.import_status = (module.import_status == 1) ? 1:0"
+                            ng-model="module.import_status"
+                            ng-true-value="1" ng-false-value="0" 
+                            class="onoffswitch-checkbox" id="{{module.module_id}}" checked>
+                    <label class="onoffswitch-label assessment-switch mb-0" for="{{module.module_id}}">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+            </button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+                {{'general.cancel' | translate}}
+            </button>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="import-workflow-modal.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{title | translate}} {{'workflows.workflow' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+        </h6>
+    </div>
+    <form novalidate name="templateForm" ng-submit="templateForm.$valid && saveTemplate(template)">
+        <div class="modal-body clearfix" id="modal-body">               
+            <div class="col-md-12 form-group" style="margin-bottom: 0px; padding: 0px;">
+                <table class="table table-custom table-striped table-hover" st-pipe="getTemplatesToImport" st-table="workflows" >
+                    <thead>
+                        <th>Task Name</th>
+                        <th style="text-align: right;"># Topics</th>
+                        <th style="text-align: right;"># Questions</th>
+                        <th style="text-align: center;"> Action</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in workflows">
+                            <td>{{item.template_name}}</td>
+                            <td class="" style="text-align: right;">{{item.topics_count}}</td>
+                            <td class="" style="text-align: right;">{{item.topics_questions_count}}</td>
+                            <td style="text-align: center;">
+                                <a href="javascript:;" ng-click="importWorkflow(item);" class="green mr-1" title="Import">
+                                        <i class="fa fa-download"></i>
+                                </a>
+                                <a href="javascript:;" ng-click="preview(item);" class="gray mr-1" title="Preview"> 
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-center" colspan="6">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="totalRecords2>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages2(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>              
+        </div>
+    </form>
+</script>

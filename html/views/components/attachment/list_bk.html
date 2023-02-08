@@ -1,0 +1,73 @@
+<div ng-form="a_form" class="form-horizontal form-bordered" novalidate>
+    <div class="clearfix">
+        <div class="col-sm-12 attachment-list p0" ng-show="uploadedDocuments.length > 0">
+            <div class="list-table">
+                <ul class="list-headers clearfix">
+                    <li class="col-sm-1 text-center"></li>
+                    <li class="col-sm-5">{{'general.document_name' | translate}}</li>
+                    <li class="col-sm-5 ">{{'providers.description' | translate}}</li>
+                    <li class="col-sm-1"></li>
+                </ul>
+                <ul class="list-items">
+                    <li class="clearfix border-bottom" uploadedDocuments
+                        ng-repeat=" uploadedDocument in uploadedDocuments">
+                        <div class="col-sm-1 text-center" upload-file data-fileType="{{ uploadedDocument.document_mime_type }}"><i
+                                class=""></i></div>
+                        <div class="col-sm-5 lh12">
+                            <!--<p class="f14">{{ uploadedDocument.document_name | getFileName:uploadedDocument.document_name }}</p>-->
+                            <p class="f14 text-line mb0" title="{{uploadedDocument.document_type_name}}">
+                                {{uploadedDocument.document_type_name }} </p>
+                            <span class="ash f11">{{'general.created_by' | translate}}: {{uploadedDocument.username}},</span>
+                            <span class="ash f11" ng-bind="uploadedDocument.date | date:'mediumDate'"></span>
+                        </div>
+                        <div class="col-sm-5 word-break">
+                            <p class="f12">{{ uploadedDocument.document_description }}</p>
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <ul>
+                                <li class="custom-list attch-li">
+                                    <a href="javascript:;" class="menu-toggle mt5 dropdown-toggle"
+                                       data-toggle="dropdown"><i class="fa fa-ellipsis-v f16"></i></a>
+                                    <ul class="dropdown-menu cust-dropdown">
+                                        <li>
+                                            <a href="{{ uploadedDocument.full_path }}" class="darkcolor" download>
+                                                {{'general.download' | translate}}
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+
+                            </ul>
+                        </div>
+                          <ul class="list-group clearfix">
+                            <li class="list-group-item col-lg-11 col-sm-11 pull-right p0 clearfix lh12"
+                                ng-repeat="v in uploadedDocument.versions">
+                                <div class="col-sm-10">
+                                    <p class="f14 text-line mb0" title="{{v.document_name}}">
+                                        <strong>v-{{(uploadedDocument.versions.length)-($index)}}.0 </strong>
+                                        {{uploadedDocument.document_type_name }}
+                                    </p>
+                                    <span class="ash f11">{{'general.created_by' | translate}}: {{v.username}},</span>
+                                    <span class="ash f11">{{v.date | date:'mediumDate'}}</span>
+                                </div>
+                                <div class="col-sm-1">
+                                    <a href="javascript:;" class="menu-toggle mt5 dropdown-toggle"
+                                       data-toggle="dropdown"><i class="fa fa-ellipsis-v f16"></i></a>
+                                    <ul class="dropdown-menu cust-dropdown">
+                                        <li>
+                                            <a href="{{ uploadedDocument.full_path }}" class="darkcolor" download>
+                                                {{'general.download' | translate}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--<div ng-hide="uploadedDocuments.length  > 0" class="text-center"><p class="f12">No Attachments</p> </div>-->
+            </div>
+        </div>
+    </div>
+</div>

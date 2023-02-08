@@ -1,0 +1,125 @@
+<div class="modal-header" ng-class="(data.action_item)?'pb-0':''">
+    <h6 class="modal-title lh14" id="modal-title">
+        <span>{{title | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f14"></a>
+        </span>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <form novalidate name="secondOpinionForm" ng-submit="secondOpinionForm.$valid && saveSecondOpinion(options)">
+        <div class="form-group col-sm-12 p0">
+            <div class="col-sm-12 p0">
+                <label class="col-sm-12 p0 mb5">{{'questions.question' | translate}}</label>
+                <label class="gray">{{question.question_text}}</label>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 p0">
+                <label class="col-sm-12 p0 mb5">{{'contract.saved_value' | translate}}</label>
+                <span ng-if="question.question_type == 'input'">
+                    <input type="text" class="form-control" placeholder="{{'contract.module_questions.answer' | translate}}" name="current_value"  ng-model="question.question_answer"
+                    readonly ng-readonly="true">
+                </span>
+                <span ng-if="question.question_type == 'dropdown'">
+                    <div class="col-sm-12 p0">
+                        <select class="form-control"  ng-disabled="true" name="current_value" ng-model="question.question_answer" ng-options="item.option_value as item.option_name for item in question.options">
+                            <option value="">--{{'general.select' | translate}}--</option>
+                        </select>
+                    </div>
+                </span>
+                <span ng-if="question.question_type == 'radio'">
+                    <select class="form-control" ng-model="question.question_answer"  ng-disabled="true" name="current_value" ng-options="item.option_value as item.option_name for item in question.options">
+                        <option value="">--{{'general.select' | translate}}--</option>
+                    </select>
+                </span>
+                <span ng-if="question.question_type == 'rag'" ng-model="question.question_answer"  disabled>
+                    <div class="radio_widget">
+                        <span ng-repeat="option in question.options">
+                            <input type="radio" id="radio2_{{$index}}_{{question.id_question}}" name="current_value"  value="{{option.option_value}}"
+                                checked ng-model="question.question_answer" disabled>
+                            <label disabled ng-if="option.option_name == 'G'" for="radio2_{{$index}}_{{question.id_question}}" class="first_label" uib-tooltip="Green"></label>
+                            <label disabled ng-if="option.option_name == 'A'" for="radio2_{{$index}}_{{question.id_question}}" class="sec_label" uib-tooltip="Amber"></label>
+                            <label disabled ng-if="option.option_name == 'R'" for="radio2_{{$index}}_{{question.id_question}}" class="third_label" uib-tooltip="Red"></label>
+                            <label disabled ng-if="option.option_name == 'N/A'" for="radio2_{{$index}}_{{question.id_question}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                        </span>                        
+                    </div>
+                </span>
+                <span ng-if="question.question_type == 'date'">
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                            ng-model="question.question_answer" name="date" is-open="openCal2"
+                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly/>
+                        <span class="input-group-btn ">
+                            <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                </span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 p0">
+                <label class="col-sm-12 p0 mb5">{{'contract.second_opinion' | translate}} *</label>
+                <span ng-if="question.question_type == 'input'">
+                    <input type="text" class="form-control" placeholder="{{'contract.module_questions.answer' | translate}}" name="second_opinion" required ng-model="options.second_opinion">
+                </span>
+                <span ng-if="question.question_type == 'dropdown'">
+                    <div class="col-sm-12 p0">
+                        <select class="form-control" required name="second_opinion" ng-model="options.second_opinion" ng-options="item.option_name as item.option_name for item in question.options">
+                            <option value="">--{{'general.select' | translate}}--</option>
+                        </select>
+                    </div>
+                </span>
+                <span ng-if="question.question_type == 'radio'">
+                    <select class="form-control" ng-model="options.second_opinion" required name="second_opinion" ng-options="item.option_name as item.option_name for item in question.options">
+                        <option value="">--{{'general.select' | translate}}--</option>
+                    </select>
+                </span>
+                <span ng-if="question.question_type == 'rag'" ng-model="options.second_opinion">
+                    <div class="radio_widget">
+                        <span ng-repeat="option in question.options">
+                            <input type="radio" id="radio1_{{$index}}_{{question.id_question}}" name="second_opinion" required value="{{option.option_name}}"
+                                checked ng-model="options.second_opinion">
+                            <label ng-if="option.option_name == 'G'" for="radio1_{{$index}}_{{question.id_question}}" class="first_label" uib-tooltip="Green"></label>
+                            <label ng-if="option.option_name == 'A'" for="radio1_{{$index}}_{{question.id_question}}" class="sec_label" uib-tooltip="Amber"></label>
+                            <label ng-if="option.option_name == 'R'" for="radio1_{{$index}}_{{question.id_question}}" class="third_label" uib-tooltip="Red"></label>
+                            <label ng-if="option.option_name == 'N/A'" for="radio1_{{$index}}_{{question.id_question}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                        </span>
+                    </div>
+                </span>
+                <span ng-if="question.question_type == 'date'">
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                            ng-model="options.second_opinion" name="second_opinion" is-open="openCal3" required
+                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly/>
+                        <span class="input-group-btn ">
+                            <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                </span>
+                <span class="error-message" ng-if="secondOpinionForm.second_opinion.$error.required && secondOpinionForm.$submitted">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 p0">
+                <label class=" form-control-label" for="textarea-responsibility1">{{'contract.comment' | translate}} *</label>
+                <div class="form-group col-sm-12 p0">
+                    <textarea id="textarea-responsibility1" ng-model="options.remarks" name="remarks" rows="5" class="form-control" required></textarea>
+                    <span class="error-message" ng-if="secondOpinionForm.remarks.$error.required && secondOpinionForm.$submitted">{{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-12  p0">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                </div>
+            </div>
+    </form>
+    </div>
+    <style>
+        .chosen-single {
+            height: 28px !important;
+            border-radius: 0px !important;
+        }
+    </style>

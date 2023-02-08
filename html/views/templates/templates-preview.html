@@ -1,0 +1,294 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div ng-if="!templateModules.length>0" class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+                {{'templates.no_modules' | translate}}
+            </div>
+            <div class="col-lg-12 pl0 large-widget">
+                <div class="col-lg-12 p0 mb-h">
+                    <!--<uib-accordion close-others="oneAtATime" ng-repeat="module in templateModules">
+                        <div uib-accordion-group class="panel-default mb-h" heading="Selection Process"
+                             template-url="group-template.html" style="border: 1px solid #ccc;" >
+                            <uib-accordion-heading   ng-click="open(module)" is-open="status.open">
+                                <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.module_id]['open'],
+                                                                'fa fa-plus-square-o': !showData[module.module_id]['open']}"></i>
+                                {{module.module_name}}
+                            </uib-accordion-heading>
+                            <ul>
+                                <uib-accordion close-others="oneAtATime">
+                                    <div uib-accordion-group class="panel-default mb-h"
+                                         ng-repeat="topic in module.topics"  heading="Selection Process"
+                                         ng-init="topic.open=false;
+                                         showData[module.module_id]['topic'][topic.topic_id]['open'] =  showData[module.module_id]['topic'][topic.topic_id]['open'] ?
+                                                                                                        showData[module.module_id]['topic'][topic.topic_id]['open'] : false;"
+                                         is-open="showData[module.module_id]['topic'][topic.topic_id]['open']"
+                                         template-url="topic-template.html" is-disabled="true"
+                                         style="border: 1px solid #ccc;">
+                                        <uib-accordion-heading >
+                                            <i class="glyphicon"
+                                               ng-click="showData[module.module_id]['topic'][topic.topic_id]['open'] = !showData[module.module_id]['topic'][topic.topic_id]['open']"
+                                               ng-class="{'fa fa-minus-square-o': showData[module.module_id]['topic'][topic.topic_id]['open'],
+                                                          'fa fa-plus-square-o': !showData[module.module_id]['topic'][topic.topic_id]['open']}"></i>
+                                            <a href="#" ng-click="showTemplateTopicQuestions(module,topic)" class="pl14">{{topic.topic_name | capitalize}}</a>
+                                       </uib-accordion-heading>
+                                        <table class="table table-custom table-striped table-hover">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="row in topic.questions">
+                                                    <td>{{row.question_text}}</td>
+                                                    <td ng-if="row.question_type == 'input'">
+                                                        {{row.question_option_answer | checkEmpty}}
+                                                    </td>
+                                                    <td ng-if="row.question_type == 'dropdown'">
+                                                        <span>{{row.question_option_answer | checkEmpty}}</span>
+                                                    </td>
+                                                    <td ng-if="row.question_type == 'radio'">
+                                                        <span>{{row.question_option_answer | checkEmpty}}</span>
+                                                    </td>
+                                                    <td ng-if="row.question_type == 'rag'">
+                                                        <div class="radio_widget">
+                                                            <span ng-if="!row.question_option_answer">{{row.question_option_answer | checkEmpty}}</span>
+                                                            <a ng-if="row.question_option_answer == 'G'" class="f18"><i class="fa fa-check-circle green mr-h"></i></a>
+                                                            <a ng-if="row.question_option_answer == 'A'" class="f18"><i class="fa fa-check-circle orange mr-h"></i></a>
+                                                            <a ng-if="row.question_option_answer == 'R'" class="f18"><i class="fa fa-check-circle red"></i></a>
+                                                            <a ng-if="row.question_option_answer == 'N/A'" class="f18"><i class="fa fa fa-check-circle gray mr-h"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody ng-if="!load && topic.questions.length == 0">
+                                                <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                                            </tbody>
+                                            <tbody ng-if="load">
+                                                <tr><td colspan="5" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </uib-accordion>
+                            </ul>
+                        </div>
+                    </uib-accordion>-->
+                    <div class="col-lg-12 p0 mb-h sortable-divs">
+                        <div ng-repeat="module in templateModules track by $index" ng-init="moduleIndx=$index;" class="panel-default mb-h">
+                            <div class="handle">
+                                <span class="display-block" ng-click="open(module)" style="padding:6px !important;font-weight: 600;">
+                                     <i class="glyphicon pull-left"
+                                        style="font-size: 12px;margin-left: 4px;width: 15px;margin-right: 10px;line-height: 22px;cursor:pointer;"
+                                        ng-class="{'fa fa-minus-square-o': module.open, 'fa fa-plus-square-o': !module.open}"></i>
+                                    <a href="javascript:;" data-id-parent="{{$index}}" style="width: 90%;display: inline-block;">
+                                        {{module.module_name | capitalize}}
+                                    </a>
+                                </span>
+                                <div ng-show="module.open" class="sort-inner" style="padding:10px 15px;">
+                                    <div ng-repeat="topic in module.topics track by $index" class="main-topic"
+                                         ng-init="topicIndx=$index;"  data-id="{{topicIndx}}" data-array-id="{{moduleIndx}}">
+                                        <div class="topic" style="position:relative">
+
+                                        <span class="display-block" ng-click="open(topic)" style="cursor:pointer;padding:6px;font-weight: 600;">
+                                            <i class="glyphicon pull-left" style="font-size: 12px;cursor:pointer;line-height: 22px;margin-left: 4px;"
+                                               ng-class="{'fa fa-minus-square-o': topic.open, 'fa fa-plus-square-o': !topic.open}"></i>
+                                            <a href="#" ng-click="showTemplateTopicQuestions(module,topic);$event.stopPropagation();"
+                                               class="pl14" style="color: #2196f3 !important;">{{topic.topic_name | capitalize}}</a>
+                                        </span>
+                                            <div ng-if="topic.questions.length<=0" ng-show="topic.open">
+                                                <p style="padding:5px 5px 5px 30px;margin: 0">{{'questions.add_question_for_tree' | translate}}</p>
+                                            </div>
+                                            <div ng-show="topic.open" class="topic-question">
+                                                <table class="table table-custom table-striped table-hover">
+                                                    <thead>
+                                                        <!--<tr>
+                                                            <th>{{'questions.question' | translate}}</th>
+                                                            <th>{{'contract.module_questions.answer' | translate}}</th>
+                                                            <th>{{'questions.proof' | translate}}</th>
+                                                        </tr>-->
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="row in topic.questions" ng-class="{'relation-bg':row.relation_question==1}" class="main-topic main-topic-q">
+                                                            <td>{{row.question_text}}</td>
+                                                            <td ng-if="row.question_type == 'input'">
+                                                                <input type="text" class="form-control" ng-model="row.question_answer" disabled/>
+                                                            </td>
+                                                            <td ng-if="row.question_type == 'dropdown'">
+                                                                <select class="form-control" ng-model="row.question_answer" disabled
+                                                                        ng-options="item.option_name as item.option_name for item in row.options">
+                                                                    <option value="">--{{'general.select' | translate}}--</option>
+
+                                                                </select>
+                                                            </td>
+                                                            <td ng-if="row.question_type == 'radio'">
+                                                                <select class="form-control" ng-model="row.question_answer" disabled
+                                                                        ng-options="item.option_name as item.option_name for item in row.options">
+                                                                    <option value="">--{{'general.select' | translate}}--</option>
+                                                                </select>
+                                                            </td>
+                                                            <td ng-if="row.question_type == 'rag'">
+                                                                <div class="radio_widget w200">
+                                                                    <span ng-repeat="option in row.options">
+                                                                        <input type="radio" id="radio1_{{$index}}_{{row.question_id}}1" disabled name="same_{{row.question_id}}" value="{{option.option_value}}" checked  ng-model="row.question_answer">
+                                                                        <label ng-if="option.option_name == 'G'" for="radio1_{{$index}}_{{row.question_id}}" class="first_label" uib-tooltip="Green"></label>
+                                                                        <label ng-if="option.option_name == 'A'" for="radio1_{{$index}}_{{row.question_id}}" class="sec_label" uib-tooltip="Amber"></label>
+                                                                        <label ng-if="option.option_name == 'R'" for="radio1_{{$index}}_{{row.question_id}}" class="third_label" uib-tooltip="Red"></label>
+                                                                        <label ng-if="option.option_name == 'N/A'" for="radio1_{{$index}}_{{row.question_id}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                    
+                                                            <td style="width: 20%;" ng-if="row.question_type == 'date'">
+                                                                <div class="">
+                                                                    <div class="input-group clearfix form-group-custom">
+                                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                                                                            ng-model="row.question_answer" name="date" is-open="openCal2"  disabled
+                                                                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly/>
+                                                                        <span class="input-group-btn ">
+                                                                            <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                                                                <i class="fa fa-calendar"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                            </td>
+                                                            <td>
+                                                                <span class="ellipis w200" tooltip-placement="left" uib-tooltip="{{row.request_for_proof}}">{{row.request_for_proof | checkEmpty}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody ng-if="questions.length == 0">
+                                                    <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="topic-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.show, 'fa fa-plus-square-o': !status.show}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="view-template-topic-questions.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{'topic.Topic' | translate}} - {{title}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f16"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <div class="card-block p0">
+            <form novalidate name="tableForm">
+                <table class="table table-custom table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{'questions.question' | translate}}</th>
+                            <th>{{'contract.module_questions.answer' | translate}}</th>
+                            <th>{{'questions.proof' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in questions" ng-class="{'relation-bg':row.relation_question==1}">
+                            <td style="width: 65%;">{{row.question_text}}</td>
+                            <td  style="width: 20%;" ng-if="row.question_type == 'input'">
+                                <input type="text" class="form-control" ng-model="row.question_answer"/>
+                            </td>
+                            <td  style="width: 20%;" ng-if="row.question_type == 'dropdown'">
+                                <select class="form-control" ng-model="row.question_answer"
+                                        ng-options="item.option_name as item.option_name for item in row.options">
+                                    <option value="">--{{'general.select' | translate}}--</option>
+
+                                </select>
+                            </td>
+                            <td style="width: 20%;" ng-if="row.question_type == 'radio'">
+                                <select class="form-control" ng-model="row.question_answer"
+                                        ng-options="item.option_name as item.option_name for item in row.options">
+                                    <option value="">--{{'general.select' | translate}}--</option>
+                                </select>
+                            </td>
+                            <td style="width: 20%;" ng-if="row.question_type == 'rag'">
+                                <div class="radio_widget">
+                                    <span ng-repeat="option in row.options">
+                                        <input type="radio" id="radio1_{{$index}}_{{row.question_id}}" name="same_{{row.question_id}}" value="{{option.option_value}}" checked  ng-model="row.question_answer">
+                                        <label ng-if="option.option_name == 'G'" for="radio1_{{$index}}_{{row.question_id}}" class="first_label" uib-tooltip="Green"></label>
+                                        <label ng-if="option.option_name == 'A'" for="radio1_{{$index}}_{{row.question_id}}" class="sec_label" uib-tooltip="Amber"></label>
+                                        <label ng-if="option.option_name == 'R'" for="radio1_{{$index}}_{{row.question_id}}" class="third_label" uib-tooltip="Red"></label>
+                                        <label ng-if="option.option_name == 'N/A'" for="radio1_{{$index}}_{{row.question_id}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="width: 20%;" ng-if="row.question_type == 'date'">
+                                <div class="">
+                                    <div class="input-group clearfix form-group-custom">
+                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                                            ng-model="row.question_answer" datepicker-options="{showWeeks:false}"
+                                            name="date" is-open="openCal2" show-button-bar="false"
+                                            readonly/>
+                                        <span class="input-group-btn ">
+                                            <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 15%;">
+                                <span class="ellipis w200" uib-tooltip="{{row.request_for_proof}}">{{row.request_for_proof | checkEmpty}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="questions.length == 0">
+                        <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</script>
+<style>
+.uib-daypicker  table tr th small {
+    color: #807b7b;
+}
+.uib-daypicker  table tr td {
+    padding: 0.05rem !important;
+}
+.relation-bg td{
+        background-color: #a9d18e !important;
+
+    }
+</style>

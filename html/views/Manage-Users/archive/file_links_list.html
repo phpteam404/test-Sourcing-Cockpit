@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title"> {{'attachment.attachments' | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f16"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <form novalidate name="tableForm">
+        <table class="table table-custom table-striped table-hover">
+            <thead>
+                <tr>
+                        <th>{{'module.module' | translate}}</th>
+                        <th>{{'topic.topic' | translate}}</th>
+                        <th>{{'questions.question' | translate}}</th>
+                        <th>{{'links.attachments_links' | translate}}</th>
+                        <th>{{'contract.created_by' | translate}}</th>
+                        <th>{{'contract.created_on' | translate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat ="row in attachments">
+                    <td class="module-name custom-ellipsis">
+                        <span class="ellipsis-block" title="{{row.module_name}}">{{row.module_name | checkEmpty}}</span>
+                    </td>
+                    <td class="topic-name custom-ellipsis">
+                        <span class="ellipsis-block" title="{{row.topic_name}}">{{row.topic_name | checkEmpty}}</span>
+                    </td>
+                    <td class="question  tooltip-question custom-ellipsis">
+                        <span class="ng-binding ellipsis-block"  uib-tooltip="{{row.question_text}}">{{row.question_text | checkEmpty}}</span>
+                    </td>
+                    <td ng-if="row.document_type==0" class="custom-ellipsis document-name">
+                        <!-- <span class="" > -->
+                            <a href="javascript:;" class="ellipsis-block" ng-click="getDownloadUrl(row)"  title="{{row.document_name}}">
+                                <!-- <i class="fa fa-download"></i>&nbsp;{{row.document_name | checkEmpty}}</a> -->
+                                <i class="fa fa-download" style="vertical-align: middle;padding-right: 6px;"></i>{{row.document_name | checkEmpty}}</a>
+
+                        <!-- </span> -->
+                    </td>
+                    <td ng-if="row.document_type==1" class="custom-ellipsis document-name">
+                        <!-- <span class=""  title="{{row.document_source}}"> -->
+                            <a ng-click="redirectUrl(row.document_source)" href="javascript:;"  class="ellipsis-block" title="{{row.document_name}}">
+                                <i class="fa fa-link"></i>&nbsp;{{row.document_name | checkEmpty}}</a>
+                        <!-- </span> -->
+                    </td>
+                    <!-- <td class="fa fa-link skyblue">  {{row.document_source}}  </td> -->
+                    <td class="created-by custom-ellipsis">
+                        <span class="ellipsis-block" title="{{row.created_by}}"> {{row.created_by}}</span>
+                    </td>
+                    <td class="created-on">{{row.created_on | utcToLocal:'date'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<style>
+    .modal-lg {
+        max-width: 1100px !important;
+    }
+</style>

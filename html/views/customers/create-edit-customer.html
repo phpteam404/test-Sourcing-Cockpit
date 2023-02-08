@@ -1,0 +1,140 @@
+<div class="add-customer">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{title | translate}} {{'customer.customer' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form novalidate name="form" ng-submit="form.$valid && addCustomer(customer)">
+                        <div class="form-group col-sm-4">
+                            <label>{{'customer.company_name' | translate}} *</label>
+                            <input type="text" name="company_name" maxlength="30" ng-model="customer.company_name" class="form-control" placeholder="{{'customer.enter_company_name' | translate}}" required>
+                            <span class="error-message" ng-if="form.company_name.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class=" form-control-label">{{'customer.company_address' | translate}} </label>
+                            <input name="textarea-input" maxlength="50" ng-model="customer.company_address" rows="3" class="form-control" placeholder="{{'general.enter' | translate}} {{'customer.company_address' | translate}}"/>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'customer.postal' | translate}} *</label>
+                            <input type="text" class="form-control" maxlength="10" ng-model="customer.postal_code" name="postal_code" placeholder="{{'general.enter' | translate}} {{'customer.postal' | translate}}" required>
+                            <span class="error-message" ng-if="form.postal_code.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.city' | translate}} *</label>
+                            <input type="text" class="form-control" maxlength="20" ng-model="customer.city" name="city" placeholder="{{'general.enter' | translate}} {{'customer.city' | translate}}" required>
+                            <span class="error-message" ng-if="form.city.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label >{{'customer.country' | translate}} *</label>
+                            <select class="form-control" name="country" ng-model="customer.country_id"  required
+                                    ng-options="item.id_country as item.country_name for item in countriesList">
+                                <option value="">--{{'general.select_country' | translate}}--</option>
+                            </select>
+                            <span class="error-message" ng-if="form.country.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'customer.vat_no' | translate}}</label>
+                            <input type="text" class="form-control" maxlength="15" name="vat" ng-model="customer.vat_number" placeholder="{{'general.enter' | translate}} {{'customer.vat_no' | translate}}">
+                            <span class="error-message" ng-if="form.vat.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group form-inline col-sm-4">
+                            <div class="form-group col-sm-9 pl0">
+                                <label class="">{{'customer.company_logo' | translate}}</label>
+                                <input type="file" class="form-control" ngf-select="uploadUserImage($file)"
+                                       ng-model="customer.company_logo_small" name="file" style="width: 100%;"
+                                       ngf-pattern="'image/*'">
+                                <span ng-show="!form.file.$untouched">
+                                    <span ng-if="!form.file.$valid" class="error-message">{{'general.upload_format' | translate}}</span>
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-3 pr0 pt-2">
+                                <img ng-if="customer.company_logo" class="image-view" ngf-thumbnail="customer.company_logo_small || 'img/logowith.png'" alt="Image"/>
+                                <a ng-show="trash" title="Delete" href="javascript:;" class="delete-img" ng-click="logoRemove()"><i class="fa fa-trash"></i></a>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4" ng-if="isEdit">
+                            <label >{{'general.status' | translate}} *</label>
+                            <select class="form-control"  ng-model="customer.company_status" name="company_status" ng-init="customer.company_statuss = (customer.company_status =='')?'0':'1'" required>
+                                <option value="">-- {{'general.select' | translate}} --</option>
+                                <option value="1">{{'general.active' | translate}}</option>
+                                <option value="0">{{'general.inactive' | translate}}</option>
+                            </select>
+                            <span class="error-message" ng-if="form.company_status.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4 switch-view">
+                            <label class="" style="margin-top: 3px;">{{'customer.import_subscription' | translate}}</label>
+                            <div class="onoffswitch form-inline">
+                                <div class="form-group">
+                                    <input type="checkbox" name="onoffswitch_toggle" 
+                                        ng-init="customer.import_subscription = (customer.import_subscription == '1') ? 1:0"
+                                        ng-model="customer.import_subscription"
+                                        ng-true-value="1" ng-false-value="0"
+                                        class="onoffswitch-checkbox " id="setting2" checked>
+                                    <label class="onoffswitch-label assessment-switch" for="setting2">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4">
+                            <label >{{'general.primary_lag' | translate}} *</label>
+                            <select class="form-control" name="primary_language_id" ng-disabled="primary"
+                            ng-model="customer.primary_language_id" ng-change="primaryLanugae(customer.primary_language_id)"
+                                ng-options="item.id_language as item.language_name for item in language" required>
+                                <option value="">-{{'general.select' | translate}}-</option>
+                            </select>
+                            <span class="error-message" ng-if="form.primary_language_id.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label >{{'general.secondary_lag' | translate}} </label>
+                            <select chosen id="add-chosen" allow-single-deselect="true"
+                            multiple ng-model="customer.secondary_languages_id" name="secondary_languages_id" class="chosen-choices" 
+                            ng-options="item.id_language as item.language_name for item in languageSelection">
+                            <!-- <option value="">-{{'general.select' | translate}}-</option> -->
+                        </select>
+                        </div>
+
+                        <!--<div class="form-group col-sm-4">
+                            <label >{{'templates.template' | translate}} *</label>
+                            <select class="form-control" name="template" ng-model="customer.template_id"  required
+                                    ng-change = getCounts(customer.template_id)
+                                    ng-options="item.id_template as item.template_name for item in templatesList">
+                                <option value="">--{{'customer.select_template' | translate}}--</option>
+                            </select>
+                            <span class="error-message" ng-if="form.template.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+                            <div class="clearfix"></div>
+
+                            <div  class="form-group col-sm-12 p0" ng-if="customer.counts">
+                                <span class="pr-1">{{'templates.modules' |translate}} : {{customer.counts.module_count}}</span>
+                                <span class="pr-1">{{'templates.topics' |translate}} : {{customer.counts.topic_count}}</span>
+                                <span>{{'templates.questions' |translate}} : {{customer.counts.question_count}}</span>
+                                <a href="javascript:;" class="icon-eye f21 pull-right" ng-click="gotoTemplate(customer)" title="{{'customer.view_template' | translate}}"></a>
+
+                            </div>
+                        </div>-->
+                        <!-- <div class="clearfix"></div> -->
+                        <div class="form-group col-sm-12 p-t-3">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>

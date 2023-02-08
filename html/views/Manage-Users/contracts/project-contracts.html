@@ -1,0 +1,389 @@
+<div class="modal-body clearfix">
+    <div class="col-lg-12 p015">
+        <div class="row" ng-init="indextab = 2">
+            <div class="col-sm-12 col-lg-12 p-0 info-tabs-div">  
+                <div class="modal-closer-contract">
+                    <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+                 </div> 
+                <uib-tabset active="indextab">
+                    <uib-tab index="0" heading="{{'contract.project_info' | translate}} ({{project_info}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">                        
+                                <div class="clearfix">
+                                    <div class="col-md-12 p0" style="margin-top: 10px;">
+                                        <form novalidate name="projectForm" ng-submit="projectForm.$valid && updateProjectInfo(infoObj)">
+                          
+                                            <div class="custom-row">
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'contract.Id' | translate}}</label>
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" name="contract_unique_id" 
+                                                            data-ng-model="infoObj.contract_unique_id" ng-disabled ="!disable" />
+                                                    </div>
+                                                    <span class="error-message" ng-if="projectForm.contract_unique_id.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                   
+                                                </div>
+                                                
+                                                 <div class="form-group col-sm-6">
+                                                    <label>{{'project.project_name' | translate}} *</label>
+                                                    <input type="text" class="form-control" maxlength="50" name="contract_name" ng-model="infoObj.contract_name"
+                                                        required>
+                                                    <span class="error-message" ng-if="projectForm.contract_name.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div> 
+                    
+                                                <div class="clearfix"></div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'project.project_start_date' | translate}} *</label>
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()"
+                                                            uib-datepicker-popup="dd-MM-yyyy" date-disabled="false" data-ng-model="infoObj.contract_start_date"
+                                                            name="start_date" is-open="openCal" datepicker-options="{showWeeks:false}" show-button-bar="false"
+                                                            readonly required />
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <span class="error-message" ng-if="projectForm.start_date.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div>
+                    
+                                                <!-- <div class="form-group col-sm-6">
+                                                    <label>{{'project.project_end_date' | translate}}</label>
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" 
+                                                                ng-model="infoObj.contract_end_date"
+                                                             name="end_date" is-open="openCal1" datepicker-options="{showWeeks:false}" show-button-bar="false" readonly />
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    
+                                                </div> -->
+                                               
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'project.project_end_date' | translate}}</label>
+                                                    <div class="input-group clearfix form-group-custom">
+                                                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"
+                                                            data-ng-model="infoObj.contract_end_date" name="end_date" is-open="openCal1"
+                                                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly />
+                                                        <span class="input-group-btn ">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                
+                                                </div>
+    
+                    
+                                                <div class="clearfix"></div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'project.budgeted_spend' | translate}} *</label>
+                                                    <input type="text" class="form-control" maxlength="30" name="contract_value" ng-model="infoObj.contract_value"
+                                                        required ui-number-mask="0">
+                                                    <span class="error-message" ng-if="projectForm.contract_value.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div>
+                    
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'contract.currency' | translate}} *</label>
+                                                    <select name="contract_curency" ng-model="infoObj.currency_id" class="form-control"
+                                                        ng-options="item.id_currency as item.currency_name for item in currencyList" required>
+                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                    </select>
+                                                    <span class="error-message" ng-if="projectForm.contract_curency.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div>
+                    
+                                                <div class="clearfix"></div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'general.status' | translate}} *</label>
+                                                    <select class="form-control" ng-model="infoObj.status" name="status" required>
+                                                        <option value="">-- {{'general.select' | translate}} --</option>
+                                                        <option value="1">{{'general.active' | translate}}</option>
+                                                        <option value="0">{{'general.closed' | translate}}</option>
+                                                    </select>
+                                                    <span class="error-message" ng-if="projectForm.status.$error.required && projectForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                </div>
+
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'bussiness.bussiness_unit' | translate}} *</label>
+                                                    <select class="form-control" ng-model="infoObj.business_unit_id" name="business_unit"
+                                                        ng-change="getContractDelegates(infoObj.business_unit_id,infoObj.id_contract)"
+                                                        ng-options="item.id_business_unit as item.bu_name disable when item.iobuuboi=='itako' for item in bussinessUnit"
+                                                        ng-disabled="(infoObj.is_lock=='1' && isEditContract) || (user.access == 'bd' && contractId!=0)"
+                                                        required>
+                                                        <option value="">-- {{'general.select' | translate}} --</option>
+                                                    </select>
+                                                    <span class="error-message" ng-if="projectForm.business_unit.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'contract.bu_owner' | translate}} *</label>
+                                                    <select chosen class="form-control chosen-choices" id="add-chosen1" placeholder-text-single="'{{'normal.placeholder_business_owner_role' | translate}}'"
+                                                        name="bu_owner" ng-model="infoObj.contract_owner_id" ng-options="item.id_user as item.name for item in buOwnerUsers"
+                                                        required>
+                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                    </select>
+                                                    <span class="error-message" ng-if="projectForm.bu_owner.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                        |translate}}</span>
+                                                </div>
+                    
+                                                <div class="form-group col-sm-6" ng-if="user.access != 'bd'">
+                                                   
+                                                        <label>{{'contract.delegates' | translate}} </label>
+                                                        <select chosen class="form-control chosen-choices" allow-single-deselect="true" style="height: 40px;"
+                                                            placeholder-text-single="'{{'normal.placeholder_delegate_Search' | translate}}'"
+                                                            ng-model="infoObj.delegate_id" name="delegate" ng-options="item.id_user as item.user_name for item in delegates">
+                                                            <option value=""></option>
+                                                        </select>
+                                                        <span class="error-message" ng-if="projectForm.delegate.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                            |translate}}</span>
+                                                  
+                                                </div>
+                    
+                    
+                                                <div class="form-group col-sm-6" ng-show="user.access == 'bd'">
+                                                   <label>{{'contract.delegates' | translate}} </label>
+                                                   <select class="form-control" ng-model="infoObj.delegate_id" name="delegate"
+                                                       allow-single-deselect="true" ng-disabled="user.access == 'bd'" ng-options="item.id_user as item.user_name for item in delegates">
+                                                       <option value="">-- {{'general.select' | translate}} --</option>
+                                                   </select>
+                                                   <span class="error-message" ng-if="projectForm.delegate.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                       |translate}}</span>
+                                               </div>
+                    
+                                               
+                                            <div class="clearfix"></div>
+                                            <div class="form-group col-sm-12">
+                                                <label>{{'project.project_description' | translate}} *</label>
+                                                <textarea class="form-control" ng-model="infoObj.description" name="desc" required style="height: 80px;"></textarea>
+                                                <span class="error-message" ng-if="projectForm.desc.$error.required && projectForm.$submitted">{{'general.required_field'
+                                                    |translate}}</span>
+                                            </div>
+                                            </div>                         
+                                            <div class="clearfix"></div>
+                                            <div class="modal-footer form-group col-sm-12">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-dot-circle-o"></i> {{bottom |translate}}</button>
+                                                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                            </div>
+                                        </form>
+                                    </div>                                    
+                                   
+                                </div>
+                            </div>
+                        </div>
+    
+                        
+                    </uib-tab>                 
+                    <uib-tab index="1" heading="{{'contract.project_attachments' | translate}} ({{project_attachments}})">
+                        <div class="card">
+                            <form novalidate name="attachmentForm" >
+                                <uib-tabset active="active" class="clearfix" style="padding: 10px;" ng-init="active=0;">
+                                    <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                                        <div class="col-sm-12 m-t-3 form-group p0">
+                                             <!-- <attachment-files ng-model="attachments"  ></attachment-files>  -->
+                                             <attachment-files ng-model="fdata.file.attachments" ng-if="!isView"></attachment-files>
+                                             <attachment-list-template  ng-if="!isView"></attachment-list-template>
+                                        </div>
+                                         <div class="p-b-1">
+                                            <p ng-if="infoObj.attachment.documents.length>0" ng-repeat="a in infoObj.unique_attachment.documents">
+                                                <a download="{{a.document_name}}" target="_blank" href="#" ng-click="getDownloadUrl(a)" download="{{a.document_name}}">
+                                                    <!-- <i class="icon-arrow-down-circle f16" style="vertical-align: middle;"></i> {{a.document_name}}</a> -->
+                                                    <i class="fa fa-download" style="vertical-align: middle;"></i>&nbsp;{{a.document_name}}</a>
+
+                                                    <span>
+                                                        <span class="tss-lock"  style="color: red; position:absolute; right:50px;cursor:pointer; font-size:20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span> 
+                                                        <span class="tss-unlock" style="color: green; position:absolute; right:50px;cursor:pointer;  font-size:20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                    </span>
+                                                    <a href="#" class="gray">
+                                                        <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1"  style="position: relative; top: 3px; font-size:20px;"
+                                                            title="{{'general.delete' | translate}}" ng-click="deleteAttachment(a.id_document,a.document_name)">
+                                                        </i>
+                                                    </a>
+                                                <span class="display-block f12 pl20">
+                                                    <span class="gray">{{'attachment.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                    <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                </span>
+                                            </p>
+                                            <p ng-show="infoObj.unique_attachment.documents.length==0" class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+                                        </div>                
+                                        <div class="modal-footer">
+                                            <button class="btn btn-sm btn-primary" type="submit"
+                                                    ng-click="uploadAttachment(fdata,data)">
+                                                <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                            </button>
+                                        </div>
+                                    </uib-tab>
+                                    <uib-tab index="1"  class="clearfix" heading="{{'links.ad_link' | translate}}">
+                                        <div class="clearfix" style="background: #EEEDF5; padding: 10px;">
+                                            <ng-form name="linkForm" class="modalUniqCls">
+                                                <div class="col-md-5 pl-0">
+                                                    <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" required>
+                                                </div>
+                                                <div class="col-md-7 pl-0" style="display:-webkit-inline-box; padding-right: 5px;">
+                                                    <input type="text" style="width:86.5%" class="form-control" ng-model="contractLink.url" required placeholder="{{'normal.placeholder_add_link_url' | translate}}">
+                                                    <span>
+                                                        <button style="padding: 0.03rem 0.5rem;" type="button" title="{{'contract.verify_link' | translate}}" ng-disabled="!linkForm.$valid" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                                            <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p></button>
+                                                    </span>
+                                                </div>
+                                            </ng-form>
+                                          
+                                            <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length && !isLink" style="overflow-y: scroll;">
+                                                <div class="list-header clearfix">
+                                                    <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                                                </div>
+                                                <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                                    <ul class="list-items files-list">
+                                                        <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                                            <div class="col-sm-11 p0">
+                                                                <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                                                <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                                            </div>
+                                                          
+                                                            <div class="col-sm-1 pull-right">
+                                                                <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray" style="font-size: 20px; position: relative; top: 3px;"></i> </a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>                    
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="p-b-1" style="padding-top: 25px;">
+                                            <p ng-if="infoObj.unique_attachment.links.length>0" ng-repeat="a in infoObj.unique_attachment.links" style="position:relative">
+                                                <a  ng-click="redirectUrl(a.document_source)" href="javascript:;" class="ellipis" title="{{a.document_source}}"
+                                                    style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i> {{a.document_name}}</a>
+                                                <a href="#" class="gray">
+                                                    <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1" style="font-size: 20px; position: relative; top: 3px;"
+                                                        title="{{'general.delete' | translate}}" ng-click="deleteAttachment(a.id_document,a.document_name)">
+                                                    </i>
+                                                </a>
+                                                <span>
+                                                    <span class="tss-lock"  style="color: red;position:absolute; right:32px;cursor:pointer; font-size:20px;
+                                                    " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span> 
+                                                    <span class="tss-unlock" style="color: green;position:absolute; right:32px;cursor:pointer; font-size:20px;
+                                                    " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                </span>
+                                                <span class="display-block f12 pl20">
+                                                    <span class="gray">{{'links.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user_name}}</span>
+                                                    <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                </span>
+                                            </p>
+                                            <p ng-show="infoObj.unique_attachment.links.length==0" class="text-sm-center pt20">{{'links.no_links' | translate}}</p>
+                                        </div>      
+                                        <div class="modal-footer">
+                                            <button class="btn btn-sm btn-primary" type="submit"
+                                                    ng-click="contractLinks && uploadLinks(contractLinks,data)">
+                                                <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                <i class="icon-times f12"></i>&nbsp;{{'general.cancel' | translate}}
+                                            </button>
+                                        </div>
+                                    </uib-tab>
+                                </uib-tabset>
+                            </form>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="{{'contract.connected_contracts' | translate}} ({{connected_contracts}})">
+                        <div class="card">
+                            <div class="card-block connected-project-block" >
+                                <table class="w-100">
+                                    <tbody>
+                                      <tr ng-repeat ="row in connectedContracts">
+                                         <td><span class="">{{row.contract_name}}</span></td>
+                                         <td><span>{{row.owner_name}}</span></td>
+                                         <!-- <td><span> <i class="fa fa-trash" ng-click="removeConnectedContract(row)" style="cursor: pointer;"></i></span></td> -->
+                                         <td><span ng-if ="access =='ca' || access =='bo' ||access =='bd'"> <i class="fa fa-trash" ng-click="removeConnectedContract(row)" style="cursor: pointer;"></i></span></td>      <!--addedby ashok-->
+                                      </tr>
+                                    </tbody>
+
+                                    <tbody ng-if="connectedContracts.length==0">
+                                        <tr>
+                                            <td colspan="15" class="text-sm-center"> {{'project.no_contracts_conected' | translate}} </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                       
+                    </uib-tab>
+
+                   
+                   
+                    <!-- <div>
+                        <span ng-click="goToNext()"> Next</span>
+                    </div> -->
+                </uib-tabset>
+                <!-- tabs 1 end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+
+
+<style>
+    .chosen-container{
+        width:100% !important;
+    }
+    .contract-list-popup .modal-dialog{
+        max-width: 960px !important;
+    }
+    .custom-row{
+       display: flex;
+       flex-wrap: wrap;
+   }
+   .modal-body {
+        position: relative;
+        padding: 5px;
+    }
+    .p015{
+        padding: 0 15px;
+    }
+    .modal-closer-contract{
+        position: absolute;
+        right: 3px;
+        top: 8px;
+        cursor: pointer;
+    }
+    .card-space {
+        padding: 0 !important;
+    }
+    .info-tabs-div .tab-content .tab-pane {
+        background-color: #fff;
+    }
+    .nav-tabs .nav-item .nav-link {
+       background: #f9f9f9 !important;
+    }
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        background: #ffff !important;
+        border-bottom: 1px solid #fff !important;
+    }
+</style>
+

@@ -1,0 +1,90 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="getCustomerUsers" st-table="customerUsersList">
+                <thead>
+                    <tr>
+                        <td colspan="12">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="name">{{'customer.admin.name' | translate}}</th>
+                        <th st-sort="email">{{'user.profile.email' | translate}}</th>
+                        <th st-sort="bu_name">{{'customer.admin.business_unit' | translate}} </th>
+                        <th st-sort="provider_name">{{'contract.company' | translate}}</th>
+                        <th st-sort="user_role_name">{{'customer.admin.role' | translate}}</th>
+                        <th class="w170" st-sort="last_logged_on">{{'access_log.last_logged_on' | translate}}</th>
+                        <th class="hand-symbol"></th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in customerUsersList">
+                        <td>{{row.name}}</td>
+                        <td>{{row.email}}</td>
+                        <!--<td>
+                            <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                            <a>{{row.bu_name[0]}}</a>
+                            <span    ng-if="row.bu_name[1]">{{'general.multi_selected' | translate}}</span>
+                            <a ng-if="row.bu_name[1]"  href="javascript:;" class="icon-plus-circle gray ml-h" uib-popover-template="dynamicPopover.templateUrl"
+                                popover-placement="right" popover-trigger="'outsideClick'" class="btn btn-default"></a>
+                        </td>-->
+                        <td>
+                                <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                                <span>
+                                    <a class="ellipis"   title="{{row.bu_name[0]}}" ng-if="!row.bu_name[1]">{{row.bu_name[0]}}</a>
+                                    <a class="ellipis"  ng-if="row.bu_name[1]" >{{'general.multi_selected' | translate}} </a>
+                                    <a ng-if="row.bu_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h "
+                                        uib-popover-template="dynamicPopover.templateUrl"
+                                        popover-placement="right" popover-trigger="'outsideClick'"
+                                        class="btn btn-default"></a> 
+                                </span>
+                        </td>
+                        <td>{{row.provider_name | checkEmpty}}</td>
+                        <td>{{row.user_role_name}}</td>
+                        <td>{{row.last_logged_on | utcToLocal:'datetime' | checkEmpty }}</td>
+                        <td>
+                            <a href="javascript:;" class="" title="{{'access_log.view_actions' | translate}}"
+                               ng-click="gotoActions(row)"><i class="fa icon-eye" ></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr><td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <!-- <div class="" ng-repeat="item in row.bu_name track by $index" ng-if=" $index != 0"> -->
+    <div class="" ng-repeat="item in row.bu_name" >
+        <span>{{item}}</span>
+    </div>
+</script>

@@ -1,0 +1,168 @@
+<div class="modal-header" >
+    <h6 class="modal-title">{{title | translate}} {{'tags.tag' | translate}} ({{tagType}})
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <form class="" name="form" novalidate ng-submit="form.$valid && addTag(tag)">
+        <div class="form-group col-sm-12">
+            <label class=" ">{{'tags.tag_title' | translate}} *</label>
+            <input type="text" name="tag_text" ng-model="tag.tag_text" class="form-control" maxlength="35"
+                   placeholder="{{'tags.type_tag' | translate}}" required/>
+            <span class="error-message" ng-if="form.tag_text.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        
+        <div class="form-group col-sm-8 mb-h form_input_style" ng-if="tag_type == 'radio'">
+            <div class="col-sm-4 pl-2"><label>{{'tags.choices' | translate}}</label></div>
+            <div class="form-group mb-0 col-sm-12 p0" ng-repeat="row in tag.option_name">
+                <div class="col-sm-4 p0 mb8">
+                    <label>{{$index+1}}</label>
+                    <input type="text"  ng-model="tag.option_name[$index].tag_option"
+                        class="form-control-static  pl-2" readonly>
+                </div>               
+            </div>
+        </div>
+        <div class="form-inline col-sm-12 mb-h"  ng-if="tag_type == 'dropdown'">
+            <label class="f15 darkcolor pt10 pb5 overflow-hidden  text-capitalize acc-heading clearfix">{{'tags.choices' | translate}}</label>
+            <fieldset class="choice-wrap mb10" data-ng-repeat="choice in choices track by $index" ng-if="choice.type !='delete'" >
+                <ng-form name="optionForm">
+                    <label class="pr-1">{{$index+1}}</label>
+                    <input  type="text" class="form-control" ng-model="choice.tag_option"
+                           name="tag_option" placeholder="{{'tags.enter_option' | translate}}" required>
+                    
+                    <a href="javascript:;" class="remove" ng-show="!($last && $first)"  ng-click="removeChoice($index,choice)">
+                        <i class="icon-minus-circle red f21 ml-h pt-h"></i>
+                    </a>
+                    <a href="javascript:;" class="addfields" ng-show="$last" ng-click="addNewChoice(tag,$index)"><i class="icon-plus-circle green f21 ml-h"></i></a>
+                    <span ng-if="form.$submitted && optionForm.tag_option.$error.required" class="error-message" style="width:195px;   display: inline-block;padding-left:25px;">
+                        {{'general.required_field' | translate}}</span>    
+                </ng-form>
+            </fieldset>
+        </div>
+        <div class="form-group col-sm-6" ng-if="tag_type == 'input'">
+            <label>{{'tags.field_type' | translate}} *</label>
+            <select class="form-control" ng-model="tag.field_type" name="field_type" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="number">{{'tags.numeric' | translate}}</option>
+                <option value="currency">{{'tags.currency' | translate}} </option>
+                <option value="text">{{'tags.text' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="form.field_type.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="form-group col-sm-8 mb-h form_input_style" ng-if="tag_type == 'rag'">
+            <div class="col-sm-4 pl-2"><label class="gray">{{'questions.choices' | translate}}</label></div>
+            <div class="col-sm-4 p0"></div>
+            <div class="form-group mb-0 col-sm-12 p0"  ng-repeat="row in tag.option_name">
+                <div class="col-sm-4 p0 mb8">
+                    <label ng-if="tag.option_name[$index].option == 'N/A'">{{$index+1}}</label>
+                    <label ng-if="tag.option_name[$index].option != 'N/A'" class="pr-2">{{$index+1}}</label>
+                    <input ng-if="tag.option_name[$index].option != 'N/A'" type="text" ng-model="tag.option_name[$index].option"
+                           class="form-control-static red-brs_{{tag.option_name[$index].option}}" readonly>
+                    <input ng-if="tag.option_name[$index].option == 'N/A'" type="text" ng-model="tag.option_name[$index].option"
+                           class="form-control-static" style="padding-left: 20px" readonly>
+                </div>
+                <!-- <div class="col-sm-2 p0 mb8"><span class = "pl-1">-</span></div> -->
+                <!-- <div class="col-sm-6 p0 mb8">
+                    <ng-form name="optionForm">
+                    <select class="form-control"  ng-model="question.option_name[$index].value" name="rag_value" required
+                            ng-options="item.value as item.label for item in q_options">
+                        <option value="">-- Select --</option>
+                    </select>
+
+                    <span ng-if="form.$submitted && optionForm.rag_value.$error.required" class="error-message">
+                        {{'general.required_field' | translate}}</span>
+                    </ng-form>
+                </div> -->
+            </div>            
+        </div>
+      
+        <div class="form-group col-sm-6" ng-if="tag_type=='date'"> <!--div open for date type tag -->
+            <label>{{'tags.field_type' | translate}} </label>
+            <div class="input-group clearfix form-group-custom">
+                <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                ng-model="tag.date"  name="date" is-open="openCal11" datepicker-options="{showWeeks:false}"
+                show-button-bar="false" ng-disabled="true" readonly>
+                <span class="input-group-btn ">
+                    <button type="button" class="btn btn-default border" ng-click="openCal11 = true">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+             </div>            
+        </div> <!--- div close for date type tag -->
+        <div class="clearfix"></div>   
+        
+        
+        <div class="form-group col-sm-6" ng-if="tag_type=='selected'">
+            <label>{{'events.select_field' | translate}} *</label>
+       <select class="form-control" ng-model="tag.selected_field" name="selected_field" ng-disabled="editTags" required>
+           <option value="">-- {{'general.select' | translate}} --</option>
+           <option value="relation">{{'contract.provider_name' | translate}}</option>
+           <option value="contract">{{'contract.contract_name' | translate}}</option>
+           <option value="project">{{'contract.project_name' | translate}}</option>
+           <option value="catalogue">{{'normal.catalogue_item_name' | translate}}</option>
+       </select>
+       <span class="error-message" ng-if="form.selected_field.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+   </div>
+
+   <div class="form-group col-sm-12" style="padding: 0px;">
+       <div class="col-sm-6">
+           <label>{{'bussiness.bussiness_unit' | translate}} </label>
+           <div class="input-group clearfix form-group-custom">
+               <select class="form-control" ng-model="tag.business_unit_id" name="business_unit"
+               ng-change="getContractDelegates(infoObj.business_unit_id,infoObj.id_contract)"
+               ng-options="item.id_business_unit as item.bu_name disable when item.iobuuboi=='itako' for item in bussinessUnit">
+               <option value="">-- {{'general.select' | translate}} --</option>
+           </select>
+            </div>            
+       </div>
+   </div>
+
+
+
+        <div class="form-group col-sm-6">
+            <label>{{'general.status' | translate}} *</label>
+            <select class="form-control" ng-model="tag.status" name="tag_status" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="1">{{'general.active' | translate}}</option>
+                <option value="0">{{'general.inactive' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="form.tag_status.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+
+        <div class="onlyactive1" style="float: left;margin-left: 0;margin-top: 0;" ng-if="tag_type=='selected' || tag_type=='dropdown'">
+            <label>{{'normal.multi_select' | translate}} *</label>
+            <div class="onoffswitch" style="margin-left: 3px;">
+                <!-- <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                        ng-true-value="1" ng-false-value="0" ng-click="multiSelectChange(tag.multi_select)"
+                        ng-model="tag.multi_select"
+                        ng-checked="tag.multi_select == 1"
+                        id="multi_select">
+                <label class="onoffswitch-label assessment-switch mb-0" style="margin-top: 8px;"
+                        for="multi_select">
+                    <span class="onoffswitch-inner mt0"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label> -->
+
+                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                    ng-true-value="1" ng-false-value="0"
+                    ng-model="tag.multi_select"
+                    ng-change="multiSelectChange(tag.multi_select)"
+                    id="status" style="margin-top: 8px;">
+                    <label class="onoffswitch-label assessment-switch mb-0"
+                            for="status">
+                        <span class="onoffswitch-inner mt0"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</div>

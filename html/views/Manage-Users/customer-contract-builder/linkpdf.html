@@ -1,0 +1,68 @@
+<div class="modal-header link-modal">
+    <div>
+        <span>{{title |translate}}</span > -
+        <span style="color: #EF904F;">{{versionDetails.name}}</span>
+    </div>
+    <div>
+        <!-- <span >template:License Agreement-Dutch</span> -->
+        <span class="template-name">{{'templates.template' | translate}}:<span> {{versionInfo.name}}- {{versionDetails.language}}</span></span>
+    </div>
+    <!-- <h6 class="modal-title" id="modal-title">{{title | translate}}
+        <span class="pull-right">template:License Agreement-Dutch</span>
+    </h6> -->
+</div>
+
+<div class="card m-0">
+    <form novalidate name="buildLinkForm" style="display: grid;" ng-submit="buildLinkForm.$valid">
+       <div class="modal-body">   
+        <div>
+            <span>{{'normal.linked_version' | translate}}: </span>
+            <span class="text-secondary" style="color: #6bb143;font-weight: bold;text-decoration: underline;">{{'v'}}{{versionInfo.version}}</span>
+            <span class="bold">{{'(By'}}</span>
+            <span>{{versionInfo.createdBy}} </span>
+            <span class="bold">{{'On'}}</span>
+            <span>{{versionInfo.created | utcToLocal: 'date' | checkEmpty}}{{')'}}</span>
+        </div>
+        <div class="clearfix"></div>
+
+        <div style="margin: 10px 0;">
+            <span>{{'documents.document_file_name' | translate}}:</span>
+            <span>{{versionDetails.name}}</span>
+        </div>
+    <div class="clearfix"></div>
+
+        <div class="form-group col-sm-6 p-0">
+            <label>{{'normal.selected_contract' | translate}}:</label>
+        <select chosen 
+                allow-single-deselect="true"    
+                placeholder-text-multiple="'{{'normal.select_placeholder_contract' | translate}}'"
+                ng-model="builderLink.contracts"
+                name="id_contract"
+                class="chosen-choices" size="1"
+                ng-options="item.id_contract as item.contract_name for item in contracts">
+                <option value="">-- {{'general.select' | translate}} --</option>
+        </select>
+        </div>
+        <div class="clearfix"></div>
+        <div class="pull-right">
+            <button class="btn btn-sm btn-primary" type="submit" ng-click="buildLinkSave(builderLink.contracts)">
+                <i class="fa fa-dot-circle-o"></i>&nbsp;{{bottom | translate}}
+            </button>
+            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                <i class="fa fa-ban"></i> &nbsp;{{'general.cancel' | translate}}
+            </button>
+        </div>
+        </body>
+        </html>
+            </div>
+    </form>
+</div>
+<style>
+    .link-modal.modal-header{
+        display: flex;
+        justify-content: space-between;
+    }
+    .link-modal.modal-header::after{
+        display: none;
+    }
+</style>

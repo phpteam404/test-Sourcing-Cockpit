@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{'general.select' | translate}} {{'relationship-classification.relationship-category' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="contractForm" ng-submit="contractForm.$valid && setRelationCategory(relCat)">
+    <div class="modal-body clearfix">
+        <label class="checkbox col-sm-12" for="inline-checkbox1-{{rc.id_relationship_category}}" ng-repeat="rc in relationCategory">
+            <input ng-disabled="tense=='old'" ng-model="relCat[rc.id_relationship_category]" type="checkbox" id="inline-checkbox1-{{rc.id_relationship_category}}" 
+            name="inline-checkbox1-{{rc.id_relationship_category}}" value="option1">{{rc.relationship_category_name}}
+        </label>
+    </div>
+    <div class="modal-footer">
+        <div class="col-sm-12 text-center">
+            <button type="submit" class="btn btn-sm btn-primary" ng-if="tense=='future'">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </div>
+</form>

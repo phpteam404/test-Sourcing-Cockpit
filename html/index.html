@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app" ng-class="{ 'page_loading': pageLoading, 'page_loaded': pageLoaded, 'app_initialized': appInitialized && !$state.is('appSimple.login')}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="1" />
+    <meta http-equiv="refresh" content="" />    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <meta name="description" content="WITH SourcingCockpit">
+    <meta name="author" content="WITH SourcingCockpit"> -->
+    <meta name="description" content="WITH Birdseye">
+    <meta name="author" content="WITH Birdseye">
+    <meta name="keyword" content="1.1.33">
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <link rel="shortcut icon" href="img/favicon.jpg">
+    <!-- <title>Sourcing Cockpit</title>    -->
+    <title>Birdseye</title>   
+
+    <!-- <link href="css/style.css?ver=6.3.0" rel="stylesheet"> -->
+    <link href="css/style.1.css?ver=6.3.0" rel="stylesheet">
+    <link href="fonts/new-icons/styles.css?ver=6.3.0" rel="stylesheet">
+    <link href="plugins/angular-bootstrap/ui-bootstrap-csp.css" rel="stylesheet">
+    <link href="plugins/angular-ui-tab-scroll/angular-ui-tab-scroll.css" rel="stylesheet">
+    <!-- <link href="plugins/angular-bootstrap/ui-bootstrap-csp.css" rel="stylesheet"> -->
+
+</head>
+<!-- BODY options, add following classes to body to change options
+		1. 'compact-nav'     	  - Switch sidebar to minified version (width 50px)
+		2. 'sidebar-nav'		  - Navigation on the left
+			2.1. 'sidebar-off-canvas'	- Off-Canvas
+				2.1.1 'sidebar-off-canvas-push'	- Off-Canvas which move content
+				2.1.2 'sidebar-off-canvas-with-shadow'	- Add shadow to body elements
+		3. 'fixed-nav'			  - Fixed navigation
+		4. 'navbar-fixed'		  - Fixed navbar
+		5. 'footer-fixed'		  - Fixed navbar
+	-->
+<body class="navbar-fixed fixed-nav">  
+    <!-- User Interface -->
+    <ui-view></ui-view>
+    <toaster-container></toaster-container>  
+    <!-- Bootstrap and necessary plugins -->
+    <link rel="stylesheet" href="plugins/angular-chosen-localytics/chosen.min.css" />
+    <script src="plugins/jquery/dist/jquery.min.js"></script>
+    <script src="plugins/angular-chosen-localytics/chosen.jquery.min.js"></script>
+    <script src="plugins/angular-chosen-localytics/chosen.proto.min.js"></script>
+    <script src="plugins/tether/dist/js/tether.min.js"></script>
+    <script src="plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- AngularJS Moment-->
+    <script src="plugins/moment/moment.js"></script>
+    <script src="plugins/angular/angular.min.js"></script>
+    <script src="plugins/angular-moment/angular-moment.js"></script>
+    <script src="plugins/angular-chosen-localytics/angular-chosen.min.js"></script>
+    
+
+    <script src="plugins/angular-cookies/angular-cookies.js"></script>
+    <script src="plugins/ngstorage/ngStorage.js"></script>
+    <!-- AngularJS plugins -->
+    <script src="plugins/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="plugins/oclazyload/dist/ocLazyLoad.min.js"></script>
+    <script src="plugins/angular-breadcrumb/dist/angular-breadcrumb.min.js"></script>
+    <script src="plugins/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+
+    <!--toastr for notification-->
+    <script src="plugins/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <!--language translater-->
+    <script src="plugins/angular-translate/angular-translate.min.js"></script>
+    <script src="plugins/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+
+    <!--data  tables-->
+    <script src="plugins/angular-smart-table/dist/smart-table.min.js"></script>
+
+    <!-- Calendar -->
+    <link type="text/css" rel="stylesheet" href="plugins/fullcalendar/dist/fullcalendar.css"/>
+    <link type="text/css" rel="stylesheet" href="scss/bootstrap_custom/_fullcalendar.scss"/>
+    <script type="text/javascript" src="plugins/angular-ui-calendar/src/calendar.js"></script>
+    <script type="text/javascript" src="plugins/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="plugins/fullcalendar/dist/gcal.js"></script>
+    <script src="plugins/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js"></script>
+    <script src="plugins/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js.map"></script>
+    <link type="text/css" rel="stylesheet" href="plugins/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css"/>
+
+    <!--Mask-->
+    <script type="text/javascript" src="plugins/angular-input-masks/angular-input-masks-dependencies.js"></script>
+    <script type="text/javascript" src="plugins/angular-input-masks/angular-input-masks.js"></script>
+    <!-- Tabs Scroll -->
+    <script type="text/javascript" src="plugins/angular-ui-tab-scroll/angular-ui-tab-scroll.js"></script>
+
+    <!--angularjs file upload-->
+    <script src="plugins/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="plugins/ng-file-upload/ng-file-upload.js"></script>
+    <script type="text/javascript" src="plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- AngularJS CoreUI App scripts -->
+    <script type="text/javascript" src="js/app_url.js?ver=6.3.0"></script>
+    <script src="js/app.js?ver=6.3.0"></script>
+    <script src="js/routes.js?ver=6.3.0"></script>
+    <script src="js/controllers.js?ver=6.3.0"></script>
+    <script src="js/directives.js?ver=6.3.0"></script>
+    <script src="js/services.js?ver=6.3.0"></script>
+    <script src="js/app.oc_lazy_load.js?ver=6.3.0"></script>
+    <script src="views/user/loginController.js?ver=6.3.0"></script>
+    <script src="js/aes.js?ver=6.3.0"></script> 
+
+    
+    <!-- <script src="https://unpkg.com/angular-bootstrap-calendar"></script> -->
+
+</body>
+<script>
+    $(function(){
+        $(window).resize();
+        //Menu Toggler
+        $('body').delegate('.navbar-toggler', 'click' , function(){
+            $('.sidebar').toggleClass('expanded-menu');
+            // console.log('test');
+            setTimeout(function(){
+                if($('.sidebar').hasClass('expanded-menu') == true){
+                    // console.log('asdasf');
+                    $('.sidebar').removeClass('expanded-menu-cls')
+                }else{
+                    $('.sidebar').addClass('expanded-menu-cls')
+                }
+            }, 500)
+        });
+        $('body').delegate('.expanded-menu .left-menu .has-sub > a', 'click' , function(){        
+            $(this).parent().toggleClass('parent-sub');
+            $(this).toggleClass('menu-hide');
+            if($(this).parent().hasClass('parent-sub')){
+                $(this).next().slideDown();
+            }
+            else{
+                $(this).next().slideUp();
+            }   
+        });  
+        
+    });
+    $(window).load(function(){
+        setTimeout(function(){ 
+            if($('.sidebar').hasClass('expanded-menu') == true){
+                //console.log('test');
+                $('.sidebar').removeClass('expanded-menu');
+                $('.sidebar').addClass('expanded-menu-cls');
+            } 
+        }, 300);
+    }); 
+</script>
+</html>

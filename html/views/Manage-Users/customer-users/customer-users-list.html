@@ -1,0 +1,180 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+          
+            <!-- tabs start -->
+            <div class="card">
+                <form name="outerForm" class="tab-form-demo">
+                    <uib-tabset active="activeForm">
+                        <uib-tab index="0">
+                            <uib-tab-heading>
+                                {{'customer.admin.internal_user' | translate}}
+                            </uib-tab-heading>
+                            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="usersList">
+                                <thead>
+                                    <tr>
+                                        <td colspan="12">
+                                            <div class="form-group clearfix col-sm-3 p0 template-filter mb-3 " style="top: 51px;">
+                                                <select class="form-control" name="business_unit" ng-model="business_unit_id" st-input-event="change" st-search="business_unit_id"
+                                                    ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit">
+                                                    <option value="">--{{'bussiness.bussiness_unit' | translate}}--</option>
+                                                </select>
+                                                <span ng-if="userForm.business_unit.$error.required && userForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                                            </div>
+                                            <div class="col-sm-12 clearfix p0">
+                                                <div class="action-head mb0">
+                                                        <div class="onlyactive1">
+                                                                <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                                                                <div class="onoffswitch">
+                                                                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                                                        ng-true-value="1" ng-false-value="0"
+                                                                        ng-model="req.status"
+                                                                        ng-checked="req.status == 1"
+                                                                        ng-change="getIntUsersByStatus(req.status)"
+                                                                        id="status">
+                                                                    <label class="onoffswitch-label assessment-switch mb-0"
+                                                                            for="status">
+                                                                        <span class="onoffswitch-inner"></span>
+                                                                        <span class="onoffswitch-switch"></span>
+                                                                    </label>
+                                                                </div>
+                                                              </div> 
+                                                    <span class="pull-right ml-h" ng-show="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bm')">
+                                                        <button class="btn btn-sm btn-primary btn-radius" ng-click="showForm()" type="button">
+                                                            <i class="icon-plus"></i>&nbsp; {{'general.ADD' | translate}}
+                                                        </button>
+                                                    </span>
+                                                    <div class="col-sm-3 p0 table-search pull-right">
+                                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event="change">
+                                                        <i class="fa icon-search"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th st-sort="name">{{'customer.admin.name' | translate}} </th>
+                                        <th st-sort="bu_name">{{'customer.admin.business_unit' | translate}} </th>
+                                        <th st-sort="email">{{'user.profile.email' | translate}}</th>
+                                        <th st-sort="user_role_name">{{'customer.admin.role' | translate}}</th>
+                                        <th st-sort="contribution">{{'contract.contribution' | translate}}</th>
+                                        <th st-sort="user_status">{{'general.status' | translate}}</th>
+                                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!isLoading">
+                                    <tr ng-repeat="row in usersList">
+                                        
+                                        <td>{{row.name}}</td>
+                                        <td>
+                                            <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                                            <span>
+                                                    <a ng-if="!row.bu_name[1]">{{row.bu_name[0]}}</a>
+                                                    <a class="ellipis" style="width: 140px;" ng-if="row.bu_name[1]">{{'general.multi_selected' | translate}}</a>
+                                                    <a ng-if="row.bu_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h "
+                                                                uib-popover-template="dynamicPopover.templateUrl"
+                                                                popover-placement="right" popover-trigger="'outsideClick'"
+                                                                class="btn btn-default"></a>
+                                            
+                                            </span>
+                                                   
+                                            
+                                        </td>
+                                        
+                                        <td>{{row.email}}</td>
+                                        <td>{{row.user_role_name}}</td>
+                                        <td>{{row.contribution | checkEmpty}}</td>
+                                        <td>
+                                            <span ng-if="row.user_status == 1" class="green">{{'general.active' | translate}}</span>
+                                            <span ng-if="row.user_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                                        </td>
+                                        <td>
+                                            <div style="display:flex;align-items:center;">
+                                                <a href="javascript:;" ng-show="(
+                                                    (user.access=='wa' || user.access=='ca'  || user.access=='bm') 
+                                                    ||(user.access=='bo' && row.user_role_name!='Owner'))" class="icon-edit mr-1 gray"
+                                                   ng-click="showForm(row)" title="Edit">
+                                                </a>
+                                            <a href="javascript:;" ng-if="(!parent_user) && (user.access=='ca')" class="mr-1 icon-users4 gray" n-t='{"valid":"true","m_t":"login","a_n":"Login As","a_d":"Login$$as$${{row.name}}"}'
+                                                ng-click="loginAsAdmin(row)" title="{{'customer.admin.login_as' | translate}} {{row.name}}"></a>
+                                            <a ng-if="row.is_blocked == 1" href="javascript:;" ng-click="unblock(row)" n-t='{"valid":"true","m_t":"login","a_n":"Unblock user","a_d":"Login$$as$${{row.name}}"}'
+                                                class="mr-1 icon-ban red" title="Unblock User"></a>
+                                            <a ng-if="(user.access=='wa' || user.access=='ca')" href="javascript:;" 
+                                                ng-click="getUserContributions(row)" class="mr-1 gray">
+                                                <i class="gray icon-registrant-template" title="Contracts / Contributions"></i>
+                                            </a>
+                                            <a href="javascript:;" ng-if="(row.user_status == 0) && (user.access!='bd')"
+
+                                                class="fa fa-trash mr-1 gray pointer"
+                                                ng-click="deleteInternalUser(row)" title="{{'general.delete' |translate}}">
+                                            </a>
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="isLoading">
+                                    <tr>
+                                        <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="emptyTable">
+                                    <tr>
+                                        <td colspan="8" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="text-center" colspan="8">
+                                            <div class="paginator">
+                                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                        ng-options="item for item in pagesNumber" selected>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </uib-tab>
+                        <uib-tab index="1"  ui-sref="app.external-user.ext-list">
+                            <uib-tab-heading ui-sref="app.external-user.ext-list">
+                                {{'customer.admin.external_user' | translate}}
+                            </uib-tab-heading>
+                          </uib-tab>
+                    </uib-tabset>
+                </form>
+            </div>
+            <!-- tabs end -->
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-5 offset-md-4">
+                <div class="clearfix">
+                    <h1 class="float-xs-left display-3 mr-2">404</h1>
+                    <h4 class="pt-1">{{'404.oops_lost' | translate}}</h4>
+                    <p class="text-muted">{{'404.page_not_found' | translate}}</p>
+                </div>
+            </div>p
+        </div>-->
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+     <div class="" ng-repeat="item in row.bu_name track by $index"> 
+            
+    <!--<div class="" ng-repeat="item in row.bu_name" ng-if="item! = row.bu_name[0]">--> <!-- This div ng-if condition is for to dispaly the first business
+     name i.e,row.bu_name[0] first,later remaining business units in '+' symbol -->
+        <div class="" ng-repeat="item in row.bu_name"> </div> <!-- This div is for moving the whatever business unit are there in row.bu_name all to 
+             '+' icon so,we exclude ng-if condition-->
+        <span>{{item}}</span>
+    </div>
+</script>
+
+
+<style>
+    .nav-tabs .nav-item.active .nav-link {
+        background: #FFF;
+    }
+</style>

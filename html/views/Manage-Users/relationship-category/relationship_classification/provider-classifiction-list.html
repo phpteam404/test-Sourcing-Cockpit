@@ -1,0 +1,64 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="col-sm-4 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="classification_name" class="st-sort-ascent st-sort-descent">{{'relationship-classification.name' | translate}}</th>
+                        <th st-sort="classification_position">{{'relationship-classification.position.position' | translate}} ({{'relationship-classification.axis' | translate}})</th>
+                        <th st-sort="classification_status" class="">{{'general.status' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading && displayed.length>0">
+                    <tr ng-repeat="row in displayed">
+                        <td>{{row.classification_name}}</td>
+                        <td>{{row.classification_position | uppercase}}</td>
+                        <td>
+                            <span  ng-if="row.classification_status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span  ng-if="row.classification_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td>
+                            <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}" ng-click="updateClassfication(row)"><i class="icon-edit" ></i></a>
+                         <a ng-if="row.classification_status == 1" href="javascript:;" class="mr-h gray" title="{{'general.manage' | translate}}" ng-click="manageClassfication(row)"><i class="icon-registrant-template" ></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="!isLoading && displayed.length<=0">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

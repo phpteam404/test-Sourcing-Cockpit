@@ -1,0 +1,328 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                <div class="card" st-pipe="getCatalogueList" st-table="catalogueListData">
+                    <div class="button-icon">
+                        <div>
+                            <button class="btn btn-sm btn-default pointer filter-icon" type="button"
+                                ng-click="advancedFilterCatalogues()">
+                                <i class="tss-filter-search"></i>
+                                <i class="icon-times" ng-if="filterCross"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-12 tableSelect-header">
+
+                            <div class="col-sm-8 p-0 tableSelect-header-left">
+                                <div ng-repeat="row in filterList" class="filter-catalogue">
+
+                                    <div class="filter-catalogue-list"
+                                        ng-if="row.field_type!='numeric_text' && row.field_type!='date'">
+                                        <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}}
+                                            ({{row.filter_condition_name}})</label>
+                                        <div class="filter-catalogue-list-value">
+                                            <p ng-if="row.filter_display_value=='Multiple Selected'"
+                                                uib-tooltip-html="row.value_names_string" tooltip-class="customClass"
+                                                tooltip-placement="bottom">{{row.filter_display_value}}</p>
+
+
+                                            <p title="{{row.filter_display_value}}"
+                                                ng-if="row.filter_display_value!='Multiple Selected'">
+                                                {{row.filter_display_value}}</p>
+                                            <div class="filter-catalogue-list-icons">
+                                                <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                                <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter-catalogue-list" ng-if="row.field_type=='date'">
+                                        <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}}
+                                            ({{row.filter_condition_name}})</label>
+                                        <div class="filter-catalogue-list-value">
+                                            <p title="{{row.filter_display_value | utcToLocal:'date'}}">
+                                                {{row.filter_display_value | utcToLocal:'date'}}</p>
+                                            <div class="filter-catalogue-list-icons">
+                                                <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                                <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter-catalogue-list" ng-if="row.field_type=='numeric_text'">
+                                        <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}}
+                                            ({{row.filter_condition_name}})</label>
+                                        <div class="form-group filter-catalogue-list-value">
+                                            <input type="text" class="form-control" name="value"
+                                                ng-model="row.filter_display_value" ui-number-mask="0"
+                                                title="{{row.filter_display_value}}">
+                                            <div class="filter-catalogue-list-icons">
+                                                <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                                <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style="width: max-content;margin-left: auto;display: flex;align-items: center;">
+                                <div class="col-sm-3 p0 table-search  p-r-3 wid-55 wid-95 w200"
+                                    style="padding:16px 4px 0;">
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'general.search' | translate}}" st-search="search_key"
+                                        id="search_key" st-input-event="change">
+                                    <i class="fa icon-search" style="padding-top: 16px;"></i>
+                                </div>
+
+                                <span>
+                                    <button class="btn btn-sm btn-primary btn-radius" type="button"
+                                    ng-if="(((user.access=='ca') && (user.user_type!='external')) || ( ( user.access=='bo' || user.access == 'bd' ) && ( user.content_administator_catalogue == 1)))"
+                                        ng-click="createCatalogue()" title="{{'normal.create_catalogue' | translate}}">
+                                        <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}
+                                    </button>
+
+                                </span>
+
+                                <button class="btn btn-default btn-sm btn-green" style="margin:15px 0 0 4px; font-size: 13px;"
+                                    ng-click="exportCatalogueList()" title="{{'contract.export' | translate}}"
+                                    type="button">
+                                    <i class="icon-export2"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="catlogue_id" st-sort="catalogue_unique_id">{{'contract.Id' | translate}}</th>
+                                <th class="catlogue_name" st-sort="catalogue_name">{{'normal.catalogue_item_name' | translate}}</th>
+                                <th class="catlogue_currency" st-sort="currency_name">{{'contract.currency' | translate}}</th>
+                                <th class="catlogue_connected">{{'contract.connect_to' | translate}}</th>
+                                <th class="catlogue_status" st-sort="status">{{'customer.status' | translate}}</th>
+                                <th class="catlogue_actions">{{'tags.actions' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!catalogueLoading">
+                            <tr ng-repeat="row in catalogueListData">
+                                <td class="catlogue_id">
+                                    <span>{{row.catalogue_unique_id}}</span>
+                                    </td>
+                                <td class="catlogue_name custom-ellipsis">
+                                    <span class="ellipsis-block skyblue pointer" ng-click="goToViewCatalogue(row)">{{row.catalogue_name}}</span>
+                                </td>
+                                <td class="catlogue_currency custom-ellipsis">
+                                    <span class="ellipsis-block">{{row.currency_name}}</span>
+                                </td>
+                                <td class="catlogue_connected custom-ellipsis">
+                                    <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.connected_to[0]">---</span>
+                                    <span ng-if="!row.connected_to[1] && row.connected_to[0].can_access==0"  class="ellipsis-block" title="{{row.connected_to[0].name}}">{{row.connected_to[0].name}}</span>
+                                    <span ng-if="!row.connected_to[1] && row.connected_to[0].can_access==1" style="color:#2196f3;cursor: pointer;" ng-click="goToDetailsPage(row.connected_to[0])"  class="ellipsis-block" title="{{row.connected_to[0].name}}">{{row.connected_to[0].name}}</span>
+
+                                    <a class="" ng-if="row.connected_to[1]">{{'general.multi_selected' | translate}}</a>
+                                    <a ng-if="row.connected_to[1]" href="javascript:;"  style="padding: 0px 0px 5px;" uib-popover-template="dynamicPopover.templateUrl" class="icon-plus-circle gray ml-h" popover-placement="right" popover-trigger="'outsideClick'" class="btn btn-default"></a>
+                                </td>
+                                <td class="catlogue_status">
+                                    <span ng-if="row.status=='Active'" class="green">{{'general.active' | translate}}</span>
+                                    <span ng-if="row.status=='Closed'" class="red">{{'general.closed' | translate}}</span>
+                                    </td>
+                                <td class="catlogue_actions">
+                                    <div style="display: flex;align-items: center;">
+                                        <span uib-dropdown on-toggle="toggled(open)" style="display: flex;"
+                                            class="c-dropdown width-20">
+                                            <a href uib-dropdown-toggle class="font-sm" style="line-height: 1;">
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop"
+                                                dropdown-append-to-body="true" uib-dropdown-menu
+                                                aria-labelledby="simple-dropdown" style="min-width: 6rem;">
+                                                <li>
+                                                    <a href="javascript:;"
+                                                        ng-click="goToViewCatalogue(row)">{{'general.view' |
+                                                        translate}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" ng-if="(((user.access=='ca') && (user.user_type!='external')) || ( ( user.access=='bo' || user.access == 'bd' ) && ( user.content_administator_catalogue == 1)))"
+                                                     ng-click="editCatalogue(row)">{{'general.edit' |
+                                                        translate}}</a>
+                                                </li>
+                                            </ul>
+                                        </span>
+                                      
+                                    </div>
+
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                        <tbody ng-show="catalogueLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="emptyCatalogueTable">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount"
+                                            class="text-sm-center"></span>
+                                        <span class="paginator-dropdown" ng-if="catalogueInfoCount>10">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultPagesCatalogue(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="myPopoverCatologue.html">
+    <div class=""  ng-repeat="item in row.connected_to">
+        <span ng-if="item.can_access==1" ng-click="goToDetailsPage(item)" style="color:#2196f3;cursor: pointer;">{{item.name}}</span>
+        <span ng-if="item.can_access==0">{{item.name}}</span>
+    </div>
+</script>
+
+
+<style>
+    .bordered-logo {
+        background-color: #70ad47;
+        border-radius: 20px;
+    }
+
+    .filter-catalogue {
+        width: 25%;
+    }
+
+    .filter-catalogue .filter-catalogue-list {
+        margin: 3px 3px 4px 3px;
+        line-height: 17px;
+    }
+
+    .filter-catalogue-list-value {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 0px 8px 0px 8px;
+        border: 1px solid #c1c0c0;
+        height: 23px;
+        position: relative;
+    }
+
+    .filter-catalogue .filter-catalogue-list .form-control {
+        background-color: transparent;
+        border: none;
+        color: #000;
+        padding: 0;
+        font-size: 14px;
+        line-height: 15px;
+        width: calc(100% - 20%);
+    }
+
+    .filter-catalogue-list-value p {
+        color: #000;
+        font-size: 14px;
+        margin: 0;
+        line-height: 17px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: calc(100% - 20%);
+        padding-bottom: 2px;
+    }
+
+    .filter-catalogue .filter-catalogue-list label {
+        color: #000;
+        margin: 0;
+        font-size: 12px;
+        padding-left: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+    .filter-catalogue .filter-catalogue-list i {
+        font-size: 11px;
+        font-weight: 900;
+        margin-left: 3px;
+    }
+
+
+    .tableSelect-header {
+        margin: 0 0 0 7px;
+    }
+
+    .tableSelect-header .form-group {
+        margin: 0;
+    }
+
+    .filter-catalogue-list-icons {
+        width: 20%;
+    }
+
+    .tableSelect-header-left {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .button-icon {
+        align-items: flex-start;
+    }
+
+    .filter-icon {
+        position: relative;
+        margin: 6px 0px;
+    }
+
+    .filter-icon i.icon-times {
+        position: absolute;
+        top: 5px;
+        font-size: 6px;
+        right: 6px;
+        background-color: #db441d;
+        color: #fff;
+        border-radius: 30px;
+        height: 12px;
+        width: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+    }
+
+    .filter-catalogue-list-value .tooltip.bottom {
+        left: 0 !important;
+        top: 20px;
+    }
+    .custom-ellipsis:before {
+        content: unset;
+    }
+    .custom-ellipsis .ellipsis-block{
+        position: unset;
+    }
+    .contract-breadcrumb-color {
+        background-color: #e5f0db;
+    }
+    .accordion-default .panel-body ul li {
+        border-bottom: 0px solid #cfd8dc;
+    }
+</style>

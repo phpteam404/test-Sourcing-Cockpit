@@ -1,0 +1,187 @@
+<div class="animated fadeIn">
+    <div class="dashboard-widget row" ng-if="permission['view']">
+    <!--<div class="dashboard-widget row" >-->
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-lg-12 p0">
+                    <div class="card">
+                        <div class="display-inline-block pull-right pt4">
+                            <form novalidate name="notificationForm" ng-submit="notificationForm.$valid && getData(for_date)" class="clearfix">
+                                <div class="col-sm-12 action-head p0 pull-right">
+                                    <button type="submit" class="btn btn-sm btn-primary pull-right"><i class="icon-search"></i></button>
+                                    <div class="form-inline pull-right">
+                                        <!--<label class="pull-left p0 mr-h pt2">{{'notification.select_date' |translate}} :</label>-->
+                                        <div class="input-group table-search">
+                                            <input type="text" class="form-control date-pic"
+                                                   uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                                                   data-ng-model="for_date"
+                                                   datepicker-options="options"
+                                                   name="for_date" is-open="openCal" show-weeks="false"
+                                                   show-button-bar="false" readonly required/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-sm btn-default border" ng-click="openCal = true">
+                                                    <i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </div>
+                                        <span class="error-message display-block" ng-if="notificationForm.for_date.$error.required && notificationForm.$submitted">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <form name="outerForm" class="tab-form-demo">
+                            <uib-tabset active="activeForm">
+                                <uib-tab index="0" >
+                                    <uib-tab-heading>
+                                        {{'notification.new' | translate}} <span class="badge-num">{{newNotificationCounts}}</span>
+                                    </uib-tab-heading>
+                                    <table class="table table-custom table-striped table-hover" st-pipe="getNewNotification" st-table="notificationNewList">
+                                        <thead>
+                                        <tr>
+                                            <th st-sort="mail_subject">{{'notification.subject' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.contract_updates' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.new_contracts' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.user_updates' | translate}}</th>
+                                            <th class="w150" st-sort="send_date">{{'notification.notification_date' | translate}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody ng-show="!isLoadingNew">
+                                        <tr ng-repeat="row in notificationNewList">
+                                            <td>
+                                                <a ui-sref="app.notifiation({date:(row.send_date | utcToLocal:'iso')})"
+                                                   n-t='{"valid":"true","m_t":"Notification","a_n":"view","a_d":"Notification view ($${{row.send_date}})"}'>
+                                                    {{row.mail_subject}} {{'for' | translate}} {{row.date | utcToLocal:'date'}}
+                                                </a>
+                                            </td>
+                                            <td
+                                                ng-init="contract_updates=row.content.changes_contract_status.length+
+                                                row.content.changes_contract.length+
+                                                row.content.review_started.length+
+                                                row.content.review_updated.length+
+                                                row.content.review_finalized.length+
+                                                row.content.contributor_add.length+
+                                                row.content.contributor_remove.length+
+                                                row.content.discussion_started.length+
+                                                row.content.discussion_updated.length+
+                                                row.content.discussion_closed.length+
+                                                row.content.action_item_created.length+
+                                                row.content.action_item_updated.length+
+                                                row.content.action_item_closed.length">{{contract_updates}}</td>
+                                            <td>{{row.content.new_contract.length}}</td>
+                                            <td
+                                                ng-init="user_updates=row.content.user_create.length+
+                                                row.content.user_update.length+
+                                                row.content.user_delete.length">{{user_updates}}</td>
+                                            <td>
+                                                {{row.send_date | utcToLocal:'date'}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody ng-show="isLoadingNew">
+                                        <tr>
+                                            <td colspan="5" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody ng-show="notificationNewList.length<=0">
+                                        <tr>
+                                            <td colspan="5" class="text-sm-center">{{'notification.no_notification' | translate}}</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot class="body-bg">
+                                        <tr>
+                                            <td class="text-center" colspan="5">
+                                                <div class="paginator">
+                                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                    <span class="paginator-dropdown" ng-if="totalRecords1>10">
+                                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                        <select ng-model="displayCount" ng-change="defaultPages1(displayCount)"
+                                                            ng-options="item for item in pagesNumber" selected>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab index="1" >
+                                    <uib-tab-heading>
+                                        {{'notification.all' | translate}} <span class="badge-num">{{allNotificationCounts}}</span>
+                                    </uib-tab-heading>
+                                    <table class="table table-custom table-striped table-hover" st-pipe="getAllNotification" st-table="notificationAllList">
+                                        <thead>
+                                        <tr>
+                                            <th st-sort="mail_subject">{{'notification.subject' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.contract_updates' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.new_contracts' | translate}}</th>
+                                            <th style="width:10%;">{{'notification.user_updates' | translate}}</th>
+                                            <th class="w150" st-sort="send_date">{{'notification.notification' | translate}} {{'notification.date' | translate}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody ng-show="!isLoadingAll">
+                                        <tr ng-repeat="row in notificationAllList" ng-class="row.is_notification_opened==0?'selectedRow':''">
+                                            <td>
+                                                <a ui-sref="app.notifiation({date:(row.send_date | utcToLocal:'iso')})"
+                                                   n-t='{"valid":"true","m_t":"Notification","a_n":"view","a_d":"Notification view ($${{row.send_date}})"}'>
+                                                    {{row.mail_subject}} {{'for' | translate}} {{row.date | utcToLocal:'date'}}
+                                                </a>
+                                            </td>
+                                            <td
+                                                ng-init="contract_updates=row.content.changes_contract_status.length+
+                                                row.content.changes_contract.length+
+                                                row.content.review_started.length+
+                                                row.content.review_updated.length+
+                                                row.content.review_finalized.length+
+                                                row.content.contributor_add.length+
+                                                row.content.contributor_remove.length+
+                                                row.content.discussion_started.length+
+                                                row.content.discussion_updated.length+
+                                                row.content.discussion_closed.length+
+                                                row.content.action_item_created.length+
+                                                row.content.action_item_updated.length+
+                                                row.content.action_item_closed.length">{{contract_updates}}</td>
+                                            <td>{{row.content.new_contract.length}}</td>
+                                            <td
+                                                ng-init="user_updates=row.content.user_create.length+
+                                                row.content.user_update.length+
+                                                row.content.user_delete.length">{{user_updates}}</td>
+                                            <td>
+                                                {{row.send_date | utcToLocal:'date'}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody ng-show="isLoadingAll">
+                                        <tr>
+                                            <td colspan="5" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody ng-show="notificationAllList.length<=0">
+                                        <tr>
+                                            <td colspan="5" class="text-sm-center">{{'notification.no_notification' | translate}}</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot class="body-bg">
+                                        <tr>
+                                            <td class="text-center" colspan="5">
+                                                <div class="paginator">
+                                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                    <span class="paginator-dropdown" ng-if="totalRecords2>10">
+                                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+<select ng-model="displayCount" ng-change="defaultPages2(displayCount)"
+                                                            ng-options="item for item in pagesNumber" selected>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </uib-tab>
+                            </uib-tabset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/row-->
+</div>

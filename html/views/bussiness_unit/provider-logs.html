@@ -1,0 +1,518 @@
+<div class="animated fadeIn f12">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div class="col-lg-12 p0 large-widget">
+                <table class="table table-custom table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;" class="hand-symbol"></th>
+                            <th style="width: 40%;" class="hand-symbol">{{'contract.current_data' | translate}}</th>
+                            <th style="width: 40%;" class="hand-symbol">
+                                <div>
+                                    <select class="form-control" ng-model="provider.id_provider_log" ng-change="getContractLogs(provider.id_provider_log)" ng-options="item.id_provider_log as ((item.log_created_on  | utcToLocal: 'toLocalTime') +' by '+item.log_user_name) for item in providerLogOptions">
+                                        <option value=""> --{{'general.select' | translate}} {{'contract.log' | translate}}--</option>
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bold">{{'contract.provider' | translate}}</td>
+                            <td>{{currentContract[0].provider_name | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="contractLogDetails[0].provider_name">
+                                    <span ng-if="currentContract[0].provider_name === contractLogDetails[0].provider_name">
+                                       {{contractLogDetails[0].provider_name | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].provider_name !== contractLogDetails[0].provider_name" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_name | checkEmpty}}
+                                    </span>
+                                </span>
+                                <span ng-if="!contractLogDetails[0].provider_name">---</span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.unique_id' | translate}}</td>
+                            <td>{{currentContract[0].unique_id | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].unique_id">---</span>
+                                <span ng-if="contractLogDetails[0].unique_id">
+                                    <span ng-if="currentContract[0].unique_id === contractLogDetails[0].unique_id">
+                                        {{contractLogDetails[0].unique_id | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].unique_id !== contractLogDetails[0].unique_id" class="log_cahnge">
+                                        {{contractLogDetails[0].contract_name | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.vat' | translate}}</td>
+                            <td>{{currentContract[0].vat | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].vat">---</span>
+                                <span ng-if="contractLogDetails[0].vat">
+                                    <span ng-if="currentContract[0].vat === contractLogDetails[0].vat">
+                                        {{contractLogDetails[0].vat | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].vat !== contractLogDetails[0].vat" class="log_cahnge">
+                                        {{contractLogDetails[0].vat | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.postal_code' | translate}}</td>
+                            <td>{{currentContract[0].postal_code  | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].postal_code">---</span>
+                                <span ng-if="contractLogDetails[0].postal_code">
+                                    <span ng-if="currentContract[0].postal_code === contractLogDetails[0].postal_code">
+                                        {{contractLogDetails[0].postal_code  | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].postal_code !== contractLogDetails[0].postal_code" class="log_cahnge">
+                                        {{contractLogDetails[0].postal_code| checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.category' | translate}}</td>
+                            <td>{{currentContract[0].category_name | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].category_name">---</span>
+                                <span ng-if="contractLogDetails[0].category_name">
+                                    <span ng-if="currentContract[0].category_name === contractLogDetails[0].category_name">
+                                        {{contractLogDetails[0].category_name  | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].category_name !== contractLogDetails[0].category_name" class="log_cahnge">
+                                        {{contractLogDetails[0].category_name| checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.country' | translate}}</td>
+                            <td>{{currentContract[0].country_name | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].country_name">---</span>
+                                <span ng-if="contractLogDetails[0].country_name">
+                                    <span ng-if="currentContract[0].country_name === contractLogDetails[0].country_name">
+                                        {{contractLogDetails[0].country_name | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].country_name !== contractLogDetails[0].country_name" class="log_cahnge">
+                                        {{contractLogDetails[0].country_name | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.address' | translate}}</td>
+                            <td>{{currentContract[0].company_address | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].company_address">---</span>
+                                <span ng-if="contractLogDetails[0].company_address">
+                                    <span ng-if="currentContract[0].company_address === contractLogDetails[0].company_address">
+                                        {{contractLogDetails[0].company_address | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].company_address !== contractLogDetails[0].company_address" class="log_cahnge">
+                                        {{contractLogDetails[0].company_address | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'providers.city' | translate}}</td>
+                            <td>{{currentContract[0].city | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].city">---</span>
+                                <span ng-if="contractLogDetails[0].city">
+                                    <span ng-if="currentContract[0].city === contractLogDetails[0].city">
+                                        {{contractLogDetails[0].city | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].city !== contractLogDetails[0].city" class="log_cahnge">
+                                        {{contractLogDetails[0].city | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td class="bold">{{'Total Spend' | translate}} ({{'general.incl' | translate}}. {{'general.vat'
+                                | translate}})</td>
+                            <td>{{currentContract[0].total_spent | currency : currentContract[0].currency_name+' ':0 | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].total_spent">---</span>
+                                <span ng-if="contractLogDetails[0].total_spent">
+                                    <span ng-if="(currentContract[0].total_spent === contractLogDetails[0].total_spent)
+                                                && (currentContract[0].total_spent === contractLogDetails[0].total_spent)">
+                                        {{contractLogDetails[0].total_spent | currency : contractLogDetails[0].currency_name+' ':0 | checkEmpty}}
+                                    </span>
+                                    <span ng-if="(currentContract[0].total_spent !== contractLogDetails[0].total_spent)
+                                                || (currentContract[0].total_spent !== contractLogDetails[0].total_spent)"
+                                        class="log_cahnge">
+                                        {{contractLogDetails[0].total_spent | currency : contractLogDetails[0].currency_name+' ':0 | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                       
+                        <tr>
+                            <td class="bold">{{'providers.description' | translate}}</td>
+                            <td>{{currentContract[0].description | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].description">---</span>
+                                <span ng-if="contractLogDetails[0].description">
+                                    <span ng-if="currentContract[0].description === contractLogDetails[0].description">
+                                        {{contractLogDetails[0].description | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].description !== contractLogDetails[0].description" class="log_cahnge">
+                                        {{contractLogDetails[0].description | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.internal' | translate}} {{'contract.contract_sponsor' | translate}}</td>
+                            <td>{{currentContract[0].internal_contract_sponsor | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].internal_contract_sponsor">---</span>
+                                <span ng-if="contractLogDetails[0].internal_contract_sponsor">
+                                    <span ng-if="currentContract[0].internal_contract_sponsor === contractLogDetails[0].internal_contract_sponsor">
+                                        {{contractLogDetails[0].internal_contract_sponsor | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].internal_contract_sponsor !== contractLogDetails[0].internal_contract_sponsor" class="log_cahnge">
+                                        {{contractLogDetails[0].internal_contract_sponsor | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.logs.provider_contract_sponsor' | translate}}</td>
+                            <td> {{currentContract[0].provider_contract_sponsor | checkEmpty}}</td>
+                            <td>
+                               
+                                <span ng-if="!contractLogDetails[0].provider_contract_sponsor">---</span>
+                                <span ng-if="contractLogDetails[0].provider_contract_sponsor">
+                                    <span ng-if="currentContract[0].provider_contract_sponsor === contractLogDetails[0].provider_contract_sponsor">
+                                        {{contractLogDetails[0].provider_contract_sponsor | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].provider_contract_sponsor !== contractLogDetails[0].provider_contract_sponsor" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_contract_sponsor | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.logs.internal_partner_relationship_manager' | translate}}</td>
+                            <td> {{currentContract[0].internal_partner_relationship_manager | checkEmpty}}</td>
+                            <td>
+                              
+                                <span ng-if="!contractLogDetails[0].internal_partner_relationship_manager">---</span>
+                                <span ng-if="contractLogDetails[0].internal_partner_relationship_manager">
+                                    <span ng-if="currentContract[0].internal_partner_relationship_manager === contractLogDetails[0].internal_partner_relationship_manager">
+                                        {{contractLogDetails[0].internal_partner_relationship_manager | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].internal_partner_relationship_manager !== contractLogDetails[0].internal_partner_relationship_manager"
+                                        class="log_cahnge">
+                                        {{contractLogDetails[0].internal_partner_relationship_manager | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.logs.provider_partner_relationship_manager' | translate}}</td>
+                            <td> {{currentContract[0].provider_partner_relationship_manager | checkEmpty}}</td>
+                            <td>
+                               
+                                <span ng-if="!contractLogDetails[0].provider_partner_relationship_manager">---</span>
+                                <span ng-if="contractLogDetails[0].provider_partner_relationship_manager">
+                                    <span ng-if="currentContract[0].provider_partner_relationship_manager === contractLogDetails[0].provider_partner_relationship_manager">
+                                        {{contractLogDetails[0].provider_partner_relationship_manager | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].provider_partner_relationship_manager !== contractLogDetails[0].provider_partner_relationship_manager"
+                                        class="log_cahnge">
+                                        {{contractLogDetails[0].provider_partner_relationship_manager | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.logs.internal_contract_responsible' | translate}}</td>
+                            <td> {{currentContract[0].internal_contract_responsible | checkEmpty}}</td>
+                            <td>
+                                
+                                <span ng-if="!contractLogDetails[0].internal_contract_responsible">---</span>
+                                <span ng-if="contractLogDetails[0].internal_contract_responsible">
+                                    <span ng-if="currentContract[0].internal_contract_responsible === contractLogDetails[0].internal_contract_responsible">
+                                        {{contractLogDetails[0].internal_contract_responsible | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].internal_contract_responsible !== contractLogDetails[0].internal_contract_responsible" class="log_cahnge">
+                                        {{contractLogDetails[0].internal_contract_responsible | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">{{'contract.logs.provider_contract_responsible' | translate}}</td>
+                            <td> {{currentContract[0].provider_contract_responsible | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].provider_contract_responsible">---</span>
+                                <span ng-if="contractLogDetails[0].provider_contract_responsible">
+                                    <span ng-if="currentContract[0].provider_contract_responsible === contractLogDetails[0].provider_contract_responsible">
+                                        {{contractLogDetails[0].provider_contract_responsible | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].provider_contract_responsible !== contractLogDetails[0].provider_contract_responsible" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_contract_responsible | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <!--spent mngmt-->
+                        <!-- <tr>
+                            <td class="bold">{{'contract.logs.additional_recurring_fees' | translate}}</td>
+                            <td> {{currentContract[0].additional_recurring_fees | checkEmpty}}</td>
+                            <td>
+                               
+                                <span ng-if="!contractLogDetails[0].additional_recurring_fees">---</span>
+                                <span ng-if="contractLogDetails[0].additional_recurring_fees">
+                                    <span ng-if="currentContract[0].additional_recurring_fees === contractLogDetails[0].additional_recurring_fees">
+                                        {{contractLogDetails[0].additional_recurring_fees | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].additional_recurring_fees !== contractLogDetails[0].additional_recurring_fees" class="log_cahnge">
+                                        {{contractLogDetails[0].additional_recurring_fees | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td class="bold">{{'contract.logs.additonal_one_off_fees' | translate}}</td>
+                            <td> {{currentContract[0].additonal_one_off_fees | checkEmpty}}</td>
+                            <td>
+                                
+                                <span ng-if="!contractLogDetails[0].additonal_one_off_fees">---</span>
+                                <span ng-if="contractLogDetails[0].additonal_one_off_fees">
+                                    <span ng-if="currentContract[0].additonal_one_off_fees === contractLogDetails[0].additonal_one_off_fees">
+                                        {{contractLogDetails[0].additonal_one_off_fees | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].additonal_one_off_fees !== contractLogDetails[0].additonal_one_off_fees" class="log_cahnge">
+                                        {{contractLogDetails[0].additonal_one_off_fees | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td class="bold">{{'contract.logs.po_number' | translate}}</td>
+                            <td> {{currentContract[0].po_number | checkEmpty}}</td>
+                            <td>
+                               
+                                <span ng-if="!contractLogDetails[0].po_number">---</span>
+                                <span ng-if="contractLogDetails[0].po_number">
+                                    <span ng-if="currentContract[0].po_number === contractLogDetails[0].po_number">
+                                        {{contractLogDetails[0].po_number | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].po_number !== contractLogDetails[0].po_number" class="log_cahnge">
+                                        {{contractLogDetails[0].po_number | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td class="bold">{{'templates.template_name' | translate}}</td>
+                            <td>{{currentContract[0].template_name | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="!contractLogDetails[0].template_name">---</span>
+                                <span ng-if="contractLogDetails[0].template_name">
+                                    <span ng-if="currentContract[0].template_name === contractLogDetails[0].template_name">
+                                        {{contractLogDetails[0].template_name | checkEmpty}}
+                                    </span>
+                                    <span ng-if="currentContract[0].template_name !== contractLogDetails[0].template_name" class="log_cahnge">
+                                        {{contractLogDetails[0].template_name | checkEmpty}}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!--provider tags start  -->
+                        <!-- <tr ng-repeat="tag in currentContract[0].provider_tags track by $index">
+                            <td class="bold">{{tag.tag_text}}</td>
+                            <td>
+                                <span ng-if="tag.tag_type=='rag' && tag.comments!=''"> {{tag.tag_value | checkEmpty}}    Comments : {{tag.comments}}</span>
+                                <span ng-if="tag.tag_type=='rag' && tag.comments ==''"> {{tag.tag_value | checkEmpty}} </span>
+                                <span ng-if="tag.tag_type!='rag'"> {{tag.tag_value | checkEmpty}} </span>
+                            </td>
+                            <td>
+                              
+                                <span ng-if="contractLogDetails[0].provider_tags[$index].tag_id === tag.tag_id">
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value === tag.tag_value && tag.tag_type=='rag' && tag.comments!=''">
+                                        {{tag.tag_value | checkEmpty}}   Comments : {{tag.comments}}
+                                    </span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value === tag.tag_value && tag.tag_type=='rag' && tag.comments==''">
+                                        {{tag.tag_value | checkEmpty}}  
+                                    </span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value !== tag.tag_value && tag.tag_type=='rag' && tag.comments!=''" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_tags[$index].tag_value | checkEmpty}}  Comments: {{tag.comments}}
+                                    </span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value !== tag.tag_value && tag.tag_type=='rag' && tag.comments==''" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_tags[$index].tag_value | checkEmpty}} 
+                                    </span>
+                                    <span ng-if=" contractLogDetails[0].provider_tags[$index].tag_value === tag.tag_value && tag.tag_type!='rag'"> {{tag.tag_value | checkEmpty}} </span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value !== tag.tag_value && tag.tag_type!='rag'" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_tags[$index].tag_value | checkEmpty}}  
+                                    </span>
+                                </span>
+                            </td>
+                        </tr> -->
+                        <tr ng-repeat="tag in currentContract[0].provider_tags track by $index">
+                            <td class="bold">{{tag.tag_text}} </td> 
+                            <td>
+                                <span  ng-if="tag.tag_type=='rag'">
+                                    <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'R'">
+                                        <span class="red-active"></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'A'">
+                                        <span class=""></span>
+                                        <span class="amber-active"></span>
+                                        <span class=""></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'G'">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="green-active"></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="!tag.tag_value">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                   
+                                    <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'N/A'">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </span>
+                                <span ng-if="tag.tag_type=='rag'"> {{tag.tag_comments |checkEmpty}}</span>
+                               <span ng-if="tag.tag_type !='rag'">{{tag.tag_value | checkEmpty}}</span> 
+                            </td>
+                            <td>
+                                <span ng-if="contractLogDetails[0].provider_tags[$index].tag_id === tag.tag_id">
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value === tag.tag_value">
+                                        <span ng-if="tag.tag_type=='rag'">
+                                            <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'R'">
+                                                <span class="red-active"></span>
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                            </div>
+                                            <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'A'">
+                                                <span class=""></span>
+                                                <span class="amber-active"></span>
+                                                <span class=""></span>
+                                            </div>
+                                            <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'G'">
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                                <span class="green-active"></span>
+                                            </div>
+                                            <div class="status-widget font-weight-bold" ng-if="!tag.tag_value">
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                            </div>
+                                           
+                                            <div class="status-widget font-weight-bold" ng-if="tag.tag_value == 'N/A'">
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                                <span class=""></span>
+                                            </div>
+                                        </span>
+                                       
+                                    </span>
+                                   <span ng-if="contractLogDetails[0].provider_tags[$index].tag_comments === tag.tag_comments && tag.tag_type=='rag'"> {{tag.tag_comments | checkEmpty}}</span>
+                                   <span ng-if="contractLogDetails[0].provider_tags[$index].tag_comments !== tag.tag_comments && tag.tag_type=='rag'" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_tags[$index].tag_comments | checkEmpty}}</span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value === tag.tag_value && tag.tag_type!='rag'"> {{tag.tag_value | checkEmpty}} </span>
+                                    <span ng-if="contractLogDetails[0].provider_tags[$index].tag_value !== tag.tag_value && tag.tag_type!='rag'" class="log_cahnge">
+                                        {{contractLogDetails[0].provider_tags[$index].tag_value | checkEmpty}}  
+                                    </span>
+                                </span>
+                                <span ng-if="!contractLogDetails[0].provider_tags[$index].tag_id">---</span>    
+                             </td>
+                        </tr>
+                        <!--provider tags end -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row pt10">
+            <div class="col-lg-12 p0 large-widget">
+                <h6>{{'contract.deleted_file_log' | translate}}</h6>
+                <table class="table table-custom table-striped table-hover" st-pipe="getContractDocLogs" st-table="contractFilesLogs">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;" class="hand-symbol">{{'contract.file_name' | translate}}</th>
+                            <th style="width: 25%;" class="hand-symbol" st-sort="action">{{'contract.action' | translate}}</th>
+                            <th style="width: 25%;" class="hand-symbol" st-sort="first_name">{{'contract.deleted_user' | translate}}</th>
+                            <th style="width: 25%;" class="hand-symbol">{{'contract.date' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in contractFilesLogs">
+                            <td ng-if="row.document_type==0">
+                                <a href="javascript:;" ng-click="getDownloadUrl(row)">
+                                    <!-- <i class="icon-arrow-down-circle f14 display-inline-block pt4 valign-t"></i>&nbsp;&nbsp;{{row.document_name}}</a> -->
+                                    <i class="fa fa-download f14 display-inline-block pt4 valign-t"></i>&nbsp;&nbsp;{{row.document_name}}</a>
+                            </td>
+                            <td ng-if="row.document_type==1">
+                                <a ng-click="redirectUrl(row.document_source)" href="javascript:;" title="{{row.document_source}}">
+                                    <i class="fa fa-link f14 display-inline-block pt4 valign-t"></i>&nbsp;&nbsp;{{row.document_name}}</a>
+                            </td>
+                            <td>
+                                <span>{{row.action}}</span>
+                            </td>
+                            <td>
+                                <span ng-if="row.updated_by==0"> {{row.uploaded_user | checkEmpty }}</span>
+                                <span ng-if="row.updated_by!=0">{{ row.updated_by_name | checkEmpty }}</span>
+                            </td>
+                            <td>
+                                <span ng-if="row.updated_by==0">
+                                    {{row.datetime | utcToLocal: 'toLocalTime' | checkEmpty}}
+                                </span>
+                                <span ng-if="row.updated_by!=0">
+                                    {{row.updated_on | utcToLocal: 'toLocalTime' | checkEmpty}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="4" class="text-center">{{'general.loading' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="contractFilesLogs.length==0">
+                        <tr>
+                            <td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="body-bg">
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

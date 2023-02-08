@@ -1,0 +1,154 @@
+<div class="animated fadeIn">
+    <div class="qpanel product-clist  clearfix">
+        <div class="panel-left-wrap">
+            <h6 class="heading pb10">{{'tags.choose_type' | translate}}</h6>
+            <div class="panel-btn-wrap pb10">
+                <ul class="clearfix" style="display: flex;">
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('input')">
+                            <i class="icon-input-text"></i>{{'tags.input' | translate}} </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('radio')">
+                            <i class="icon-yes-no"></i> {{'tags.yes_no' | translate}} </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('dropdown')">
+                            <i class="icon-list"></i> {{'tags.dropdown' | translate}} </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('rag')">
+                       <i class="icon-rgb1"></i> {{'questions.rag' | translate}}  </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('date')">
+                        <i class="fa fa-calendar"></i> {{'tags.date'| translate}} </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" ng-click="loadModal('selected')">
+                            <i class="tss-selected-field" style="position: relative;top: 6px;font-size: 18px;"></i>{{'normal.selected_field' | translate}} </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="onlyactive1" style="padding-top: 7px;">
+                <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                            ng-true-value="1" ng-false-value="0"
+                            ng-model="req.status"
+                            ng-checked="req.status == 1"
+                            ng-change="getTagsByStatus(req.status)"
+                            id="status">
+                    <label class="onoffswitch-label assessment-switch mb-0"
+                            for="status">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="panel-right-wrap">
+            <div class="q-box mb10 scroll-div-wrap">
+                <div class="a-ques-list">
+                    <table class="table table-hover questions-list-table">
+                        <thead>
+                            <tr ng-if="tagsList.length>0">
+                                <th style="padding-left: 56px;">{{'tags.tag_title' | translate}}</th>
+                                <th>{{'bussiness.bussiness_unit' | translate}}</th>
+                                <th>{{'tags.status' | translate}}</th>
+                                <th class="pull-right">{{'tags.actions' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody  ui-sortable="sortableOptions" ng-model="tagsList">
+                            <tr ng-repeat="row in tagsList"  ng-init="tagIndx=$index;">
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <div class="acc-wrapper accordian-wrapper q-acc-wrap">
+                                                <span class="index-count">{{$index+1}}</span>
+                                                <div class="clearfix acc-head q-acc-head">
+                                                    <div class="provider-list-tags">
+                                                    <span ng-if="row.tag_type == 'dropdown'" class="icon-list" style="height: 21px;width:21px;margin-right: 4px;font-size: 20px;"></span>
+                                                    <span ng-if="row.tag_type == 'radio'" class="icon-yes-no" style="height: 21px;width:21px;margin-right: 4px;"></span>
+                                                    <span ng-if="row.tag_type == 'input'" class="icon-input-text" style="height: 21px;width:21px;margin-right: 4px;"></span>
+                                                    <span ng-if="row.tag_type == 'date'" class="fa fa-calendar" style="height: 21px;width:21px;margin-right: 4px;font-size: 20px;"></span>
+                                                    <span ng-if ="row.tag_type =='rag'" class="icon-rgb1" style="height:21px;width:21px;margin-right: 4px;"></span>
+                                                    <span ng-if="row.tag_type == 'selected'" class="tss-selected-field" style="height:21px;width:21px;margin-right: 4px;font-size: 20px;"></span>
+                                                    <!-- <div class="question-text" title="{{row.tag_text}}">{{row.tag_text}} &nbsp;
+                                                        <i  ng-if="row.is_fixed == 1" class="fa fa-pencil-square-o"></i>
+                                                    </div> -->
+                                                    <div class="provider-tags-data pl-0" ng-init="showLabel=true ;">
+                                                        <a ng-show="showLabel" class="provider-edit-tags" href="javascript:;" style="color:#464646 !important;" ng-click="showLabel=false;">
+                                                            <label  class="question-text pointer" title="{{row.tag_text}}">{{row.tag_text}}</label>
+                                                            <span  ng-if="row.is_fixed == 1" class="fa fa-pencil-square-o"></span>
+                                                            <span ng-if="row.is_fixed != 1"></span>
+                                                        </a>
+                                                        <div ng-show="!showLabel" class="provider-save-tags" ng-if="row.is_fixed == 1">  
+                                                            <input type="text"  class="form-control w190" ng-class="row.tag_text?'':'req-filter'"
+                                                        maxlength="16" ng-model="row.tag_text"/>
+                                                        <span ng-show="!showLabel && row.tag_text" class="green pointer" style="padding-left: 3px;"
+                                                            ng-click="showLabel=true" uib-tooltip="Save">
+                                                            <button class="btn btn-success mt-0 sponser-label-save" ng-click="updatData(row)"  type="button">
+                                                                <i class="fa fa-floppy-o"></i>
+                                                            </button>
+                                                        </span>
+                                                        </div>
+                
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="acc-body">
+                                                    <div class="acc-data" ng-if="show_options">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td>
+                                    <span ng-if="row.bu_name">{{row.bu_name}}</span>
+                                    <span ng-if="!row.bu_name">---</span>
+                                </td>
+                                <td>
+                                    <span ng-if="row.status == 1 && row.is_fixed != 1" class="green" >{{'general.active' | translate}}</span>
+                                    <span ng-if="row.status == 0 && row.is_fixed != 1" class="red" >{{'general.inactive' | translate}}</span>
+                                    <span ng-if="row.is_fixed == 1 && row.label == 'label_1'" class="text-primary" >{{'general.chart_color_indicator' | translate}}</span>
+                                </td>
+                                <td >
+                                    <a href="javascript:;" ng-if ="row.is_fixed != 1" class="pull-right mr-1 gray" title="{{'general.update' | translate}}" 
+                                        ng-click="loadModal(row.tag_type,row)"><i class="icon-edit" ></i></a>                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .editAlign{
+        margin-left: 137px;
+        margin-top:-30px;
+    }
+ 
+    .provider-list-tags,
+    .provider-save-tags,
+    .provider-edit-tags{
+        display: flex;
+        align-items: center;
+    }
+    .provider-tags-data{
+        width: 250px;
+    }
+    .w190{
+        width: calc(100% - 19px);
+    }
+    .panel-left-wrap{
+        padding: 7px 10px;
+    }
+    .panel-left-wrap .panel-btn-wrap {
+    width: 78%;
+}
+</style>

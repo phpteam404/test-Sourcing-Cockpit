@@ -1,0 +1,56 @@
+<div class="sidebar" ng-controller="fullLayoutCtrl">
+    <nav id="leftMenu" class="left-menu pull-left parent">
+        <div class="clearfix" ng-scrollbars win-height wh-offset="100"></div>
+        <ul class="nav">
+            <li ng-class="{'has-sub':m.sub_menu.length>0}" class="nav-item" 
+                ng-repeat="m in menu" title="{{m.module_name}}" ng-if="user.access!='ca'">
+                <a class="nav-link clearfix" id="{{m.module_name|underscoreadd}}"
+                    active-link="active" ng-href="{{m.url}}" ng-init="m.url=(m.module_url)?'#'+m.module_url:''" >
+                    <i class="{{m.module_icon}}" ></i>
+                    <label> <span>{{m.module_name}}</span></label>
+                </a>
+                <ul class="sub-menu" ng-if="m.sub_menu" style="border-right: 1px solid #ccc;">
+                    <li ng-repeat="c in m.sub_menu track by $index" class="nav-item pointer child_menu" id="child_{{m.module_name | underscoreadd}}">
+                        <a class="nav-link" href="#{{c.module_url}}" name="child_{{m.module_name | underscoreadd}}-{{$index}}" active-link="active"  title="{{c.module_name}}" id="{{c.module_name | underscoreadd}}">
+                            <i class="{{c.module_icon}}" ></i>
+                            <label>{{c.module_name}}</label>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li ng-class="{'has-sub':m.sub_menu.length>0}" class="nav-item" 
+                ng-repeat="m in menu" title="{{m.module_name}}" ng-if="user.access=='ca' && m.is_admin_menu=='0'">
+                <a class="nav-link clearfix" id="{{m.module_name|underscoreadd}}"
+                   active-link="active" ng-href="{{m.url}}" ng-init="m.url=(m.module_url)?'#'+m.module_url:''" >
+                    <i class="{{m.module_icon}}" ></i>
+                    <label> <span>{{m.module_name}}</span></label>
+                </a>
+                <ul class="sub-menu" ng-if="m.sub_menu" style="border-right: 1px solid #ccc;">
+                    <li ng-repeat="c in m.sub_menu track by $index" class="nav-item pointer child_menu" id="child_{{m.module_name | underscoreadd}}">
+                        <a class="nav-link" href="#{{c.module_url}}" name="child_{{m.module_name | underscoreadd}}-{{$index}}" active-link="active"  title="{{c.module_name}}" id="{{c.module_name | underscoreadd}}">
+                            <i class="{{c.module_icon}}" ></i>
+                            <label>{{c.module_name}}</label>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li ng-class="{'has-sub':m.sub_menu.length>0}" class="nav-item admin_menu_icon" 
+                ng-repeat="m in menu" title="{{m.module_name}}" ng-if="user.access=='ca' && m.is_admin_menu=='1'">
+                <a class="nav-link clearfix" id="{{m.module_name|underscoreadd}}"
+                    active-link="active" ng-href="{{m.url}}" ng-init="m.url=(m.module_url)?'#'+m.module_url:''" >
+                    <i class="{{m.module_icon}}" ></i>
+                    <label> <span>{{m.module_name}}</span></label>
+                </a>
+                <ul class="sub-menu" ng-if="m.sub_menu" style="border-right: 1px solid #ccc;">
+                    <li ng-repeat="c in m.sub_menu track by $index" class="nav-item pointer child_menu" id="child_{{m.module_name | underscoreadd}}">
+                        <a class="nav-link" href="#{{c.module_url}}" name="child_{{m.module_name | underscoreadd}}-{{$index}}" active-link="active"  title="{{c.module_name}}" id="{{c.module_name | underscoreadd}}">
+                            <i class="{{c.module_icon}}" ></i>
+                            <label>{{c.module_name}}</label>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        </div>
+    </nav>
+</div>

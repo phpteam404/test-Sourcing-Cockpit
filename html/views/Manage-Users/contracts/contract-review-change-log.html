@@ -1,0 +1,199 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div class="col-lg-12 p0 large-widget">
+                <div class="card col-lg-12 p0">
+                    <h5>{{contract_name}}</h5>
+                    <div class="card-block border-left-none">
+                        <div class="h4 m-b-0">{{'contract.status' | translate}}</div>
+                        <span class="widget-span orange">{{contractInfo.review_status | replaceWorflowToTask | capitalize}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'contract.review_date' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'contract.execute_date' | translate}}</div>
+                        <span class="widget-span">{{contractInfo.review_date | utcToLocal:'toLocalDate' | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0">{{'contract.current_status' | translate}}</div>
+                        <div class="status-widget font-weight-bold" ng-if="contractInfo.review_score == 'Red'">
+                            <span class="red-active"></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="contractInfo.review_score == 'Amber'">
+                            <span class=""></span>
+                            <span class="amber-active"></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="contractInfo.review_score == 'Green'">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class="green-active"></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="!contractInfo.review_score">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <span class="" ng-if="contractInfo.review_score == 'N/A'">{{contractInfo.review_score}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-12 p0 mb-h">
+                    <div class="col-lg-4 p0 mb-h">
+                        <select class="form-control" ng-model="change.module" ng-change="getTopics(change.module,'module')" ng-options="item.id_module as item.module_name for item in modules">
+                            <option value="">--{{'change_logs.all_modules' | translate}}--</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 pl-3 mb-h" ng-if="change.module">
+                        <select class="form-control" ng-model="change.topic" ng-change="getTopics(change.topic,'topic')" ng-options="item.id_topic as item.topic_name for item in topics">
+                            <option value="">-- {{'change_logs.all_topics' | translate}}--</option>
+                        </select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <uib-accordion ng-if="!noQuestions" close-others="oneAtATime" ng-repeat="question in questionsList">
+                        <div uib-accordion-group class="panel-default mb-h" heading="Selection Process" template-url="group-template.html" style="border: 1px solid #ccc;"
+                            is-open="status.open" ng-init="status.open = true">
+                            <uib-accordion-heading>
+                                {{question.question_text}}
+                            </uib-accordion-heading>
+                            <ul class="clearfix mb-0">
+                                <li ng-repeat="log in question.change_log" ng-class="(log.is_current == '1')?'current-log col-sm-12':'col-sm-12'">
+                                    <label class="col-sm-4 mb-0 pl0" ng-show="$last">{{'change_logs.created_by' | translate}} : &nbsp;
+                                        <span class="gray">{{log.answer_by_username | capitalize}}</span>
+                                    </label>
+                                    <label class="col-sm-4 mb-0 pl0" ng-show="!$last">{{'change_logs.updated_by' | translate}} : &nbsp;
+                                        <span class="gray">{{log.answer_by_username | capitalize}}</span>
+                                    </label>
+                                    <label class="col-sm-4 mb-0" ng-show="$last">{{'change_logs.created_on' | translate}} : &nbsp;
+                                        <span class="gray">{{log.updated_on | utcToLocal:'toLocalDate' | checkEmpty}}</span>
+                                    </label>
+                                    <label class="col-sm-4 mb-0" ng-show="!$last">{{'change_logs.updated_on' | translate}} : &nbsp;
+                                        <span class="gray">{{log.updated_on | utcToLocal:'toLocalDate' | checkEmpty}}</span>
+                                    </label>
+                                    <label class="col-sm-4 mb-0">{{'change_logs.answer' | translate}} : &nbsp;
+                                        <span class="display-inline-block mr-1">
+                                            <div ng-if="log.question_type != 'rag'">
+                                                <span class="orange">{{log.question_answer | checkEmpty}}</span>
+                                            </div>
+                                            <div ng-if="log.question_type == 'rag'">
+                                                <div class="radio_widget">
+                                                    <span ng-if="!log.question_answer">{{log.question_answer | isUndefinedOrNull}}</span>
+                                                    <span ng-if="log.question_answer == 'G'" class="f18">
+                                                        <i class="fa fa-check-circle green mr-h"></i>
+                                                    </span>
+                                                    <span ng-if="log.question_answer == 'A'" class="f18">
+                                                        <i class="fa fa-check-circle orange mr-h"></i>
+                                                    </span>
+                                                    <span ng-if="log.question_answer == 'R'" class="f18">
+                                                        <i class="fa fa-check-circle red"></i>
+                                                    </span>
+                                                    <span ng-if="log.question_answer == 'N/A'" class="f18">
+                                                        <i class="fa fa fa-check-circle gray mr-h"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </uib-accordion>
+                    <div ng-if="noQuestions" class="text-sm-center" style="padding-top: 35px;">{{'change_logs.no_questions' | translate}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt10">
+            <div class="col-lg-12 p0 large-widget">
+                <h6>{{'contract.deleted_file_log' | translate}}</h6>
+                <table class="table table-custom table-striped table-hover" st-pipe="getFileList" st-table="FileList">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;" class="hand-symbol">{{'contract.file_name' | translate}}</th>
+                            <th style="width: 40%;" class="hand-symbol"  st-sort="module_name">{{'contract.module_topic' | translate}}</th>
+                            <th style="width: 8%;" class="hand-symbol"  st-sort="action">{{'contract.action' | translate}}</th>
+                            <th style="width: 15%;" class="hand-symbol"  st-sort="first_name">{{'contract.deleted_user' | translate}}</th>
+                            <th style="width: 12%;" class="hand-symbol"  st-sort="datetime">{{'contract.date' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in FileList">
+                            <td ng-if="row.document_type==0">
+                                <a href="javascript:;" ng-click="getDownloadUrl(row)">
+                                    <!-- <i class="icon-arrow-down-circle f14 display-inline-block pt4 valign-t"></i>&nbsp;&nbsp;{{row.document_name}}</a> -->
+                                    <i class="fa fa-download" style="vertical-align: middle;margin-right:6px;"></i>{{row.document_name}}</a>
+
+                                </td>
+                            <td ng-if="row.document_type==1">
+                                <a ng-click="redirectUrl(row.document_source)" href="javascript:;" title="{{row.document_source}}">
+                                    <i class="fa fa-link f14 display-inline-block pt4 valign-t"></i>&nbsp;&nbsp;{{row.document_name}}</a>
+                            </td>
+                            <td>{{row.module_name | checkEmpty}} / {{row.topic_name | checkEmpty}}</td>
+                            <td>
+                                <span ng-if="row.updated_by==0">
+                                    {{'Added'}}
+                                </span>
+                                <span ng-if="row.updated_by!=0">
+                                    {{'Deleted'}}
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-if="row.updated_by==0"> {{row.uploaded_user_name | checkEmpty }}</span>
+                                <span ng-if="row.updated_by!=0">{{ row.updated_by_name | checkEmpty }}</span>
+                            </td>
+                            <td>
+                                <span ng-if="row.updated_by==0">
+                                    {{row.uploaded_on | utcToLocal: 'toLocalTime' | checkEmpty}}
+                                </span>
+                                <span ng-if="row.updated_by!=0">
+                                    {{row.updated_on | utcToLocal: 'toLocalTime' | checkEmpty}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="5" class="text-center">{{'general.loading' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="FileList.length==0">
+                        <tr>
+                            <td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="body-bg">
+                        <tr>
+                            <td class="text-center" colspan="5">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,130 @@
+<div class="edit-customer">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{title | translate}} {{'user.user' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form novalidate name="userForm" ng-submit="userForm.$valid && addUser(customUser)">
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.f_name' | translate}} *</label>
+                            <input type="text" class="form-control" maxlength="40" name="first_name" ng-model="customUser.first_name" placeholder="{{'general.enter' | translate}} {{'user.profile.f_name' | translate}}" required>
+                            <span class="error-message" ng-if="userForm.first_name.$error.required && userForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.l_name' | translate}} *</label>
+                            <input type="text" class="form-control" maxlength="40" name="last_name" ng-model="customUser.last_name" placeholder="{{'general.enter' | translate}} {{'user.profile.l_name' | translate}}" required>
+                            <span class="error-message" ng-if="userForm.last_name.$error.required && userForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.email' |translate}} *</label>
+                            <input type="email" class="form-control" maxlength="60" name="email" ng-model="customUser.email" placeholder="{{'general.enter' | translate}} {{'user.profile.email' | translate}}" required>
+                            <span class="error-message" ng-if="userForm.email.$error.required && userForm.$submitted">{{'general.required_field' |translate}}</span>
+                            <span ng-if="userForm.email.$error.email && userForm.$submitted" class="error-message">{{'general.enter_valid_email' |translate}}</span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4" ng-if="customUser.user_type=='internal'">
+                            <label >{{'customer.admin.role' | translate}} *</label>
+                            <select class="form-control"  ng-model="customUser.user_role_id" name="user_role" ng-required="customUser.user_type=='internal'"
+                                    ng-options="item.id_user_role as item.user_role_name for item in userRoles" ng-change="userRoleType(customUser.user_role_id)">
+                                <option value="">--{{'general.select' | translate}}--</option>
+                            </select>
+                            <span ng-if="userForm.user_role.$error.required && userForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="form-control-label">{{'user.profile.gender'| translate}}</label>
+                            <div class="" ng-init="customUser.gender = (customUser.gender=='')?'female':'male'">
+                                <label class="radio-inline mr-1">
+                                    <input type="radio" ng-model="customUser.gender" name="gender" value="male"> {{'user.profile.male' | translate}}
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="customUser.gender" name="gender" value="female"> {{'user.profile.female' | translate}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label >{{'general.status' | translate}} *</label>
+                            <select class="form-control"  ng-model="customUser.user_status" ng-init="customUser.user_status = (customUser.user_status =='')?'0':'1'" required>
+                                <option value="">-{{'general.select' | translate}}--</option>
+                                <option value="1">{{'general.active' | translate}}</option>
+                                <option value="0">{{'general.inactive' | translate}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-sm-4" ng-if="roleType!='U2FsdGVkX19UaGVAMTIzNEV1ZvR9jxgyIc/o1qBljiE='">
+                            <label >{{'customer.language' | translate}} *</label>
+                            <select class="form-control" name="language_id" ng-model="customUser.language_id" required 
+                                ng-options="item.id_language as item.language_name for item in language">
+                                <option value="">-{{'general.select' | translate}}-</option>
+                            </select>
+                            <span ng-if="userForm.language_id.$error.required && userForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                        <div class="col-sm-12 mb-2 form-inline manual-psd" ng-show="!user_id">
+                            <div class="form-group pt-1" ng-init="customUser.is_manual=0">
+                                <label class="checkbox pull-left pt-h" for="is_manual"> {{'user.cpassword.manual_password' | translate}}
+                                    <input type="checkbox" name="inline-checkbox1" id="is_manual"
+                                           ng-model="customUser.is_manual" ng-true-value="1"
+                                           ng-false-value="0">
+                                </label>
+                                <div ng-show="customUser.is_manual" class="form-group p0">
+                                    <input type="text" class="form-control w375" name="password2017" ng-model="customUser.password"
+                                           ng-pattern="/^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])(?=.*\d)(?=.*[$@$!%*#?&()\-_.=+])[A-Za-z\d$@$!%*#?&()\-_.=+]{8,}$/"
+                                           placeholder="{{'user.profile.password' | translate}}" maxlength="20" ng-required="customUser.is_manual">
+                                    <span ng-if="userForm.password2017.$error.required && userForm.$submitted" class="error-message">{{'general.required_field'|translate}}</span>
+                                    <div ng-if="!userForm.password2017.$error.required && userForm.password2017.$error.pattern" class="error-message">
+                                        <span class="clearfix">{{'user.cpassword.password_pattern'|translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-12 text-center m-t-1">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card" ng-show="user_id">
+                <div class="card-header">
+                    <strong>{{'user.cpassword.change_password' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form name="passwordForm" novalidate ng-submit="passwordForm.$valid && resetPassword(userPwd,customUser)">
+                        <div class="col-sm-12 p0 reset-psd">
+                            <div class="form-group col-sm-4">
+                                <label class="form-control-label">{{'user.cpassword.npassword' | translate}} *</label>
+                                <input type="password" class="form-control" name="npassword" ng-model="userPwd.npassword"
+                                       ng-pattern="/^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])(?=.*\d)(?=.*[$@$!%*#?&()\-_.=+])[A-Za-z\d$@$!%*#?&()\-_.=+]{8,}$/"
+                                       placeholder="{{'user.cpassword.npassword' | translate}}" maxlength="20" required minlength="8">
+                                <span ng-if="passwordForm.npassword.$error.required && passwordForm.$submitted" class="error-message">{{'general.required_field'|translate}}</span>
+                                <div ng-if="!passwordForm.npassword.$error.required && passwordForm.npassword.$error.pattern" class="error-message">
+                                    <span class="clearfix">{{'user.cpassword.password_pattern'|translate}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="form-control-label">{{'user.cpassword.cpassword' | translate}} *</label>
+                                <input type="password" class="form-control" name="cpassword" ng-model="userPwd.cpassword"
+                                       placeholder="{{'user.cpassword.cpassword' | translate}}"  maxlength="20" minlength="8" required>
+                                <span ng-if="passwordForm.cpassword.$error.required && passwordForm.$submitted" class="error-message">{{'general.required_field' |translate}}</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-sm-4">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-dot-circle-o"></i> {{'general.reset'|translate}}
+                                </button>
+                                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel'|translate}}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

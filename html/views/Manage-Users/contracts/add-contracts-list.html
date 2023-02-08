@@ -1,0 +1,382 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">
+        <span ng-if="projectInfo.type=='project'">{{'user.breadcrumb.all_contracts'| translate}}</span>
+        <span ng-if="contractInfo.type=='contract'">{{'user.breadcrumb.add_existing_contracts'| translate}}</span>
+
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix" id="modal-body">
+    <div class="animated fadeIn">
+        <div class="contract-overview">
+            <div class="row m-0 relative">
+                <div class="col-lg-12 p0">
+                    <div class="card" st-pipe="callServer" st-table="contractsList">
+                        <div class="col-sm-12 tableSelect-header">
+                            <div class="form-group col-sm-2 pl0 custom-field pt10 wid-55 r-padding">
+                                <select class="form-control" id="select"
+                                    name="select1" size="1"
+                                    ng-model="business_unit_id" 
+                                    ng-class="(business_unit_id)?'active-filter':''"
+                                    st-input-event="change" st-search="business_unit_id" 
+                                    ng-change="getProviderList(business_unit_id);" 
+                                    ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit">
+                                    <option value="" class="font-italic">-{{'bussiness.bussiness_unit'| translate}}-</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 pl0 custom-field pt10 pr5 r-padding" style="width: 145px;">
+                                <select class="form-control" id="select0" name="select0" size="1" ng-model="relationship_category_id" 
+                                    ng-class="(relationship_category_id)?'active-filter':''" ng-change="categoryUpdated(relationship_category_id)"
+                                    st-input-event="change" st-search="relationship_category_id" 
+                                    ng-options="opt.id_relationship_category as opt.relationship_category_name group by opt.type
+                                                    for opt in relationshipCategoryList">
+                                    <option value="" class="font-italic">- {{'contract.category'| translate}} -</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 custom-field pl0 pt10  wid-55 r-padding" ng-if="projectInfo.type=='project'">
+                                <select class="form-control" id="select1" name="select2" size="1" ng-model="provider_name" ng-class="(provider_name)?'active-filter':''"
+                                    st-input-event="change" st-search="provider_name" ng-change="providerChanged(provider_name)"
+                                    ng-options="item.provider_name as item.provider_name for item in providerList | orderBy:'provider_name'">
+                                    <option value="" class="font-italic">-{{'contract.provider' | translate}}-</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 custom-field pl0 pt10  wid-55 r-padding" ng-if="projectInfo.type!='project' && contractInfo.type!='contract'">
+                                <select class="form-control" id="select1" name="select2" size="1" ng-model="provider_name" ng-class="(provider_name)?'active-filter':''"
+                                    st-input-event="change" st-search="provider_name" ng-change="providerChanged()"
+                                    ng-options="item.provider_name as item.provider_name for item in providerList | orderBy:'provider_name'">
+                                    <option value="" class="font-italic">-{{'contract.provider' | translate}}-</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 custom-field pt10 pl0  wid-55 r-padding">
+                                <select class="form-control" id="select3" name="select5" size="1" ng-model="date_field" ng-class="(date_field)?'active-filter':''"
+                                    st-input-event="change" ng-change="filterDateType(date_field)">
+                                    <option value="" class="font-italic">-{{'contract.contract_date' | translate}}-</option>
+                                    <option value="created_on">{{'templates.create_date' | translate}}</option>
+                                    <option value="contract_start_date">{{'contract.start_date' | translate}}</option>
+                                    <option value="contract_end_date">{{'contract.end_date' | translate}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 custom-field pt10 pl0 wid-55 r-padding">
+                                <select class="form-control" id="select4" name="select4" size="1" ng-model="date_period" ng-class="(date_period)?'active-filter':''"
+                                    st-input-event="change" ng-change="filterDatePeriod(date_period)">
+                                    <option value="" class="font-italic">-{{'contract.condition' | translate}}-</option>
+                                    <option value="<=">{{'contract.before' | translate}}</option>
+                                    <option value=">=">{{'contract.after' | translate}}</option>
+                                    <option value="=">{{'contract.on' | translate}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2 custom-field pt10 pl0 wid-55 pr5">
+                                <input type="text" class="form-control" id="created_date" uib-datepicker-popup="dd-MM-yyyy" ng-model="created_date" is-open="openCal1"
+                                    show-weeks="false" show-button-bar="false"  ng-class="(created_date)?'active-filter':''" 
+                                    datepicker-options="dateOptions" ng-required="true" placeholder="dd-mm-yyyy" 
+                                    close-text="Close" current-text="111" ng-change="selectDate(created_date)"/>
+                               
+                                <span class="input-group-btn calanderIconCls">
+                                <button type="button" class="btn btn-default border" ng-click="openCal1 = true" style="padding:5px 0;">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                                <button type="button" class="btn btn-basic border reset-icon-cls" style="padding:5px 0;" ng-click="clear();selectDate()"  
+                                    title="Reset" ng-if="created_date || business_unit_id || provider_name || relationship_category_id || date_field || date_period" >
+                                    <i class="fa fa-undo f14" style="cursor: pointer;"></i></button>
+                                </span>
+                              
+                            </div>
+                            
+                          
+                            <div class="col-sm-3 p0 table-search pull-right  p-r-3 wid-55 wid-95 w200" style="padding-top: 10px; padding-right: 4px;">
+                                <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                                <i class="fa icon-search" style="padding-top: 10px;"></i>
+                            </div>
+                        </div>
+                        <table class="table table-custom table-striped table-hover contact-view-table alternate-td-bg-color">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th st-sort="provider_name" >{{'contract.provider' | translate}}</th>
+                                    <th st-sort="contract_name" >{{'contract.contract_name' | translate}}</th>
+                                    <th st-sort="relationship_category_name" >{{'contract.category' | translate}}</th>
+                                    <th st-sort="contract_start_date"  >{{'contract.start_date' | translate}}</th>
+                                    <th st-sort="contract_end_date" >{{'contract.end_date' | translate}}</th>
+                                    <th st-sort="bu_name" >{{'bussiness.bussiness_unit' | translate}}</th>
+                                    <th st-sort="bu_owner" >{{'contract.bu_owner' | translate}}</th>
+                                    <!-- <th st-sort="bu_delegate" >{{'contract.delegates' | translate}}</th> -->
+                                    <th st-sort="Projected_value"  >{{'contract.contracts_value' | translate}}</th>
+                                    <!-- <th st-sort="spent_amount" >{{'contract.invoices' | translate}}</th> -->
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <tr ng-repeat-start="row in contractsList" ng-class="row.can_access==1?'':'gray-text'"> 
+                                    <td class="action-item" style="position: relative;" ng-init="showData[row.id_contract]=row;showData[row.id_contract]['showChild']=false;">
+                                     <i ng-if="row['sub_contracts'] && row['sub_contracts'].length > 0 && projectInfo.type=='project'" ng-click="showData[row.id_contract]['showChild']=!showData[row.id_contract]['showChild']"
+                                            style="cursor: pointer;color: #000;" class="overview-list-icon-cls fa {{!showData[row.id_contract]['showChild']?'fa-plus':'fa-minus'}}"
+                                            tooltip-placement="top" title="{{!showData[row.id_contract]['showChild']?'View child contracts':''}}"></i>
+                                    </td>
+                                    <td class="provider-name custom-ellipsis">
+                                        <!-- <a href="javascript:;" ng-click="filterByProvider(row) && projectInfo.type=='project'" 
+                                        class="ellipsis-block"
+                                            title="{{row.provider_name}}" ng-if="row.can_access==1" 
+                                             n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                            {{row.provider_name | checkEmpty}}
+                                        </a> -->
+
+                                        <span ng-click="filterByProvider(row) && projectInfo.type=='project'" 
+                                                class="skyblue pointer ellipsis-block"
+                                            title="{{row.provider_name}}" ng-if="row.can_access==1 && projectInfo.type=='project'" 
+                                             n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                            {{row.provider_name | checkEmpty}}
+                                      </span> 
+
+                                        <span class="ellipsis-block"
+                                                title="{{row.provider_name}}" ng-if="row.can_access==1 && contractInfo.type=='contract'">
+                                              {{row.provider_name | checkEmpty}}
+                                        </span>
+                                        <span title="{{row.provider_name}}" ng-if="row.can_access==0"
+                                            style="color:#ccc;"  class="ellipsis-block">
+                                            {{row.provider_name | checkEmpty}}</span>
+                                    </td>   
+                                    <td  class="contract-name custom-ellipsis">
+                                        <!-- <a class="contract-td skyblue pointer ellipsis-block" title="{{row.contract_name}}"  
+                                                ng-if="row.can_access==1 || projectInfo.type=='project'" 
+                                            ng-click="goToContractDetails(row) && projectInfo.type=='project'" 
+                                            n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'>
+                                            {{row.contract_name | checkEmpty}}
+                                        </a> -->
+
+                                        <span class="contract-td skyblue pointer ellipsis-block"  title="{{row.contract_name}}"   
+                                                ng-click="goToContractDetails(row) && projectInfo.type=='project'" 
+                                                ng-if="row.can_access==1 && projectInfo.type=='project'">
+                                                 {{row.contract_name | checkEmpty}}
+                                        </span>
+                                        <span class="ellipsis-block" title="{{row.contract_name}}"  
+                                                ng-if="row.can_access==1 && contractInfo.type=='contract'">
+                                                  {{row.contract_name | checkEmpty}}
+                                       </span>
+
+                                        <span title="{{row.contract_name}}" ng-if="row.can_access==0" 
+                                            style="color:#ccc;"  class="ellipsis-block">
+                                            {{row.contract_name | checkEmpty}}</span>
+                                    </td>   
+                                    <td class="category-name">
+                                        <span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name | checkEmpty}}</span>
+                                    </td> 
+                                    <td class="start-date">
+                                        <span>{{row.contract_start_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                    </td>
+                                    <td  class="end-date">
+                                        <span>{{row.contract_end_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                    </td>
+                                    <td class="business-unit custom-ellipsis">
+                                        <span  class="ellipsis-block" title="{{row.bu_name}}">{{row.bu_name | checkEmpty}}</span>
+                                    </td>
+                                    <td class="owner-name custom-ellipsis">
+                                        <span   class="ellipsis-block"title="{{row.bu_owner}}">{{row.bu_owner | checkEmpty}}</span>
+                                    </td>
+                                    <!-- <td class="delegate-name custom-ellipsis">
+                                        <span  class="ellipsis-block" title="{{row.bu_delegate}}">{{row.bu_delegate | checkEmpty}}</span>
+                                    </td> -->
+                                    <td class="projected-spend">
+                                        <span  
+                                            title="{{row.Projected_value | currency : row.currency_name+' ':0}}">
+                                            {{row.Projected_value | currency : row.currency_name+' ':0 |checkEmpty}}
+                                        </span>
+                                    </td>
+                                    <!-- <td class="actual-spend">
+                                        <span 
+                                            title="{{row.spent_amount | currency : row.currency_name+' ':0}}">
+                                            {{row.spent_amount | currency : row.currency_name+' ':0 |checkEmpty}}
+                                        </span>
+                                    </td>    -->
+                                    <td> 
+                                        <a class="contract-td skyblue pointer ellipsis-block"  ng-if="projectInfo.type=='project'" ng-click="addedContractsList(row)">{{'general.select'| translate}}</a>
+                                        <a class="contract-td skyblue pointer ellipsis-block"  ng-if="contractInfo.type=='contract'" ng-click="addedSubContractsList(row,contractInfo)">{{'general.select'| translate}}</a>
+                                        <!-- <a class="contract-td skyblue pointer ellipsis-block"  ng-if="projectInfo.type!='project' && contractInfo.type!='contract'" ng-click="updateSelectedContract(row)">Select</a> -->
+
+                                    </td>  
+    
+                                </tr>
+                                <tr ng-repeat-end ng-class="{'open-child':!showData[row.id_contract]['showChild'],'highlight':showData[row.id_contract]['showChild']}">
+                                    <td colspan="15" class="toggle-Div" style="background-color: #e6e6e6;border-top: 1px solid lightgray;border-bottom: 1px solid lightgray">
+                                        <table class="table table-custom table-striped table-hover" style="margin-bottom:2px">
+                                            <tbody>
+                                                <tr ng-repeat="rowData in showData[row.id_contract]['sub_contracts']" ng-class="rowData.can_access==1?'':'gray-text'">
+                                                    <td class="action-item">
+                                                        <span ng-if="rowData.action_item_count>0" tooltip-placement="right" title="{{'contract.action_items' | translate}}"
+                                                            class="label_tag">{{rowData.action_item_count}}</span>
+                                                        <!-- angle-down,angle-up -->
+                                                    </td>
+                                                    <td class="provider-name custom-ellipsis">
+                                                        <a class="contract-td ellipsis-block" title="{{rowData.provider_name}}" 
+                                                            ng-if="rowData.can_access==1"
+                                                            href="javascript:;" ng-click="filterByProvider(rowData)"
+                                                           
+                                                            n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{rowData.provider_name}})"}'>
+                                                            {{rowData.provider_name | checkEmpty}}
+                                                        </a>
+                                                        <span ng-if="rowData.can_access==0" class="contract-td ellipsis-block" title="{{rowData.provider_name}}"
+                                                            style="color:#ccc;" >
+                                                            {{rowData.provider_name | checkEmpty}}
+                                                        </span>
+                                                    </td>                                                
+                                                    <td class="contract-name custom-ellipsis">
+                                                        <a class="contract-td skyblue pointer ellipsis-block" title="{{rowData.contract_name}}" ng-if="rowData.can_access==1"
+                                                            ng-click="goToContractDetails(rowData)"
+                                                            
+                                                            n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{rowData.contract_name}})"}'>
+                                                            {{rowData.contract_name | checkEmpty}}
+                                                        </a>
+                                                        <span ng-if="rowData.can_access==0" class="contract-td ellipsis-block" title="{{rowData.contract_name}}"
+                                                            style="color:#ccc;">
+                                                            {{rowData.contract_name | checkEmpty}}
+                                                        </span>
+                                                    </td>
+                                                    <td class="category-name">
+                                                        <span title="{{rowData.relationship_category_name}}">{{rowData.relationship_category_short_name | checkEmpty}}</span>
+                                                    </td>
+                                                    <td class="start-date">
+                                                        <span>{{rowData.contract_start_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                                    </td>
+                                                    <td class="end-date">
+                                                        <span>{{rowData.contract_end_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                                    </td>
+                                                    <td class="business-unit custom-ellipsis">
+                                                        <span  class="ellipsis-block" title="{{rowData.bu_name}}">{{rowData.bu_name | checkEmpty}}</span>
+                                                    </td>
+                                                    <td class="owner-name custom-ellipsis">
+                                                        <span  class="ellipsis-block" title="{{rowData.bu_owner}}">{{rowData.bu_owner | checkEmpty}}</span>
+                                                    </td>
+                                                    <!-- <td class="delegate-name custom-ellipsis">
+                                                        <span  class="ellipsis-block" title="{{rowData.bu_delegate}}">{{rowData.bu_delegate | checkEmpty}}</span>
+                                                    </td> -->
+                                                    <td class="projected-spend">
+                                                        <span  
+                                                            title="{{rowData.Projected_value | currency : rowData.currency_name+' ':0}}">
+                                                            {{rowData.Projected_value | currency : rowData.currency_name+' ':0 |checkEmpty}}
+                                                        </span>
+                                                    </td>
+                                                    <!-- <td class="actual-spend">
+                                                        <span  
+                                                            title="{{rowData.spent_amount | currency : rowData.currency_name+' ':0}}">
+                                                            {{rowData.spent_amount | currency : rowData.currency_name+' ':0 | checkEmpty}}
+                                                        </span>
+                                                    </td>   -->
+                                                    <td> 
+                                                        <a class="contract-td skyblue pointer ellipsis-block" ng-click="addedContractsList(rowData)">{{'general.select'| translate}}</a>
+                                                    </td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                             <!-- <tbody ng-if="providersList.length==0 && !isLoading"> -->
+                                <tbody ng-show="isLoading">
+                                    <tr>
+                                        <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="emptyTable">
+                                    <tr>
+                                        <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                                    </tr>
+                                </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-sm-center" colspan="15">
+                                        <div class="paginator">
+                                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                    ng-options="item for item in pagesNumber" selected>
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+          
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="pagination.html">
+<div class="pagination" ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+        </li>
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+        </li>
+    </ul>
+</div>
+</script>
+
+
+
+<style>
+    .w155 {
+        width: 155px;
+        padding-right: 5px !important;
+    }
+    .calanderIconCls {
+        position: absolute;
+        top: 1px;
+        right: -40px;
+        margin-top: 10px !important;
+    }
+    .calanderIconCls button{
+        padding: 4px 10px;
+    }
+    .gray-text{
+        color: #ccc;
+    }
+    .status-widget span{
+        height: 5px;
+    }
+    .contractShowHideChart{
+        right: 65px;
+    }
+    .onlyactive1 .onoffswitch-inner:before, .onlyactive1 .onoffswitch-inner::after {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    }
+    .onlyactive1 .onoffswitch-switch {
+        width: 14px;
+        height: 12px;
+        margin-top: 4px;
+    }
+    .onlyactive1 {
+        margin-top: -11px;
+        margin-left: 20px;
+    }
+    .tableSelect-header span.pr40{
+        padding-right: 22px !important;
+    }
+    .onlyactive1 .mrg-space{
+        padding-right: 0px !important;
+    }
+    .onoffswitch-inner{
+        margin-top: 0px !important;
+    }
+    .contract-list-popup .modal-dialog{
+        max-width: 1200px !important;
+    }
+    .contract-list-popup .calanderIconCls button{
+       background-color: transparent;
+    }
+</style>

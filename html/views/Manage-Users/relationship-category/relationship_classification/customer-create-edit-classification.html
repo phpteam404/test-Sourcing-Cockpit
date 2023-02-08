@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{'general.edit' | translate}} {{'relationship-classification.relationship-classification' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="classficationForm" ng-submit="classficationForm.$valid && update(classification)">
+<div class="modal-body clearfix" id="modal-body">
+
+    <div class="col-md-12 form-group">
+        <label>{{'relationship-classification.name' | translate}} *</label>
+        <input type="text" ng-model="classification.classification_name" class="form-control" name="classification_name" required/>
+        <span class="error-message" ng-if="classficationForm.classification_name.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    <div class="form-group col-sm-6">
+        <label >{{'relationship-classification.position.position' | translate}} *</label>
+        <select class="form-control"  ng-model="classification.classification_position" name="classification_position" required>
+            <option value="">-- {{'general.select' | translate}} --</option>
+            <option value="x">{{'relationship-classification.position.x' | translate}}</option>
+            <option value="y">{{'relationship-classification.position.y' | translate}}</option>
+        </select>
+        <span class="error-message" ng-if="classficationForm.classification_position.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    <div class="form-group col-sm-6" ng-if="isEdit">
+        <label >{{'general.status' | translate}} *</label>
+        <select class="form-control"  ng-model="classification.classification_status" required name="classification_status">
+            <option value="">-- {{'general.select' | translate}} --</option>
+            <option value="1">{{'general.active' | translate}}</option>
+            <option value="0">{{'general.inactive' | translate}}</option>
+        </select>
+        <span class="error-message" ng-if="classficationForm.classification_status.$error.required && classficationForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    <div class="col-sm-4">
+        <label>{{'relationship-classification.visible' | translate}}</label>
+        <div class="onoffswitch form-inline">
+            <div class="form-group" >
+                <input type="checkbox" name="onoffswitch_toggle"
+                       ng-model="classification.is_visible"
+                       ng-init="classification.is_visible = (classification.is_visible==1)?1:0"
+                       ng-checked="classification.is_visible == 1"
+                       ng-true-value="1" ng-false-value="0" class="onoffswitch-checkbox " id="setting2">
+                <label class="onoffswitch-label assessment-switch" for="setting2">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-primary">
+        <i class="fa fa-dot-circle-o"></i> {{'general.update' | translate}}</button>
+    <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+</div>
+</form>

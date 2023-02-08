@@ -1,0 +1,205 @@
+<div class="modal-header">
+    <h6 
+        class="modal-title" id="modal-title"> {{'general.add' | translate}} {{'contract.invoice' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<div class="modal-body clearfix">
+    <div class="card-block">
+        <form novalidate name="form" style="padding: 0px;" ng-submit="update(spendLine)">
+            <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6 pt-h">
+                    <label> {{'reports.from' | translate}} </label>
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="MMM dd yyyy" date-disabled="false"
+                            data-ng-model="spendLine.from_date"  name="from_date" is-open="openCal"
+                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>                
+                </div>
+                <div class="form-group col-sm-6 pt-h">                
+                    <label> {{'reports.to' | translate}} </label>
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="MMM dd yyyy" date-disabled="false"
+                            data-ng-model="spendLine.to_date"  name="to_date" is-open="openCal1"
+                            datepicker-options="{showWeeks:false}" show-button-bar="false" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>                
+                </div>
+           
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-2 pt-h">
+                <div class="input-group clearfix form-group-custom currency-code">
+                    <label>&nbsp;</label>
+                    <input name="currency_name" class="form-control" ng-model="contractInfo.currency_name" ng-disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-5 pt-h">
+                <label>{{'project.invoice_amount' | translate}} *</label>
+                <input type="text" class="form-control" maxlength="30" name="spent_amount" ui-number-mask="0" ng-model="spendLine.spent_amount" required>
+                <span class="error-message" ng-if="form.spent_amount.$error.required && form.$submitted">{{'general.required_field' |translate}}</span>
+            </div>
+
+            <div class="form-group col-sm-5 pt-h">
+                <label>{{'contract.invoice_description' | translate}} </label>
+                <input type="text" class="form-control" name="spend_line_description" ng-model="spendLine.spend_line_description">
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-6 pt-h">
+                <label>{{'contract.invoice_status' | translate}}</label>
+                <select class="form-control" name="invoice_status" ng-model="spendLine.invoice_status">
+                    <option value="">-- {{'general.select' |translate}} --</option>
+                    <option value="0">{{'contract.contract_dispute' | translate}}</option>
+                    <option value="1">{{'contract.contract_partial' | translate}}</option>
+                    <option value="2">{{'contract.contract_activated' | translate}}</option>
+                    <option value="3">{{'contract.contract_overdue' | translate}}</option>
+                    <option value="4">{{'contract.contract_draft' | translate}}</option>
+                    <option value="5">{{'contract.contract_paid' | translate}}</option>
+                </select>
+            </div>
+        
+            <div class="form-group col-sm-12 pt-h">
+                <label class="gray">{{'contract.comment' | translate}}</label>
+                <textarea type="text" name="comment"  ng-model="spendLine.comment" class="form-control"></textarea>
+                <span class="error-message" ng-if="form.comment.$error.required && form.$submitted">{{'general.required_field' | translate}}</span>
+            </div>
+          
+
+          
+            <div class="clearfix"></div>
+            <div>
+                <h6 class="form-group border-b">
+                    <label class="f16">{{'contract.evidences' | translate}}:</label>
+                </h6>
+                <div ng-init="indextab=0">
+                    <uib-tabset active="indextab" class="clearfix" style="padding: 10px;">
+                        <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                            <div class="col-sm-12 m-t-3 form-group p0">
+                                <attachment-files ng-model="file.attachment"></attachment-files>
+                            </div>
+                          
+                        </uib-tab>
+                        <uib-tab index="1" heading="{{'links.ad_link' | translate}}">
+                            <div class="clearfix" style="background: #EEEDF5; padding: 10px;">
+                                <ng-form name="linkForm" >
+                                    <div class="col-sm-5 pl0 ">
+                                        <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" required>
+                                    </div>
+                                    <div class="col-sm-7 pl-0" style="display:-webkit-inline-box;padding-right: 5px; display:flex;">
+                                        <input type="text" style="width:86.5%" class="form-control" ng-model="contractLink.url" required placeholder="{{'normal.placeholder_add_link_url' | translate}}">
+                                        <span class="question-attachements-add-link">
+                                             <button type="button" style="padding: 0.03rem 0.5rem;"  title="{{'contract.verify_link' | translate}}" ng-disabled="!linkForm.$valid" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                                <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p></button> 
+                                        </span>
+                                    </div>
+                                </ng-form>
+                                <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length" style="overflow-y: scroll;">
+                                    <div class="list-header clearfix">
+                                        <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                                    </div>
+                                    <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                        <ul class="list-items files-list">
+                                            <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                                <div class="col-sm-11 p0">
+                                                    <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                                    <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                                </div>
+                                                <div class="col-sm-1 pull-right">
+                                                    <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray"></i> </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>                                    
+                            </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+
+                </div>
+              
+             
+
+            <div class="clearfix"></div>
+            <!-- <div class="form-group col-sm-12 text-center m-t-3">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> {{'general.save'| translate}}</button>
+                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div> -->
+            <div class="modal-footer clearfix">
+                <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.save' | translate}}
+                </button>
+                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                    <i class="fa fa-ban"></i> &nbsp;{{'general.cancel' | translate}}
+                </button>
+            </div>
+        </form>
+        </div>
+
+    </div>
+<style>
+.nav-tabs .nav-item{
+    margin-bottom: 0px;
+    padding: 0;
+}
+.tab-content .tab-pane{
+    padding: 10px;
+}
+.nav-tabs{
+    background: #FFF !important;
+}
+.nav.nav-tabs li:last-child{
+    padding-right: 0px;
+    margin: 0;
+}
+.nav.nav-tabs li:last-child {
+    padding-right: 0px;
+    margin: 0;
+    margin-left: 0.2rem;
+}
+.nav-tabs .nav-item .nav-link {
+    background: #FFF;
+    color: #464646;
+    text-align: center;
+    min-width: 165px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+}
+.pt20{
+    padding-top: 20px;
+}
+.currency-code input {
+            height: 36px;
+            text-align: center;
+            width: 74px;
+        }
+.nav-tabs .nav-item.active .nav-link {
+    background: #efefef5e;
+    border-bottom-color: #FFF;
+    border: 1px solid #ccc;
+    border-bottom: 1px solid #f9f9f9;
+    margin-bottom: -1px;
+}
+.tab-content{
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+.question-attachements-add-link{
+  position: absolute;
+  right:0;
+  float:left;
+}
+</style>

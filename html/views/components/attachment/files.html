@@ -1,0 +1,56 @@
+<div ng-form="a_form" class="form-horizontal form-bordered" novalidate>
+    <div class="clearfix">
+        <!--<label class="form-group f14">Attachments</label>-->
+        <div class="col-sm-12 p0 bg-box">
+            <!--ng-if="permission.attachements_add"-->
+            <div class="dropzone plr15">
+                <div ngf-select="uploadFiles($files)" ngf-drop="uploadFiles($files)" class="drop-box"
+                     ngf-drag-over-class="'dragover'" ngf-multiple="true"
+                     ngf-pattern="'.png,.jpg,.jpeg,.xl,.xls,.xlsx,.doc,.docx,.pdf,.rtf,.txt,.gif,.bmp,.ppt,.pptx,.zip,.rar,.msg,.avi,.mp3,.mp4,.eml,.mov,.wav,.pst,.mbox,.f4v,.wmv,.mkv,.flv,.webm'">
+                    {{'attachment.select_file' | translate}}<span> ({{'general.or' | translate}}) {{'attachment.drop_here'|translate}}</span>
+                </div>
+            </div>
+            <div class="col-sm-12 p0 mt-1" ng-if="uploadImage.length" style="overflow-y: scroll">
+                <div class="list-header clearfix">
+                    <label class="text-capitalize f14">{{'attachment.attached_files' | translate}}</label>
+                </div>
+                <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                    <ul class="list-items files-list">
+                        <li class="clearfix" ng-repeat="f in uploadImage">
+                            <div class="col-sm-12 f-list-wrap" ng-if="showSelectType">
+                                <ng-form name="a_form">
+                                    <div class="col-sm-6">
+                                        <select class="form-control" ng-model="f.document_type"
+                                                name="document_type"
+                                                ng-options="item.id_crm_document_type as item.document_type_name for item in documentsTypes">
+                                            <option value="">--Select Document Type--</option>
+                                        </select>
+                                        <div ng-show="a_form.document_type.$error.required"
+                                             class="error-message">{{'general.required_field' | translate}}.
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" ng-model="f.description" placeholder="{{'providers.description' | translate}}"
+                                               name="descriptionName" />
+                                    </div>
+                                </ng-form>
+                            </div>
+                            <!--<div class="col-sm-1" upload-file data-fileType="{{ f.type }}"><i class=""></i></div>-->
+
+                            <div class="col-sm-11 p0">
+                                <p class="f12 text-line m-0 p-h" title="{{f.name}}">
+                                    <span class="pl-h" ng-if="url=='#/customer-document-intelligence'">{{ $index+1}}. </span>
+                                    {{f.name }}
+                                <span class="pl-h">{{ f.size/1000 | number : 0}} KB </span></p>
+                            </div>
+                            <div class="col-sm-1">
+                                <a href="javascript:;" class="display-inline-block p-h" uib-tooltip="Delete" ng-click="removeImage($index,f)"> <i
+                                        class="icon-trash gray"></i> </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

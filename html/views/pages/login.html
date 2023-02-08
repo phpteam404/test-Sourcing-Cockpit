@@ -1,0 +1,192 @@
+<div class="container d-table" id="loginPage">
+    <div class="d-100vh-va-middle">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <div class="card-group">
+                    <div class="card p-2">
+                        <div class="card-block"ng-show="(!isADLoginPage && !isSSOLoginPage && !isLoginWithMfa && !isEmailPage)">
+                            <p><img src="img/logowith.png"></p>
+                            <form class="form-group" name="emailForm" ng-submit="emailForm.$valid && submitLogin(emailForm,user)" novalidate>
+                                <h1><span>{{'user.login.Login' | translate}}</span></h1>
+                                <div class="form-group">
+                                    <div class="input-group mb-1"
+                                         ng-class="{'has-danger': loginForm.email_id.$error.required && loginForm.$submitted}">
+                                        <input type="email" class="form-control" ng-model="user.email_id" name="email_id" placeholder="{{'normal.placeholder_email_address' | translate}}" required>
+                                        <span ng-if="emailForm.email_id.$error.required && emailForm.$submitted" class="error-message">{{'general.enter_email' | translate}}</span>
+                                        <span ng-if="emailForm.email_id.$error.email && emailForm.$submitted" class="error-message">{{'general.enter_valid_email' | translate}}</span>
+                                    </div>
+                                    <div class="col-xs-12 sign-in">
+                                        <button type="submit" ng-if="!showLoadingSubmit" class="btn btn-orange px-3 mb-2">{{'general.submit' | translate}}</button>
+                                        <button type="button" ng-if="showLoadingSubmit" ng-disabled="showBtnSubmit" class="btn btn-orange px-3 mb-2">{{'general.loading' | translate}}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                         <div class="card-block" ng-show="(!isADLoginPage && !isSSOLoginPage && !isLoginWithMfa && isEmailPage)"> <!-- basic login page div open -->
+                            <p><img src="img/logowith.png"></p>
+                            <form class="form-group" name="loginForm" ng-submit="loginForm.$valid && submitLogin(loginForm,user,'0')" novalidate>
+                                <h1><span>{{'user.login.Login' | translate}}</span></h1>
+                                <div class="form-group">
+                                    <div class="input-group mb-1"
+                                         ng-class="{'has-danger': loginForm.email_id.$error.required && loginForm.$submitted}">
+                                        <input type="email" class="form-control" ng-model="user.email_id" name="email_id" placeholder="{{'normal.placeholder_email_address' | translate}}" ng-disabled="true" required>
+                                        <span ng-if="loginForm.email_id.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_email' | translate}}</span>
+                                        <span ng-if="loginForm.email_id.$error.email && loginForm.$submitted" class="error-message">{{'general.enter_valid_email' | translate}}</span>
+                                    </div>
+                                </div>
+                               
+                                <div class="input-group mb-2 form-group" ng-if="checkMailDetails.show_password"
+                                     ng-class="{'has-danger': loginForm.password.$error.required && loginForm.$submitted}">
+                                    <input type="password" class="form-control" ng-model="user.password" name="password" placeholder="{{'user.profile.password' | translate}}" required>
+                                    <div ng-if="loginForm.password.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_password' | translate}}</div>
+                                </div>
+                                <div class="col-xs-12 sign-in"> 
+                                    <button type="submit" ng-show="checkMailDetails.show_sign_in_button && !showLoadingSubmit"
+                                    ng-class="{'btn disable-color px-2':(checkMailDetails.is_sign_in_disabled),
+                                    'btn btn-orange px-2 pointer':(checkMailDetails.is_sign_in_disabled==false)}" 
+                                    ng-disabled="checkMailDetails.is_sign_in_disabled">{{'user.login.sign_in' | translate}}</button>
+                                    <button type="button" ng-show="showLoadingSubmit" class="btn btn-orange px-2" ng-disabled="showBtnSubmit">{{'general.loading' | translate}}</button>
+                                </div>
+                                <div class="clearfix"></div> 
+                                <div class="col-xs-12 forget-psd" ng-if="checkMailDetails.show_forgot_password_buttton">
+                                    <!-- <a ui-sref="{{checkMailDetails.is_forgot_password_buttton_disabled?'':'appSimple.forgotPassword'}}" ng-class="{disabled: checkMailDetails.is_forgot_password_buttton_disabled}">{{'user.login.forgot_password' | translate}} ?</a> -->
+                                    <a  ng-class="{disabled}"  ng-if="checkMailDetails.is_forgot_password_buttton_disabled">{{'user.login.forgot_password' | translate}} ?</a>
+                                    <a ui-sref="appSimple.forgotPassword" ng-if="checkMailDetails.is_forgot_password_buttton_disabled==false">{{'user.login.forgot_password' | translate}} ?</a>
+                                </div>
+                            </form>
+                        </div> <!-- basic login form close-->
+                        
+                         <div class="card-block" ng-if="(isADLoginPage || isSSOLoginPage)"> <!-- login Ad and sso form  open-->
+                            <p><img src="img/logowith.png"></p>
+                            <form class="form-group" name="loginForm" ng-submit="loginForm.$valid && submitLogin(loginForm,user, '1')" novalidate>
+                                <h1 ng-if="isADLoginPage"><span>{{'user.login.login_with_ad' | translate}}</span></h1> 
+                                <h1 ng-if="isSSOLoginPage"><span>{{'Login With Sso' | translate}}</span></h1> 
+
+                                <div class="form-group">
+                                    <div class="input-group mb-1"
+                                         ng-class="{'has-danger': loginForm.email_id.$error.required && loginForm.$submitted}">
+                                        <input type="email" class="form-control" ng-model="user.email_id" name="email_id" placeholder="{{'normal.placeholder_email_address' | translate}}" ng-disabled="true" required>
+                                        <span ng-if="loginForm.email_id.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_email' | translate}}</span>
+                                        <span ng-if="loginForm.email_id.$error.email && loginForm.$submitted" class="error-message">{{'general.enter_valid_email' | translate}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="input-group mb-2 form-group"
+                                     ng-class="{'has-danger': loginForm.password.$error.required && loginForm.$submitted}">
+                                    <input type="password" class="form-control" ng-model="user.password" name="password" placeholder="{{'user.profile.password' | translate}}" required>
+                                    <div ng-if="loginForm.password.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_password' | translate}}</div>
+                                </div>
+                                <div class="col-xs-12 sign-in">
+                                    <button type="submit" ng-show="!showSsoAd" class="btn btn-orange px-2">{{'user.login.sign_in' | translate}}</button>
+                                    <button type="button" ng-show="showSsoAd" class="btn btn-orange px-2">{{'general.loading' | translate}}</button>
+                                </div>
+                            </form>
+                        </div> <!-- login Ad and sso form  close-->
+                        
+                        
+                        <div class="card-block" ng-if="isLoginWithMfa">  <!-- login Mfa form  open-->
+                            <p><img src="img/logowith.png"></p>
+                            <form class="form-group" name="loginForm" ng-submit="loginForm.$valid && mfaForm(loginForm,user)" novalidate>
+                                <h1><span>{{'LOGIN VERIFICATION' | translate}}</span></h1>
+                                <div class="input-group mb-2 form-group"
+                                     ng-class="{'has-danger': loginForm.verification_method.$error.required && loginForm.$submitted}">
+                                     <label>{{'general.verification_method'| translate}}*</label>
+                                     <select class="form-control"  ng-model="user.verification_method" name="verification_method" required>
+                                        <option value="email" selected>{{'E-mail'| translate}}</option>
+                                    </select>
+                                    <div ng-if="loginForm.verification_method.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_verification_method' | translate}}</div>
+                                </div>
+                                <div class="input-group form-group-row mb-2" style="display: flex;align-items: flex-end;justify-content: space-between;">
+                                    <div style="padding-right: 10px;"
+                                         ng-class="{'has-danger': loginForm.email_id.$error.required && loginForm.$submitted}">
+                                         <label>{{'general.verification_email'| translate}}*</label>
+                                        <input type="email" class="form-control" ng-model="user.email_id" ng-disabled="true" name="email_id" placeholder="{{'normal.placeholder_email' | translate}}" required>
+                                        <div ng-if="loginForm.email_id.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_email' | translate}}</div>
+                                </div>
+                                    <div>
+                                        <button type="button" class="tss-send-1" ng-disabled="verifyCode" ng-click="submitMfa(user.verification_method,user.email_id)"></button>
+                                    </div>
+                                </div>
+                                    <div class="input-group mb-1 form-group">
+                                         <label>{{'general.verification_code'| translate}}*</label>
+                                        <input type="text" class="form-control" ng-model="user.verification_code" name="verification_code" placeholder="{{'normal.placeholder_verify_code' | translate}}">
+                                        <!-- <div ng-if="user.verification_code.$error.required && loginForm.$submitted" class="error-message">{{'general.enter_verification_code' | translate}}</div> -->
+                                    </div>
+                                    <div class="input-group mb-1 form-group form-check">
+                                        <input class="form-check-input" style="margin: 2px 0 0" type="checkbox" ng-model="user.is_trust" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                          {{'general.this_device' | translate}}
+                                        </label>
+                                      </div>
+                                      <div class="col-xs-12 mfaSubmit">
+                                      <button type="submit" ng-if="!mfaLoading"
+                                      ng-class="{'btn btn-orange pointer':(user.verification_code.length==10),
+                                      'btn disable-color':(user.verification_code.length!=10)}"
+                                       ng-disabled="user.verification_code.length==10?false:true">{{'general.submit' | translate}}</button>
+                                       <button type="button" class="btn btn-orange" ng-if="mfaLoading">{{'general.loading' | translate}}</button>
+                                    </div>
+                            </form>
+                        </div> <!-- login Mfa form  close-->
+
+
+                        <div class="col-xs-12 login-ad" ng-show="checkMailDetails.show_ldap_button==true">
+                            <!-- <a href="javascript:;" ng-click="isADLoginPage=!isADLoginPage">{{isADLoginPage?'&#x2190; Back' : 'Login with AD'}}</a> -->
+                            <button type="button" ng-click="isADLoginPage=!isADLoginPage" 
+                            ng-class="{'btn btn-orange px-2 pointer':(!isADLoginPage),
+                                    'btn btn-basic px-2':(isADLoginPage)}">{{isADLoginPage?'&#x2190; Back':'Login with AD'}}</button>
+                        </div>  
+                        <!-- <div class="col-xs-12 login-ad" ng-show="checkMailDetails.show_sso_button==true">
+                            <button type="button" ng-click="isSSOLoginPage=!isSSOLoginPage" 
+                            ng-class="{'btn btn-orange px-2 pointer':(!isSSOLoginPage),
+                                    'btn btn-basic px-2':(isSSOLoginPage)}">{{isSSOLoginPage?'&#x2190; Back':'Login with SSO'}}</button>
+                        </div>  -->
+
+                        <div class="col-xs-12 login-ad" ng-show="checkMailDetails.show_sso_button==true">
+                            <button type="button" ng-click="ssoUrl()" 
+                            class="btn btn-orange px-2 pointer">{{'Login with SSO'}}</button>
+                        </div> 
+
+                        <div class="col-xs-12 login-ad" ng-show="checkMailDetails.show_verify_login_with_mfa">
+                            <!-- <button type="button" ng-click="isLoginWithMfa=!isLoginWithMfa" class="btn btn-basic px-2">{{isLoginWithMfa?'submit':'VERIFY LOGIN WITH MFA'}}</button> -->
+                         <button type="button" ng-show="!isLoginWithMfa"
+                                    ng-click="isLoginWithMfa=!isLoginWithMfa" 
+                                    ng-disabled="checkMailDetails.is_verify_login_with_mfa_disable"
+                                    ng-class="{'btn btn-orange pointer':(checkMailDetails.is_verify_login_with_mfa_disable==false),
+                                    'btn disable-color':(checkMailDetails.is_verify_login_with_mfa_disable==true)}">{{'VERIFY LOGIN WITH MFA'}}</button>
+                        </div>
+
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .form-group-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .form-group-row button {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font-size: 25px;
+        margin-bottom: 13px;
+    }
+    .form-group-row button.fa-send {
+        transform: rotate(30deg);
+        margin-right: 8px;
+    }
+    .disable-color{
+       background-color: #aeabab;
+       color: #fff;
+    }
+    .mfaSubmit{
+        text-align: center;
+    }
+    .mfaSubmit .btn{
+        border-radius: 6px;
+    }
+</style>

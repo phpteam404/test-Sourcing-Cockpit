@@ -1,0 +1,114 @@
+.table-outline {
+  border: 1px solid $table-border-color;
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.table-align-middle {
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.table-clear {
+  td {
+    border: 0;
+  }
+}
+/*table*/
+.table.table-custom thead tr th{
+  background:#DFDFDF !important;
+  text-transform:initial;
+  border-bottom: 1px solid #CDCDCD;
+  border-top: 0px;
+  font-weight: 500;
+  cursor:pointer;
+  /*white-space: nowrap;*/
+}
+/*.table.table-custom thead tr th::after{
+  content: "\f0dc";
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  margin-left: 10px;
+}*/
+.table.table-custom thead tr th.logo-th::after{display: none;}
+.table.table-custom tbody tr td{
+  border-top: 0px;
+  vertical-align: middle;
+  border-top: 0px;
+  a{
+    &:hover{text-decoration: none;}
+    &:focus{text-decoration: none;outline: none;}
+  }
+}
+.dashboard-chart img{width: 100%;}
+/*Pagination*/
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link{color:#464646;}
+.page-item.active .page-link, .pagination-datatables li.active .page-link, .pagination li.active .page-link, .page-item.active .pagination-datatables li a, .pagination-datatables li .page-item.active a, .pagination-datatables li.active a, .page-item.active .pagination li a, .pagination li .page-item.active a, .pagination li.active a, .page-item.active .page-link:focus, .pagination-datatables li.active .page-link:focus, .pagination li.active .page-link:focus, .page-item.active .pagination-datatables li a:focus, .pagination-datatables li .page-item.active a:focus, .pagination-datatables li.active a:focus, .page-item.active .pagination li a:focus, .pagination li .page-item.active a:focus, .pagination li.active a:focus, .page-item.active .page-link:hover, .pagination-datatables li.active .page-link:hover, .pagination li.active .page-link:hover, .page-item.active .pagination-datatables li a:hover, .pagination-datatables li .page-item.active a:hover, .pagination-datatables li.active a:hover, .page-item.active .pagination li a:hover, .pagination li .page-item.active a:hover, .pagination li.active a:hover {
+  z-index: 2;
+  color: #fff;
+  cursor: default;
+  background-color: #DB441D;
+  border-color: #DB441D;
+}
+.table.table-custom thead td{border-top:0px;padding:5px 0;}
+.table-search{
+  .form-control{
+    height: 28px;
+    padding: 4px 7px;
+  }
+  .icon-search {
+    position: absolute;
+    top: 8px;
+    right: 11px;
+  }
+}
+.st-sort-descent:after {
+  content: '\25BC';
+  margin-left: 5px;
+  font-size: 10px;
+}
+.st-sort-ascent:after {
+  content: '\25B2';
+  margin-left: 5px;
+  font-size: 10px;
+}
+.table.table-custom.reports-table thead tr th {
+  border-right: 1px solid #EFEFEF;
+  cursor: default;
+  &:last-child{border-right: none;}
+  &.rotate{
+    height: 200px;
+    white-space: nowrap;
+    min-width: 60px;
+    &:first-child{
+      @media(max-width:1100px) {
+        min-width: 45px;
+      }
+    }
+    &.rotate-mwidth{
+
+      @media(max-width:1100px){
+        min-width: 45px;
+      }
+    }
+    div{
+      transform:
+              /* Magic Numbers */
+              translate(-10px, 0px)
+                /* 45 is really 360 - 45 */
+              rotate(-75deg);
+      width: 30px;
+      span {
+        /*padding: 5px 10px;
+        border: 1px solid #EFEFEF;*/
+      }
+    }
+
+  }
+
+}

@@ -1,0 +1,712 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div ng-if="trendsData.contract_review_id == 0" class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+                {{'dashboard.no_reviews' | translate}}
+            </div>
+            <div class="col-lg-8 pl0 large-widget" ng-if="((isNaN(trendsData.contract_review_id)===false && trendsData.contract_review_id != 0) || (isNaN(trendsData.contract_review_id)===true && trendsData.contract_review_id.length > 0))">
+                <div class="card col-lg-12 p0" style="margin-bottom: 5px;">
+                    <h5>{{contractInfo.contract_name}} </h5>
+                    <div class="card-block border-left-none">
+                        <div class="h4 m-b-0">{{'contract.status' | translate}}</div>
+                        <span class="widget-span orange">{{trendsData.review_status | capitalize}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'contract.review_date' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'contract.execute_date' | translate}}</div>
+                        <span class="widget-span">{{trendsData.review_date | utcToLocal: 'toLocalDate' | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0">{{'contract.current_status' | translate}}</div>
+                        <div class="status-widget font-weight-bold" ng-if="trendsData.review_score == 'Red'">
+                            <span class="red-active"></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="trendsData.review_score == 'Amber'">
+                            <span class=""></span>
+                            <span class="amber-active"></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="trendsData.review_score == 'Green'">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class="green-active"></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="!trendsData.review_score">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <span class="" ng-if="trendsData.review_score=='N/A'">{{trendsData.review_score}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'templates.template_name' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'workflows.workflow_name' | translate}}</div>
+                        <span class="widget-span">{{trendsData.template_name | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block"  ng-if="(trendsData.prev !=0) || (trendsData.next !=0)">
+                        <div class="prev-next-btns text-sm-right">
+                            <a href="#" ng-if="trendsData.prev !=0" class="prev-btn" ng-click="goToNext(trendsData,false)">
+                                <i class="fa fa-angle-double-left"></i> {{'contract.module_questions.prev' | translate}}</a>
+                            <a href="#" ng-if="trendsData.next !=0" class="next-btn" ng-click="goToNext(trendsData,true)">
+                                {{'contract.module_questions.next' | translate}} <i class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 p0 mb-h">
+                    <div class="text-xs-center" ng-if="trendsData.modules.length==0" style="padding: 40px;
+                                                                                        background: #fff;
+                                                                                        border: 1px solid #ccc;
+                                                                                        margin-top: 15px;">
+                        <span class="f14">{{'templates.no_modules' | translate}}</span>
+                    </div>
+                    <div class="contract-list-view" style="display: flex;" ng-if="trendsData.modules">                                
+                            <div class="report-contract-cls1" style="width: 244px;">&nbsp;</div>
+                            <div class="custom-header">
+                            <div style="font-weight: 400;width: 98px;" ng-repeat="head in trendsData.dates" ng-if="head.date!='Current Score'">
+                                <a href="javascript:;" ng-click="goToDashboardByDate(head)">{{head.date | checkEmpty}}</a>
+                            </div>
+                            <div style="font-weight: 400;width: 91px;" ng-repeat="head in trendsData.dates" ng-if="head.date=='Current Score'">{{'dashboard.current_score' | translate}}</div>
+                        </div>
+                    </div>
+                    <uib-accordion close-others="oneAtATime" ng-repeat="module in trendsData.modules">
+                        <div uib-accordion-group class="panel-default mb-h " ng-class="((module.static=='1') ? ((module.is_workflow=='1') ? 'bg-color-green':'bg-light-orange'): 'bg-color-white')"
+                             template-url="group-template.html" ng-init="module.open=false;
+                             showData[module.id_module]['open']=showData[module.id_module]['open'] ? showData[module.id_module]['open'] : false;"
+                            style="border: 1px solid #ccc;" is-open="showData[module.id_module]['open']">
+                            <uib-accordion-heading ng-click="showData[module.id_module]['open'] = !showData[module.id_module]['open']">
+                                <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.id_module]['open'],
+                                                                'fa fa-plus-square-o': !showData[module.id_module]['open']}"></i>
+                                <div style="width: 25%;text-align: left;">
+                                    <span style="display: inline-block;
+                                                width: 100%;
+                                                text-overflow: ellipsis;
+                                                overflow: hidden;
+                                                font-size: 13px;
+                                                font-weight: 500;
+                                                white-space: nowrap;" title="{{module.module_name}}">
+                                        {{module.module_name}}
+                                    </span>
+                                </div>
+                                <div class="pull-right" style="padding-left: 20px; 
+                                                                width: calc(100% - 27%);
+                                                                text-align: right;
+                                                                float: none;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                justify-content: flex-end;">
+                                    <div ng-repeat="mscore in module.module_scores track by $index">
+                                        <div class="status-widget font-weight-bold" style="margin-right: 0px !important;" ng-if="mscore == 'Green'">
+                                            <span class="green-active"></span>
+                                        </div>
+                                        <div class="status-widget font-weight-bold" ng-if="mscore == 'Amber'">
+                                            <span class="amber-active"></span>
+                                        </div>
+                                        <div class="status-widget font-weight-bold" ng-if="mscore == 'Red'">
+                                            <span class="red-active"></span>
+                                        </div>
+                                        <div class="status-widget font-weight-bold" ng-if="mscore == 'N/A' || mscore==null || mscore==''">
+                                            <span class=""></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion-heading>
+                            <ul>
+                                <uib-accordion close-others="oneAtATime">
+                                    <div uib-accordion-group class="panel-default mb-h"
+                                         ng-repeat="topic in module.topics"  heading="Selection Process"
+                                         ng-init="topic.open=false;
+                                         showData[module.id_module]['topic'][topic.id_topic]['open'] =  showData[module.id_module]['topic'][topic.id_topic]['open'] ?
+                                                                                                        showData[module.id_module]['topic'][topic.id_topic]['open'] : false;"
+                                         is-open="showData[module.id_module]['topic'][topic.id_topic]['open']"
+                                         template-url="topic-template.html" 
+                                         style="border: 1px solid #ccc;">
+                                        <uib-accordion-heading ng-click="showData[module.id_module]['topic'][topic.id_topic]['open'] = !showData[module.id_module]['topic'][topic.id_topic]['open']">
+                                            <i class="glyphicon"                                                
+                                                ng-class="{'fa fa-minus-square-o': showData[module.id_module]['topic'][topic.id_topic]['open'],
+                                                          'fa fa-plus-square-o': !showData[module.id_module]['topic'][topic.id_topic]['open']}"></i>
+                                            <div style="width: 26%;text-align: left;color: #2196f3;">
+                                                <span style="display: inline-block;
+                                                                width: 100%;
+                                                                text-overflow: ellipsis;
+                                                                overflow: hidden;
+                                                                white-space: nowrap;
+                                                                font-weight: normal;
+                                                                font-size: 12px;" title="{{topic.topic_name | capitalize}}">
+                                                    <span class="pl3">{{topic.topic_name | capitalize}} </span>
+                                                </span>
+                                            </div>
+                                            <!-- <span class="pull-right mr-1" ng-if="topic.topic_score == 'N/A'">{{topic.topic_score}}</span> -->
+                                            <div style="display:flex;
+                                                            text-align: right;
+                                                            float: none;
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: flex-end;
+                                                            width: calc(100% - 28%);">
+                                                <div ng-repeat="tscore in topic.topic_scores track by $index">
+                                                    <div class="status-widget" style="padding-left: 18px !important;">
+                                                        <span ng-if="tscore == 'Red'" class="score_color red-bg"></span>
+                                                        <spann ng-if="tscore == 'Amber'" class="score_color orange-bg"></spann>
+                                                        <span ng-if="tscore == 'Green'" class="score_color green-bg"></span>
+                                                        <span ng-if="!tscore" class="score_color "></span>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        </uib-accordion-heading>
+                                        <div ng-repeat="row in topic.questions" style="display: flex;height: 28px;"
+                                        ng-class="{'relation-active':row.provider_visibility==1}" class="color-div">
+                                            <div style="width: 28%;
+                                            overflow: hidden;
+                                            display: inline-block;
+                                            white-space: nowrap;
+                                            line-height: 30px;
+                                            padding-left: 5px;
+                                            text-overflow: ellipsis;
+                                            color: black;" title="{{row.question_text}}">{{row.question_text}} </div>
+                                            <div style="display: flex;
+                                                        text-align: right;
+                                                        float: none;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: flex-end;
+                                                        width: calc(100% - 28%);">
+                                            <div class="inside-acc-div" ng-if="row.question_type == 'input'" ng-repeat="answer in row.question_answeres track by $index">
+                                               <div class="inside-acc-div-text" ng-if="$index < (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                               <div class="last-span" ng-if="$index == (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                            </div>
+                                            <div class="inside-acc-div" ng-if="row.question_type == 'dropdown'" ng-repeat="answer in row.question_answeres track by $index">
+                                                <div class="inside-acc-div-text" ng-if="$index < (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                                <div class="last-sapn-drop" style="padding-left: 3px;" ng-if="$index == (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                            </div>
+                                            <div class="inside-acc-div" style="" ng-if="row.question_type == 'radio'" ng-repeat="answer in row.question_answeres track by $index">
+                                                <div class="inside-acc-div-text-radio" ng-if="$index < (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                                <div class="last-span-radio" ng-if="$index == (row.question_answeres.length-1)" title="{{answer}}">{{answer | checkEmpty}}</div>
+                                            </div>
+                                            <div class="inside-acc-div" style="" ng-if="row.question_type =='date'" ng-repeat="answer in row.question_answeres track by $index">
+                                                <!-- <span class="inside-acc-div-text">{{answer | utcToLocal:'date' | checkEmpty}}</span> -->
+                                                <div class="inside-acc-div-date" ng-if="$index < (row.question_answeres.length-1)" title="{{answer | utcToLocal:'date'}}">{{answer | utcToLocal:'date' | checkEmpty}}</div>
+                                                <div class="last-span-date" ng-if="$index == (row.question_answeres.length-1)" title="{{answer | utcToLocal:'date'}}">{{answer | utcToLocal:'date' | checkEmpty}}</div>
+                                            </div>
+                                            <div class="inside-acc-div" ng-if="row.question_type == 'rag'" ng-repeat="answer in row.question_answeres track by $index">
+                                                <div class="radio_widget inside-acc-div-text-icon" ng-if="$index < (row.question_answeres.length-1)">
+                                                    <span ng-if="!answer" class="">{{answer | checkEmpty}}</span>
+                                                    <a ng-if="answer == 'G'" class="f18"><i class="fa fa-check-circle green mr-h1"></i></a>
+                                                    <a ng-if="answer == 'A'" class="f18"><i class="fa fa-exclamation-circle orange mr-h1"></i></a>
+                                                    <a ng-if="answer == 'R'" class="f18"><i class="fa fa-times-circle red mr-h1"></i></a>
+                                                    <a ng-if="answer == 'N/A'" class="f18"><i class="fa fa-minus-circle gray mr-h1"></i></a>
+                                                </div>
+                                                <div class="radio_widget last-span-icon" ng-if="$index == (row.question_answeres.length-1)">
+                                                    <span ng-if="!answer" class="">{{answer | checkEmpty}}</span>
+                                                    <a ng-if="answer == 'G'" class="f18"><i class="fa fa-check-circle green mr-h1"></i></a>
+                                                    <a ng-if="answer == 'A'" class="f18"><i class="fa fa-exclamation-circle orange mr-h1"></i></a>
+                                                    <a ng-if="answer == 'R'" class="f18"><i class="fa fa-times-circle red mr-h1"></i></a>
+                                                    <a ng-if="answer == 'N/A'" class="f18"><i class="fa fa-minus-circle gray mr-h1"></i></a>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        </div>
+                                         <!-- <table class="table table-custom table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 180px;" ng-show="false"></th>
+                                                    <th style="width: 98px;"  ng-show="false" ng-repeat="qhead in trendsData.dates"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="row in topic.questions">
+                                                    <td style="width: 200px;
+                                                                overflow: hidden;
+                                                                display: inline-block;
+                                                                white-space: nowrap;
+                                                                text-overflow: ellipsis;" title="{{row.question_text}}">{{row.question_text}} </td>
+                                                    <td style="width: 50px;overflow: hidden;
+                                                    display: inline-block;
+                                                    white-space: nowrap;
+                                                    text-overflow: ellipsis;" ng-if="row.question_type == 'input'" ng-repeat="answer in row.question_answeres track by $index">
+                                                        {{answer | checkEmpty}}
+                                                    </td>
+                                                    <td style="width: 50px;overflow: hidden;
+                                                    display: inline-block;
+                                                    white-space: nowrap;
+                                                    text-overflow: ellipsis;" ng-if="row.question_type == 'dropdown'" ng-repeat="answer in row.question_answeres track by $index">
+                                                        <span>{{answer | checkEmpty}}</span>
+                                                    </td>
+                                                    <td style="width: 50px;overflow: hidden;
+                                                    display: inline-block;
+                                                    white-space: nowrap;
+                                                    text-overflow: ellipsis;" ng-if="row.question_type == 'radio'" ng-repeat="answer in row.question_answeres track by $index">
+                                                        <span>{{answer | checkEmpty}}</span>
+                                                    </td>
+                                                    <td style="width: 50px;overflow: hidden;
+                                                    display: inline-block;
+                                                    white-space: nowrap;
+                                                    text-overflow: ellipsis;" ng-if="row.question_type =='date'" ng-repeat="answer in row.question_answeres track by $index">
+                                                        <span>{{answer | utcToLocal:'date' | checkEmpty}}</span>
+                                                    </td>
+                                                    <td style="width: 50px;overflow: hidden;
+                                                    display: inline-block;
+                                                    white-space: nowrap;
+                                                    text-overflow: ellipsis;" ng-if="row.question_type == 'rag'" ng-repeat="answer in row.question_answeres track by $index">
+                                                        <div class="radio_widget">
+                                                            <span ng-if="!answer">{{answer | checkEmpty}}</span>
+                                                            <a ng-if="answer == 'G'" class="f18"><i class="fa fa-check-circle green mr-h"></i></a>
+                                                            <a ng-if="answer == 'A'" class="f18"><i class="fa fa-exclamation-circle orange mr-h"></i></a>
+                                                            <a ng-if="answer == 'R'" class="f18"><i class="fa fa-times-circle red"></i></a>
+                                                            <a ng-if="answer == 'N/A'" class="f18"><i class="fa fa-minus-circle gray mr-h"></i></a>
+                                                        </div>
+                                                    </td>                                                    
+                                                </tr>
+                                            </tbody>
+                                            <tbody ng-if="!load && topic.questions.length == 0">
+                                                <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                                            </tbody>
+                                            <tbody ng-if="load">
+                                                <tr><td colspan="5" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                                            </tbody>
+                                        </table>  -->
+                                    </div>
+                                </uib-accordion>
+                            </ul>
+                        </div>
+                    </uib-accordion>
+                </div>
+            </div>
+            <div class="col-lg-4 icons-widget pr0" ng-if="((isNaN(trendsData.contract_review_id)===false && trendsData.contract_review_id != 0) || (isNaN(trendsData.contract_review_id)===true && trendsData.contract_review_id.length > 0))">
+                <div class="card-group contract-card-group">
+                    <div class="card contract-main-card" ng-if=" access!='eu'">
+                        <div class="card-block" ng-click="goToDetails1()">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-report3"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.contract' | translate}}</small>
+                        </div>
+                    </div>
+
+                    <div class="contract-card-group-list">
+                        <div class="contract-group-icons">
+
+                    <div class="card dashboard-block" ng-click="exportReview()">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-dashboard5"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.export_report' | translate}}</small>
+                        </div>
+                    </div>
+                    <div class="card dashboard-block" ng-click="exportTrendsData()">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-export2"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.export_data' | translate}}</small>
+                        </div>
+                    </div>
+                    <div class="card dashboard-block">
+                        <div class="card-block" ng-click="goToDashboard()">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-dashboard5"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.dashboard' | translate}}</small>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer"  
+                ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="topic-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer;font-weight: 400;">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.show, 'fa fa-plus-square-o': !status.show}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<style>
+    .accordion-default .panel-title .static{
+    color: #000 !important;
+    background-color: #da4421d6!important;
+    }
+    .accordion-default .panel-title {
+    color: #000 !important;
+    /* background-color: #fff !important; */
+    }
+    .count-small{
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        background: #5bb166;
+        display: block;
+        color: #fff;
+        line-height: 14px;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 10px;
+        top: -9px;
+        right: -8px;
+    }    
+    .outer {
+        position: relative;
+    }
+    tr.border-list-child td:first-child{
+        padding-left: 6px;
+    }
+    .contract-list-view table {
+        width: 100%;
+    }
+    .contract-list-view thead tr th {
+        color: #2196f3;
+        border-bottom: 0px solid #cfd8dc;
+    }
+    .table th, .table td{
+        padding: 0.45rem;
+        vertical-align: top;
+        border-top: 0px solid #cfd8dc;
+    }
+    .contract-list-view table tbody .border-list {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .contract-list-view table tr:last-child {
+        border-bottom: 0px solid #cfd8dc;
+    }
+    .contract-list-view thead tr th:last-child {
+        color: #464646;
+    }
+    .contract-list-view tbody tr td {
+        background-color: #fff;
+    }
+    .contract-list-view tbody tr td:first-child {
+        border-left: 1px solid #cfd8dc;
+        border-right: 0px solid #cfd8dc;
+    }
+    .contract-list-view tr td:last-child {
+        border-right: 1px solid #cfd8dc;
+    }
+    .contract-list-view .td-view-heading span {
+        padding: 0px 5px 0px 0px;
+    }
+    .contract-list-view .td-view-heading {
+        font-weight: 600;
+    }
+    .contract-list-view .td-view-sub-heading {
+        padding: 3px 0px 3px 5px;
+        color: #2196f3;
+    }
+    .contract-list-view tbody tr:last-child .td-view-sub-heading {
+        padding-bottom: 3px;
+    }
+    .child-topics{
+        border-bottom: 10px solid #efefef;
+
+    }
+    .child-topics:after{
+        content: '';
+    display: block;
+    height: 10px;
+    position: relative;
+    background-color: #efefef;
+    width: 100%;  
+    }
+    .child-topics tbody tr td{
+        text-align: center;
+    }
+    .child-topics tbody tr td:first-child {
+        border-left: none;
+    }
+    .child-topics tbody tr{
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .child-topics tbody tr:last-child{
+        border-bottom: none;
+    }
+    .child-topics tbody tr td:last-child {
+        border-right: none;
+    }
+    .contract-list-view tr td div {
+        border-right: 0px solid #ccc;
+        border-left: 0px solid #ccc;
+    }
+    .inside-table-body::after {
+        content: '';
+        display: block;
+        height: 10px;
+        background-color: #efefef;
+    }
+    .contract-list-view tbody tr td {
+        padding: 3px 0px 0px;
+        text-align: center;
+    }
+    .contract-list-view tbody tr:first-child td:last-child {
+        padding-right: 1px;
+    }
+    /* .contract-list-view tbody tr:last-child td {
+        padding-bottom: 10px;
+    } */
+
+    /* .contract-list-view tbody tr td:last-child {
+        padding-right: 10px;
+        padding-left: 10px;
+    } */
+    .fixed-layout-cls1 {
+        table-layout: fixed;
+        width: 100%;
+        margin-bottom: 0px;
+    }
+    .contract-list-view thead tr th {
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        padding-bottom: 4px !important;
+        text-align: center !important;
+    }
+    .contract-list-view tbody {
+        background-color: #fff;
+    }
+    .border-list tr td {
+        padding: 0.45rem;
+    }
+    .border-list tr td:first-child {
+        padding-left: 0.45rem;
+    }
+    .border-list tr td:last-child {
+        padding-right: 0.45rem;
+    }
+    .border-list td:first-child {
+        padding-left: 0.45rem !important;
+    }
+    .border-list td:first-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .border-list td:last-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .border-list td {
+        border-top: 1px solid #efefef;
+    }
+    .tr-inside-table tr:last-child td {
+        border-bottom: 1px solid #efefef !important;
+    }
+    .child-topics table{
+        border-bottom: 1px solid #cfd8dc !important;
+    }
+    tr.contract-list-view-border td:first-child{
+        padding-bottom: 4px !important;
+        padding-top: 8px !important;
+    }
+    .border-list td{
+        padding: 0px;
+    }
+    .border-list td div{
+        padding: 6px !important;
+        border-top:  1px solid #cfd8dc !important;
+    }
+    .contract-list-view table tbody .border-list td{
+        padding: 0px !important
+    }
+    .contract-list-view table tbody .border-list .td-view-heading span{
+        padding: 6px 0px 4px 5px!important;
+        border-top:  1px solid #cfd8dc !important;
+        font-size: 12px;
+    }
+    th.report-contract-cls1{
+        min-width: 240px;
+    }
+    .contract-list-view tr th,
+    .panel-heading .status-widget {
+    min-width: 98px;
+    padding: 4px 3px;
+    text-align: center;
+    }
+    .panel-heading .status-widget {
+        padding: 0px 3px 5px !important;
+    }
+    .accordion-default .panel-title {
+        padding: 6px 0px 0px 5px;
+        line-height: 19px;
+    }
+    .accordion-default .panel-title a.accordion-toggle span i.glyphicon{
+        margin-top: 4px;
+        color: #8a8686;
+    }
+    .custom-header{
+        width: calc(100% - 250px);
+        display: flex;
+        text-align: center;
+        padding: 10px 0px 5px;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 13px;
+    }
+    .status-widget span{
+        border: 1px solid #a7a2a2;
+    }
+    .status-widget .score_color{
+        border: 1px solid #a7a2a2;
+        height:14px !important;
+    }
+    .accordion-default{
+        font-size: 11px;
+    }
+    /* .inside-acc-div{
+        width: 86px;
+        padding: 5px 10px 5px 22px;
+    } */
+    .inside-acc-div-text{
+        overflow: hidden;
+        display: inline-block;
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 98px;
+        padding: 4px 12px 0px 4px;
+    }
+    .last-span{
+        overflow: hidden;
+        display: inline-block;
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 80px;
+        padding: 4px 5px 0px;
+        margin-right: 0px;
+    }
+    .last-sapn-drop{
+        overflow: hidden;
+        display: inline-block;
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 80px;
+        padding: 5px 0px 5px 5px;
+        margin-right: -2px;
+    }
+    .inside-acc-div-text-icon{
+        text-align: center;
+        width: 98px;
+        padding: 4px 30px 0px 4px;
+    }
+    .last-span-icon{
+        width: 80px;
+        padding: 4px 12px 0px 5px;
+        margin-right: -10px;
+        text-align: center;
+    }
+    .inside-acc-div-text-radio{
+        text-align: center;
+        width: 98px;
+        padding: 4px 35px 0px 4px;
+    }
+    .last-span-radio{
+        width: 80px;
+        padding: 4px 17px 0px 5px;
+        margin-right: -10px;
+        text-align: center;
+    }
+    .inside-acc-div-date{
+        margin-right: 0px;
+        padding: 4px;
+        width: 98px;
+        text-align: center;
+    }
+    .last-span-date{
+        margin-right: -4px;
+        padding: 4px;
+        width: 80px;
+        text-align: center;
+    }
+    .mr-h1{
+        margin-right: 6px;
+    }
+    .color-div:nth-child(even) {
+        background: #f1f1f6;
+    }
+    .bg-color-white{
+        background: #fff !important;
+    }
+    /* .contract-list-view{
+        background: #efefef;
+        display: flex;
+        position: sticky;
+        top: 55px;
+        z-index: 999;
+    } */
+    .accordion-default .panel-body {
+        padding: 6px 6px 1px;
+    }
+    .panel-body ul{
+        margin-bottom: 6px;
+    }
+    .panel-body ul .panel-heading h4{
+        font-size: 12px !important;
+    }
+    .panel-body .panel-default{
+        margin-bottom: 6px !important;
+    }
+    .panel-body .panel-default .panel-body{
+        padding-bottom: 6px;
+    /* background: rgba(219, 68, 29, 0.1); */
+
+    }
+    .header-fixed .contract-list-view{
+        background-color: #d0d0d0;
+        position: fixed;
+        /* min-height: 130px; */
+        top: 55px;
+        left: -3px;
+        float: left;
+        width: 66.66667%;
+        margin: 0;
+        z-index: 999;
+    }
+    .status-widget .score_color {
+       height: 14px !important;
+    }
+    .contract-group-icons {
+    padding: 4px 0px;
+    margin: 17px 20px 3px 20px;
+    }
+    .relation-active{
+    background-color: #a9d18e !important;
+    border-bottom: 1px solid #fff;
+    }
+
+</style>
+<script>
+    $(window).scroll(function () {
+    if ($(window).scrollTop() >= 150) {
+        $('body').addClass('header-fixed');
+    } else {
+        $('body').removeClass('header-fixed');
+    }
+    });
+</script>

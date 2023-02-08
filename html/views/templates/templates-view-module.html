@@ -1,0 +1,77 @@
+<table class="table table-custom table-striped table-hover" st-pipe="moduleListTable" st-table="moduleList">
+    <thead>
+        <tr>
+            <td colspan="8">
+                <div class="col-sm-12 clearfix p0">
+                    <div class="action-head mb0 clearfix">
+                        <span class="pull-right ml-h mt-h">
+                            <button class="btn btn-sm btn-primary" type="button" ng-click="addModuleModal(template_id)"><i class="icon-plus"></i>&nbsp; {{'general.add' | translate}}</button>
+                        </span>
+                        <div class="col-sm-3 p0 table-search pull-right mt-h">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event ="change">
+                            <i class="fa icon-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>{{'module.module_name' | translate}}</th>
+            <th>#{{'module.topic_count' | translate}}</th>
+            <th>#{{'module.question_count' | translate}}</th>
+            <th>{{'general.actions' | translate}}</th>
+        </tr>
+    </thead>
+    <tbody  ng-show="!isLoading" ui-sortable="sortableOptions" ng-model="moduleList">
+        <tr ng-repeat="row in moduleList">
+            <td>{{row.module_name}}</td>
+            <td>{{row.topics_count}}</td>
+            <td>{{row.topics_questions_count}}</td>
+            <td>
+                <a href="javascript:;" ng-click="deleteTemplateModule(row)" class="icon-trash gray"
+                   title="{{'general.delete' | translate}}"></a>
+            </td>
+        </tr>
+    </tbody>
+    <tbody ng-show="isLoading">
+        <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+    </tbody>
+    <tbody ng-show="emptyTable">
+        <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+    </tbody>
+    <!--<tfoot>
+        <tr>
+            <td class="text-center" colspan="8">
+                <div st-pagination="" class="text-sm-center"></div>
+            </td>
+        </tr>
+    </tfoot>-->
+</table>
+<script type="text/ng-template" id="templates-module-modal.html">
+    <div class="modal-header" >
+        <h6 class="modal-title">{{'general.add' | translate}} {{'module.module' | translate}}
+            <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="ModuleForm" ng-submit="addModules(modules)">
+        <div class="modal-body clearfix" ng-if="allModules[0].module_name">
+            <ul>
+                <li ng-repeat="module in allModules">
+                    <label class="checkbox" for="{{module.$index}}">
+                        <input type="checkbox" id="{{module.$index}}" name="inline-checkbox1"
+                               ng-model="modules[module.id_module]" ng-true-value="1"
+                               ng-false-value="0">{{module.module_name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="!allModules[0].module_name">
+            <span class="text-sm-center text-center" style="padding-left: 45%">{{'general.no_data'|translate}}</span>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary" ng-if="allModules[0].module_name">
+                <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>

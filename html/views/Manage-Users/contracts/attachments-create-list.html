@@ -1,0 +1,169 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">
+        <span>{{title  | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+        </span>
+    </h6>
+</div>
+
+<div class="modal-body clearfix">
+    <uib-tabset active="active" class="clearfix" style="padding: 10px;" ng-init="active=0;">
+        <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+            <div class="col-sm-12 m-t-3 form-group p0">
+                <attachment-files ng-model="attachments"></attachment-files>
+            </div>
+            <div class="p-b-1">
+                <p ng-if="eventAdd.attachment.documents.length>0" ng-repeat="a in eventAdd.attachment.documents">
+                    <a download="{{a.document_name}}" target="_blank" href="#" ng-click="getDownloadUrl(a)">
+                        <i class="fa fa-download" style="vertical-align: middle;padding-right: 6px;"></i>{{a.document_name}}</a>
+                        <a href="#" class="gray">
+                            <i class="pull-right icon-trash m-t-1"  style="position: relative; top: 3px; font-size:20px;"
+                                title="{{'general.delete' | translate}}" ng-click="deleteAttachmentEvent(a.id_document,a.document_name)">
+                            </i>
+                        </a>
+                    <span class="display-block f12 pl20">
+                        <span class="gray">{{'attachment.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                        <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                    </span>
+                </p>
+                <p ng-show="eventAdd.attachment.documents.length==0" class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" type="button" 
+                        ng-click="addEventAttachemts(attachments)">
+                    <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                </button>
+                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                    <i class="icon-times f12"></i>&nbsp;{{'general.cancel' | translate}}
+                </button>
+            </div>
+
+        </uib-tab>
+        <uib-tab index="1"  class="clearfix" heading="{{'links.ad_link' | translate}}">
+            <div class="clearfix" style="background: #EEEDF5; padding: 10px;" ng-init="contractLink.url='';contractLink.title='';">
+                <ng-form name="linkForm" class="modalUniqCls">
+                    <div class="col-md-5 pl-0">
+                        <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" >
+                    </div>
+                    <div class="col-md-7 pl-0" style="display:-webkit-inline-box; padding-right: 5px;">
+                        <div class="input-group" style="display:flex;">
+                        <input type="text" class="form-control" name="url"
+                         ng-model="contractLink.url"  placeholder="{{'normal.placeholder_add_link_url' | translate}}">                                             
+                         <div class="input-group-append">
+                            <span class="input-group-text">
+                            <button type="button" style="padding: 0.03rem 0.5rem;" title="{{'contract.verify_link' | translate}}" 
+                                ng-disabled="(contractLink.url.length && contractLink.title.length)==0" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                    </div>
+                </ng-form>
+                <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length" style="overflow-y: scroll;">
+                    <div class="list-header clearfix">
+                        <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                    </div>
+                    <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                        <ul class="list-items files-list">
+                            <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                <div class="col-sm-11 p0">
+                                    <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                    <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                </div>
+                                <div class="col-sm-1 pull-right">
+                                    <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray"></i> </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>                                    
+            </div>
+            <div class="col-sm-12 attachment-list p0 mt-h">
+                <div class="p-b-1" style="padding-top: 25px;">
+                    <p ng-if="eventAdd.attachment.links.length>0" ng-repeat="a in eventAdd.attachment.links" style="position:relative">
+                        <a  ng-click="redirectUrl(a.document_source)" href="javascript:;" class="ellipis" title="{{a.document_source}}"
+                            style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i> {{a.document_name}}</a>
+                        <a href="#" class="gray">
+                            <i  class="pull-right icon-trash m-t-1" style="font-size: 20px; position: relative; top: 3px;"
+                                title="{{'general.delete' | translate}}" ng-click="deleteAttachmentEvent(a.id_document,a.document_name)">
+                            </i>
+                        </a>
+                        <span class="display-block f12 pl20">
+                            <span class="gray">{{'links.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user_name}}</span>
+                            <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                        </span>
+                    </p>
+                    <p ng-show="eventAdd.attachment.links.length==0" class="text-sm-center pt20">{{'links.no_links' | translate}}</p>
+                </div>
+            </div>  
+            <div class="modal-footer clearfix">
+                <button class="btn btn-sm btn-primary" type="submit"
+                        ng-click="contractLinks && uploadLinksEvent(contractLinks,data)">
+                    <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                </button>
+                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                    <i class="icon-times f12"></i>&nbsp;{{'general.cancel' | translate}}
+                </button>
+            </div>
+        </uib-tab>
+    </uib-tabset>
+</div>
+<style>
+     .chosen-single {
+        height: 28px !important;
+        border-radius: 0px !important;
+    }
+    .action-item-buttons{
+        padding: 20px 15px 16px;
+    text-align: right;
+    }
+    .nav-tabs .nav-item{
+        margin-bottom: 0px;
+        padding: 0;
+    }
+    .tab-content .tab-pane{
+        padding: 10px;
+    }
+    .nav-tabs{
+        background: #FFF !important;
+    }
+    .nav.nav-tabs li:last-child{
+        padding-right: 0px;
+        margin: 0;
+    }
+    .nav.nav-tabs li:last-child {
+        padding-right: 0px;
+        margin: 0;
+        margin-left: 0.2rem;
+    }
+    .nav-tabs .nav-item .nav-link {
+        background: #FFF;
+        color: #464646;
+        text-align: center;
+        min-width: 165px;
+        border: 1px solid #ccc;
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-item.active .nav-link {
+        background: #efefef5e;
+        border-bottom-color: #FFF;
+        border: 1px solid #ccc;
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: -1px;
+        color:#db441d !important;
+
+    }
+    .tab-content::after, .tab-content::before{
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .tab-content{
+        border: 1px solid #ccc !important;
+    }
+    .card-block .tab-content{
+        background-color: #f9f9f9;
+    }
+</style>

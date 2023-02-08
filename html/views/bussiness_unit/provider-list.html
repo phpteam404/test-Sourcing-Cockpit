@@ -1,0 +1,560 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                <div class="contractShowHideChart" ng-init="showChart=false;">
+                    <a href="javascript:;" title="{{'contract.view_chart' | translate}}" class="showChart" ng-click="showChart=displayChart();"><i class="fa fa-bar-chart"></i></a>
+                </div>
+                <div class="card" st-pipe="callServer" st-table="contractsList">
+
+                    <div class="button-icon">
+                    <div>
+                        <button  class="btn btn-sm btn-default pointer filter-icon"
+                                type="button"  ng-click="advancedFilterRelation()">
+                                <i class="tss-filter-search"></i>
+                                <i class="icon-times" ng-if="filterCross"></i>
+                                </button>
+                        </div>
+
+                    <div class="col-sm-12 tableSelect-header">
+
+                        <div class="col-sm-8 p-0 tableSelect-header-left">
+                            <div ng-repeat="row in filterList" class="filter-relation">
+    
+                            <div class="filter-relation-list" ng-if="row.field_type!='numeric_text' && row.field_type!='date'">
+                                    <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="filter-relation-list-value">
+                                    <p ng-if="row.filter_display_value=='Multiple Selected'" 
+                                    uib-tooltip-html="row.value_names_string" tooltip-class="customClass" tooltip-placement="bottom">{{row.filter_display_value}}</p>
+    
+                                    <p title="{{row.filter_display_value}}" ng-if="row.filter_display_value!='Multiple Selected'">{{row.filter_display_value}}</p>
+                                    <div class="filter-relation-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+       
+                            <div class="filter-relation-list" ng-if ="row.field_type=='date'">
+                                    <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="filter-relation-list-value">
+                                    <p title="{{row.filter_display_value | utcToLocal:'date'}}">{{row.filter_display_value | utcToLocal:'date'}}</p>
+                                    <div class="filter-relation-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+           
+                            <div class="filter-relation-list" ng-if="row.field_type=='numeric_text'">
+                                <label title="{{row.field}} ({{row.filter_condition_name}})">{{row.field}} ({{row.filter_condition_name}})</label>
+                                <div class="form-group filter-relation-list-value">                    
+                                    <input type="text" class="form-control"  name="value"
+                                    ng-model="row.filter_display_value" ui-number-mask="0" title="{{row.filter_display_value}}">
+                                    <div class="filter-relation-list-icons">
+                                        <i class="icon-edit pointer" ng-click="createFilter(row)"></i>
+                                        <i class="icon-times pointer" ng-click="currentFlterDelete(row)"></i>
+                                    </div>
+                                </div>
+                            </div>
+       
+                            </div>
+                            </div>
+                        <!-- <div class="form-group col-sm-2 pl0 custom-field pt10  wid-55 r-padding">
+                        <select class="form-control" id="select"  name="select1" size="1"
+                               ng-model="country_id"  ng-class="(country_id)?'active-filter':''"
+                               st-input-event="change" st-search="country_id"
+                               ng-change="getProviderList(country_id);" 
+                                ng-options="item.id_country as item.country_name for item in countriesList">
+                            <option value="">--{{'Country' | translate}}--</option>
+                        </select>
+                        </div>
+                        <div class="form-group col-sm-2 pl0 custom-field pt10 pr5 r-padding" style="width: 135px;">
+                            <select class="form-control" id="select0" name="select0" size="1" ng-model="relationship_category_id" 
+                                ng-class="(relationship_category_id)?'active-filter':''" ng-change="categoryUpdated()"
+                                st-input-event="change" st-search="relationship_category_id" 
+                                ng-options="opt.id_provider_relationship_category as opt.relationship_category_name group by opt.type
+                                                for opt in relationshipCategoryList">
+                                <option value="" class="font-italic">- {{'contract.category'| translate}} -</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2 custom-field pl0 pt10  wid-55 r-padding">
+                            <select class="form-control" id="select1" name="select2" size="1" ng-model="risk_profile" 
+                                   ng-class="(risk_profile)?'active-filter':''" st-input-event="change" st-search="risk_profile">
+                                <option value="" class="font-italic">- {{'Risk Profile' | translate}} -</option>
+                                <option value="R">Red</option>
+                                <option value="A">Amber</option>
+                                <option value="G">Green</option>
+                                <option value="N/A">N/A</option>                            
+                            </select>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2 custom-field pt10 pl0  wid-55 r-padding">
+                            <select class="form-control" id="select2" name="select3" size="1" ng-model="approval_status" 
+                                   ng-class="(approval_status)?'active-filter':''"  st-input-event="change" st-search="approval_status">
+                                <option value="" class="font-italic">- {{'Approval Status' | translate}} -</option>   
+                                <option value="R">Red</option>
+                                <option value="A">Amber</option>
+                                <option value="G">Green</option>
+                                <option value="N/A">N/A</option>                            
+                            </select>
+                        </div>
+
+                        <div class="form-group col-sm-2 custom-field pt10 pl0  wid-55 r-padding">
+                            <select class="form-control" id="select2" name="select3" size="1" ng-model="can_access" 
+                                   ng-class="(can_access)?'active-filter':''"  st-input-event="change" st-search="can_access">
+                                <option value="" class="font-italic">- {{'Status' | translate}} -</option>   
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>                          
+                            </select>
+                        </div> -->
+                         <!-- <div class="onlyactive1 pull-right">
+                            <span class="mrg-space">Active only</span>
+                            <div class="onoffswitch" style="margin-left: 3px;">
+                                <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                        ng-true-value="1" ng-false-value="0"
+                                        ng-model="can_access"
+                                        ng-checked="can_access == 1"
+                                        ng-change="getProvidersByAccess(can_access)"
+                                        id="status">
+                                <label class="onoffswitch-label assessment-switch mb-0"
+                                        for="status">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>                      -->
+                        <span class="pull-right pr40">
+                           
+                            <button ng-if="(((user.access=='ca') && (user.user_type!='external')) || ( ( user.access=='bo' || user.access == 'bd' ) && ( user.content_administator_relation == 1)))" class="btn btn-sm btn-primary btn-radius"
+                                type="button" ng-click="createProvider()" title="{{'Create Provider' | translate}}">
+                                <i class="icon-plus-circle"></i>&nbsp;{{'general.ADD'|translate}}
+                            </button>
+                            <button ng-if="(user.access=='ca' || user.access=='bo' || user.access=='bd'|| user.access=='bm')  && (user.user_type!='external')" class="btn btn-default btn-sm btn-green" ng-click="exportProvidersList()"
+                                title="{{'contract.export' | translate}}" type="button">
+                                <i class="icon-export2"></i>
+                            </button>
+                        </span>
+                        <div class="col-sm-3 p0 table-search pull-right  p-r-3 wid-55 wid-95 w200" style="padding-top: 16px; padding-right: 4px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                        </div>
+                        </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>
+                                 <th class="hand-symbol action-item-provider"></th>
+                                <th st-sort="unique_id" class="provider-list-unique-id">{{'providers.id' | translate}}</th> 
+                                <th st-sort="provider_name" class="provider-list-name">{{'user.profile.name' | translate}}</th>
+                                <th st-sort="country_name" class="provider-list-country">{{'providers.country' | translate}}</th>
+                                <th st-sort="vat" class="provider-list-vat">{{'providers.vat' | translate}}</th>
+                                <th st-sort="category_name" class="provider-list-category">{{'contract.category' | translate}}</th>
+                                <th class="hand-symbol provider-list-risk-profile">{{labelNames[0]}}</th>
+                                <th class="hand-symbol provider-list-approval-status">{{labelNames[1]}}</th>
+                                <th class="hand-symbol provider-list-financial-profile">{{labelNames[2]}}</th>
+                                <!-- <th class="hand-symbol provider-list-risk-profile">{{'Risk Profile' | translate}}</th> -->
+                                <!-- <th class="hand-symbol provider-list-approval-status" >{{'Approval Status' | translate}}</th>  -->
+                                <th class="provider-list-total-spent hand-symbol">{{'providers.total_value' | translate}}</th>
+                                <th st-sort="status" style="text-align:right;" class="provider-list-status">{{'user.profile.status' | translate}}</th>
+                                <!-- <th class="hand-symbol"></th> -->
+                            </tr>
+                        </thead>
+                        <tbody ng-if="providersList.length>0">
+                            <tr ng-repeat="row in providersList">
+                                <td style="max-width: 20px;min-width: 20px;width: 20px; position: relative;" >
+                                    <span ng-if="row.action_items_count>0" tooltip-placement="right" title="{{row.action_items_count}}" class="label_tag">{{row.action_items_count}}</span>
+                                </td>
+                                <td style="min-width: 80px;width: 80px;">
+                                    <span title="{{row.unique_id}}">{{row.unique_id | checkEmpty}}</span>
+                                </td>
+                                <td style="max-width: 120px;min-width: 120px;width: 120px; cursor: pointer;"  ng-click="goToProviderDetails(row)" >
+                                    <!-- <a href="javascript:;" title="{{row.provider_name}}" ng-click="goToProviderDetails(row)" 
+                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:100%;"
+                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                        {{row.provider_name | checkEmpty}}
+                                    </a> -->
+                                    <span  title="{{row.provider_name}}"  
+                                         style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:100%; color:#2196f3;"
+                                         n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                         {{row.provider_name | checkEmpty}}
+                                    </span>
+                                </td>                                
+                                <td style="max-width: 150px;min-width: 150px;width: 150px;">
+                                     <span title="{{row.country_name}}"  
+                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: block;width:100%;">
+                                        {{row.country_name | checkEmpty}}</span> 
+                                </td>
+                                <td style="min-width: 80px;width: 80px;">
+                                    <span title="{{row.vat}}" ng-if="row.vat !='null'">{{row.vat | checkEmpty}}</span>
+                                    <span title="{{row.vat}}" ng-if="row.vat =='null'">---</span>
+                                </td>
+                                <td style="min-width: 120px;width: 120px;">
+                                    <span style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:100%;" title="{{row.category_name}}">{{row.category_name | checkEmpty}}</span>
+                                </td>
+                                <td ng-if="row.risk_profile == 'A'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class="amber-active"></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.risk_profile == 'R'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class="red-active"></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.risk_profile == 'G'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="green-active"></span>
+                                    </div>
+                                </td>
+                                <td ng-if="!row.risk_profile" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <!-- <td ng-if="row.risk_profile == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="gray-active"></span>
+                                    </div>
+                                </td> -->
+                                <td ng-if="row.risk_profile == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+
+                                
+                                <td ng-if="row.approval_status == 'A'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class="amber-active"></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.approval_status == 'R'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class="red-active"></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.approval_status == 'G'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="green-active"></span>
+                                    </div>
+                                </td>
+                                <td ng-if="!row.approval_status" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <!-- <td ng-if="row.approval_status == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="gray-active"></span>
+                                    </div>
+                                </td> -->
+                                <td ng-if="row.approval_status == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+
+
+
+                                <td ng-if="row.finacial_health == 'A'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class="amber-active"></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.finacial_health == 'R'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class="red-active"></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <td ng-if="row.finacial_health == 'G'" style="max-width:100px;min-width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="green-active"></span>
+                                    </div>
+                                </td>
+                                <td ng-if="!row.finacial_health" style="max-width:100px;min-width: 100px;width: 100px;">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                                <!-- <td ng-if="row.risk_profile == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="gray-active"></span>
+                                    </div>
+                                </td> -->
+                                <td ng-if="row.finacial_health == 'N/A'">
+                                    <div class="status-widget font-weight-bold">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                </td>
+                              
+                               <td style="font-size: 13px;" class="custom-ellipsis">
+                                <span   class="ellipsis-block" title="{{row.total_spent | currency : row.currency_name+' ':0}}">
+                                    {{row.total_spent | currency : row.currency_name+' ':0 |checkEmpty}}
+                               </span>
+                               </td>
+                             
+                               <td style="width:65px;max-width:65px;min-width: 65px;font-size: 13px;text-align:right;">
+                                <span ng-if="row.status == 1" class="green">{{'general.active' | translate}}</span>
+                                <span ng-if="row.status == 0" class="red">{{'general.inactive' | translate}}</span>
+                               </td>
+
+                        </tbody>
+                        <tbody ng-show="isLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="providersList.length==0 && !isLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="pr0 text-sm-center contDashbordCharts" id="chart" ng-if="showChart">
+                <label class="orange mb-0 mt-1"  style="padding: 0px 0px 0px 42px;">{{'user.breadcrumb.relation_catageory' | translate}}</label>
+                <i class="pull-right icon-times f14" 
+                        style="float: right;padding: 16px 12px 0px;cursor: pointer;"
+                            ng-click="hideChart(true);"></i> 
+                <div class="dashboard-chart main_bubble_chart">
+                    <span class="title_2"> 
+                        <label class="ellipis">{{myDataSource.classficationRelation['low'] | checkEmpty}}</label>
+                    </span>
+                    <span class="title_1">
+                        <label class="ellipis">{{myDataSource.classficationRelation['high'] | isUndefinedOrNull}}</label>
+                    </span>
+                    <div fusioncharts height="390" width="100%" type="bubble" dataSource="{{myDataSource | json}}">
+                    </div>
+                    <span class="title_3">{{myDataSource.classficationRelation['left'] | isUndefinedOrNull}}</span>
+                    <span class="title_4">{{myDataSource.classficationRelation['right'] | isUndefinedOrNull}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <script src="plugins/angular-smart-table/dist/smart-table.min.js"></script> -->
+<script type="text/ng-template" id="pagination.html">
+    <div class="pagination" ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li ng-if="currentPage > 1">
+                <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+            </li>
+            <li ng-if="currentPage > 1">
+                <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+            </li>
+            <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+            </li>
+            <li ng-if="currentPage < numPages">
+                <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+            </li>
+            <li ng-if="currentPage < numPages">
+                <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+            </li>
+        </ul>
+    </div>
+</script>
+<style>
+    .w155 {
+        width: 155px;
+        padding-right: 5px !important;
+    }
+    .calanderIconCls {
+        position: absolute;
+        top: 1px;
+        right: -40px;
+    }
+    .calanderIconCls button{
+        padding: 4px 10px;
+    }
+    .gray-text{
+        color: #ccc;
+    }
+    /* .status-widget span{
+        height: 5px;
+    } */
+    /* .contractShowHideChart{
+        right: 77px !important;
+    } */
+
+    .contractShowHideChart{
+        right: 0px;
+        top: 16px;
+        padding: 1.8px 7px;
+    }
+    .onlyactive1 .onoffswitch-inner:before, .onlyactive1 .onoffswitch-inner::after {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    }
+    .onlyactive1 .onoffswitch-switch {
+        width: 14px;
+        height: 12px;
+        margin-top: 4px;
+    }
+    .onlyactive1 {
+        margin-top: -11px;
+        margin-left: 20px;
+    }
+    .tableSelect-header span.pr40{
+        padding-right: 36px !important;
+    }
+    .onlyactive1 .mrg-space{
+        padding-right: 0px !important;
+    }
+    .onoffswitch-inner{
+        margin-top: 0px !important;
+    }
+
+    .filter-relation {
+    width: 25%;
+    }
+    .filter-relation .filter-relation-list {
+        margin: 3px 3px 4px 3px;
+        line-height: 17px;
+    }
+    .filter-relation-list-value {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 0px 8px 0px 8px;
+        border: 1px solid #c1c0c0;
+        height: 23px;
+        position: relative;
+    }
+    .filter-relation .filter-relation-list .form-control{
+        background-color: transparent;
+        border: none;
+        color: #000;
+        padding: 0;
+        font-size: 14px;
+        line-height: 15px;
+        width: calc(100% - 20%);
+    }
+    .filter-relation-list-value p{
+        color: #000;
+        font-size: 14px;
+        margin: 0;
+        line-height: 17px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: calc(100% - 20%);
+        padding-bottom: 2px;
+    }
+    .filter-relation .filter-relation-list label {
+        color: #000;
+        margin: 0;
+        font-size: 12px;
+        padding-left: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+
+    .filter-relation .filter-relation-list i{
+        font-size: 11px;
+        font-weight: 900;
+        margin-left: 3px;
+    }
+    .tableSelect-header {
+        margin: 0 0 0 7px;
+}
+.tableSelect-header .form-group {
+    margin: 0;
+}
+.filter-relation-list-icons {
+    width: 20%;
+}
+.tableSelect-header-left{
+    display: flex;
+    flex-wrap: wrap;
+}
+.button-icon{
+    align-items: flex-start;
+}
+.filter-icon {
+    position: relative;
+    margin:6px 0px;
+
+}
+.filter-icon i.icon-times {
+    position: absolute;
+    top: 5px;
+    font-size: 6px;
+    right: 6px;
+    background-color: #db441d;
+    color: #fff;
+    border-radius: 30px;
+    height: 12px;
+    width: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.filter-relation-list-value .tooltip.bottom {
+        left: 0 !important;
+        top: 20px;
+    }
+</style>

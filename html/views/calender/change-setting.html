@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">
+        <span ng-if="type">{{'calender.review' | translate}}</span>
+        <span ng-if="!type">{{'calender.workflow' | translate}}</span>
+        {{'calender.reminder_notf' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="settingForm" ng-submit="settingForm.$valid && addSetting(setting)">
+    <div class="modal-body clearfix">
+        <div class="form-group col-sm-12 text-center m-t-3">
+            <div class="col-sm-12 p0 mb-h">
+                <div class="col-sm-5 p0"> </div>
+                <div class="col-sm-7">
+                    <p class="mb-0">
+                        <label class="mb-0 f14 pr-h">{{'calender.invitation' | translate}}</label>
+                        <label class="mb-0 f14 pr-h">{{'calender.remainder_1' | translate}}</label>
+                        <label class="mb-0 f14 pr-h">{{'calender.remainder_2' | translate}}</label>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <ng-form name="FieldForm">
+                    <div class="col-sm-12 p0 mb-h">
+                        <div class="col-sm-5 p0">
+                            <label class="mb-0 pt5" ng-if="type">{{'calender.all_reviews' | translate}} *</label>
+                            <label class="mb-0 pt5" ng-if="!type">{{'workflows.all_workflows' | translate}} *</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control col-sm-4 w70 mr10" 
+                                ng-class="settingForm.$submitted && FieldForm.workflow_name.$error.required?'reminder-error-message':''" name="workflow_name"
+                                class="form-control mb-h" maxlength="3"
+                                only-digits ng-model=setting.days required>
+
+                            <input type="text" class="form-control col-sm-4 w70 mr10" 
+                                ng-class="settingForm.$submitted && FieldForm.workflow_name2.$error.required?'reminder-error-message':''" name="workflow_name2"
+                                class="form-control mb-h" maxlength="3"
+                                only-digits ng-model=setting.r2_days required>
+
+                            <input type="text" class="form-control col-sm-4 w70"
+                                ng-class="settingForm.$submitted && FieldForm.workflow_name3.$error.required?'reminder-error-message':''" name="workflow_name3"
+                                class="form-control mb-h" maxlength="3"
+                                only-digits ng-model=setting.r3_days required>
+                            <span class="pl-h mt-h display-inline-block">(days)</span>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col-sm-12 text-center m-t-3">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </div>
+</form>

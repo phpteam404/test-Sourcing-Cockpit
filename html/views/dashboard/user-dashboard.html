@@ -1,0 +1,2017 @@
+<div class="animated fadeIn" style="position: relative;">
+    <div class="dashboard-widget row" ng-if="permission['view']" >
+        <div class="row dashboardAlignments custom-row-mr">
+           
+                 
+            <ul ui-sortable="sortableOptions" ng-model="panels" class="user-dashboard-scroll">
+                <li ng-repeat="item in panels track by $index" ng-init="tagIndx=$index;" class="user-dashboard-item" id="customTab{{$index}}">
+                    <div  ng-include src="item.content"></div>
+                </li>
+            </ul>
+             
+               
+        </div>
+        <div class="col-sm-12">
+            <div class="row">
+                
+                <div class="col-lg-12 p0">
+                    <div class="card">
+                        <form name="outerForm" class="tab-form-demo">
+                            <uib-tabset active="active">
+                                <uib-tab index="0" ng-if="!(user.access=='eu')" ng-click="buttonClicked(0,'My reviews');getContractsInChart1();">
+                                    <uib-tab-heading style="font-size: 16px;">
+                                        {{'dashboard.my_activities' | translate}} 
+                                        <span class="badge-num dashboard-tab-counts">{{totalReviews}}</span>
+                                    </uib-tab-heading>
+                                    <table class="table table-custom table-striped table-hover contact-view-table dashboard-td-bg-color" st-pipe="getPendingReviews" st-table="contractReviews">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="12" style="background: #efefef!important; padding:0;">
+                                                    <div class="col-sm-12 tableSelect-header">
+                                                     
+                                                        <div class="col-sm-9 p0 table-search pull-right  p-r-3" style="padding-top: 16px; padding-right: 4px;width:217px">
+                                                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key1" st-input-event="change">
+                                                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                                                        </div>
+                                                        <span class="pull-right" style="display:flex;">
+                                                          
+                                                            <!-- <button class="btn btn-primary btn-sm paddFix" ng-class="btn-adv-search" id="btn-adv-search1" type="button" ng-click="getAdvSearch1(1)" 
+                                                            uib-tooltip="Advanced Search Filters"   tooltip-placement="left"  style="margin-right: 4px;">
+                                                                <img src="img/search-plus-white.png" alt="">
+                                                            </button>  -->
+                                                          
+                                                            <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                                <button ng-if="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm') && (user.user.user_type!='external')"
+                                                                        class="btn btn-sm btn-primary" type="button" ng-click="createContract()"
+                                                                        title="{{'contract.create_contract' | translate}}" style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                                        <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                                    </button>
+                                                                  
+                                                                    <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')"
+                                                                    id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                                    ng-click="$event.stopPropagation();$event.preventDefault();dashboardFunction12();"    
+                                                                    uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                                        <i id="arrow-icon-total" class="fa fa-angle-double-down"></i>
+                                                                    </button>
+                                                                    <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="showPie12" id="alltotal">
+                                                                        <span   ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')" ng-click="createProject()">{{'dashboard.Project'|translate}}</span>
+                                                                       <span  ng-show="(user.access=='ca'  || user.access=='bo' || user.access=='bd' ||user.access=='bm')" ng-click="createContract()">{{'dashboard.Contract'|translate}}</span>
+                                                                        <span  ng-show="(user.access=='ca')" ng-click="createRelation()">{{'dashboard.Relation'|translate}}</span>
+                                                                        <span  ng-show="(user.access=='ca' || user.access=='bo' ||user.access=='bm')" ng-click="createInternalUser()">{{'dashboard.User'|translate}}</span>
+                                                                        <span   ng-if="(user.access!='eu' || user.access!='ro')" ng-click="createActionItem()">{{'dashboard.action_item'|translate}}</span>
+                                                                </div>
+                                                                </div>
+                                                        
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th width="1%" style="width: 20px;"></th>
+                                                <!-- <th st-sort="provider_name">{{'contract.provider' | translate}}</th> -->
+                                                <th st-sort="contract_name" style="max-width: 220px;min-width: 220px;width: 220px;">{{'contract.contract_info_names' | translate}}</th>
+                                                <th st-sort="is_workflow" style="max-width: 100px;min-width: 100px;width: 100px;">{{'contract.activity_topic' | translate}}</th>
+                                                <th st-sort=type style="max-width: 80px;min-width: 80px;width: 80px;">{{'general.type'|translate}}</th>
+                                                <th st-sort="relationship_category_name" style="max-width: 80px;min-width: 80px;width: 80px;">{{'contract.category' | translate}}</th>
+                                                
+                                                <th class="hand-symbol">{{'contract.complete_by' | translate}}</th>
+                                                <th class="hand-symbol">{{'contract.last_change' | translate}}</th>
+                                                <th class="hand-symbol">{{'contract.current_status' | translate}}</th>
+                                                <th colspan="2" class="hand-symbol"><span class="last-td">{{'contract.activity_completion' | translate}}</span></th>
+                                                <!-- <th class="w70 hand-symbol"></th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="row in contractReviews">                                               
+                                                <td style="max-width: 30px;min-width: 30px;width: 30px; text-align: center;">
+                                                    <span ng-if="row.action_item_count>0" tooltip-placement="right" title="{{'contract.action_items' | translate}}" class="label_tag">{{row.action_item_count}}</span>
+                                                </td>                                                
+                                                <td style="max-width: 150px;min-width: 42px;width: 172px;">
+                                                    <a class="contract-td skyblue pointer" title="{{row.contract_name}}"  ng-click="goToContractDetails(row)"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: block;width:100%; font-size: 18px;">
+                                                        {{row.contract_name}}
+                                                    </a>
+                                                    <p style="margin: 0; display: flex; font-size: 14px;">
+                                                    <span ng-if ="row.provider_name !='Multiple'">
+                                                        <a  ui-sref="app.contract.contract-overview({pname:(row.provider_name)})" title="{{row.provider_name}}" 
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                                        {{row.provider_name |checkEmpty}}
+                                                    </a>
+                                                    </span>
+                                                    <span ng-if ="row.provider_name =='Multiple'" title="{{row.provider_name}}"
+                                                            style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">
+                                                            {{row.provider_name |checkEmpty}}
+                                                    </span>
+                                                  
+                                                   
+                                                    <span style="margin: 0 5px;color:#474747;font-size: 14px;">/</span>
+                                                    <span title="{{row.bu_name}}" style="font-size: 14px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">{{row.bu_name}}</span>
+                                                    </p>
+                                                </td>
+                                                <td style="max-width: 150px;min-width: 150px;width: 150px; position: relative;">
+                                                    <p style="margin: 0; display:flex; font-size: 16px;flex-direction: column;">                                                        
+                                                        <span ng-if="row.is_workflow=='1' && row.is_subtask=='0'" style="text-overflow: ellipsis;
+                                                                                                overflow: hidden;white-space: nowrap;
+                                                                                                display: inline-block;width:auto;font-size: 18px;"
+                                                              class="green" title="{{'calender.workflow' | translate}}">
+                                                             {{'calender.workflow' | translate}}
+                                                        </span>  
+                                                        <span ng-if="row.is_subtask=='1'" style="text-overflow: ellipsis;
+                                                                    overflow: hidden;white-space: nowrap;
+                                                                display: inline-block;width:auto;font-size: 18px;"
+                                                                class="green" title="{{'calender.workflow' | translate}}">
+                                                                    {{'calender.sub_task' | translate}}
+                                                        </span>                                                           
+                                                        <span ng-if="row.is_workflow=='0'" style="text-overflow: ellipsis;
+                                                                                                overflow: hidden;white-space: nowrap;
+                                      
+                                                                                                display: inline-block;width:auto;font-size: 18px;"
+                                                            class="orange" title="{{'calender.review' | translate}}">
+                                                            {{'calender.review' | translate}}
+                                                        </span>
+                                                        <span title="{{row.review_name}}" class="skyblue pointer" style="text-overflow: ellipsis;overflow: hidden;
+                                                                                                        white-space: nowrap;display: inline-block;
+                                                                                                        width:auto;font-size: 14px;" 
+                                                                                                        ng-click="goToReviewPage(row)">
+                                                            {{row.review_name | checkEmpty}}
+                                                        </span>
+                                                    </p>
+                                                </td>
+                                                <td style="min-width: 80px;width: 80px;font-size: 18px;">{{row.type | capitalize}}</td>
+                                                <td style="min-width: 80px;width: 80px;font-size: 16px;">
+                                                    <span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name| checkEmpty}}</span>
+                                                </td>
+                                                 <!-- <td class="dashboard-complete-by">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td>   -->
+                                                <!-- <td>
+                                                    <span ng-class="(row.overdue=='1') ?'dashboard-complete-by': 'dashboard-complete-by-wthout'">{{row.deadline | utcToLocal:'date'}}</span>
+                                                </td> -->
+                                                <td class="dashboard-complete-by" ng-if="row.overdue ==1">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td>
+                                                <td style="width:100px;max-width:100px;min-width: 100px;font-size: 16px;" ng-if="row.overdue==0">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td>
+                                                
+                                                <td style="width:100px;max-width:100px;min-width: 100px;font-size: 16px;">{{row.last_review | utcToLocal: 'date' | checkEmpty}}</td>
+                                                <td ng-if="row.score == 'Amber'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class="amber-active"></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'Red'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class="red-active"></span>
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'Green'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                        <span class="green-active"></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="!row.score" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'N/A'">
+                                                    <span class="" style="font-size: 16px;">{{row.score}}</span>
+                                                </td>
+                                    
+                                                <td style="max-width: 100px;min-width: 100px;width: 100px;position: relative;">
+                                                   
+                                                        <span class="f16">{{row.contract_progress == null ? "0%":row.contract_progress}}</span> 
+                                                        <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right" ng-if="(row.validation_status!=2 ||user1.access =='ca')">
+                                                            <a href uib-dropdown-toggle class="font-sm">
+                                                                <span class="fa fa-ellipsis-v"></span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" 
+                                                                uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                                <li ng-if="row.id_contract_review && row.can_review=='1' && row.is_workflow=='0'">
+                                                                    <a href="javascript:;" ng-click="goToContractReview(row)">{{'contract.complete_review' | translate}}</a>        
+                                                                </li>
+                                                                <li ng-if="row.id_contract_review && row.is_workflow=='1'">
+                                                                    <a href="javascript:;" ng-click="goToContractReview(row)">{{'contract.execute_workflow' | translate}}</a>
+                                                                </li>
+                                                                <li ng-if="row.id_contract_review && row.can_review=='1' && row.is_workflow=='0'">
+                                                                    <a href="javascript:;" ng-click="goToContractDashboard(row)">{{'contract.dashboard' | translate}}</a>
+                                                                </li>
+                                                                <li ng-if="row.id_contract_review && row.is_workflow=='1'">
+                                                                    <a href="javascript:;" ng-click="goToContractDashboard(row)">{{'contract.dashboard' | translate}}</a>
+                                                                </li>
+                                                                <li ng-if="row.id_contract_review && row.is_subtask == 0">
+                                                                    <a href="javascript:;" ng-click="exportContractReview(row)">{{'contract.export'| translate}}</a>
+                                                                </li>
+                                                                <!-- <li ng-if="del==1">
+                                                                    <a href="javascript:;" ng-click="deleteContract(row)" class="danger-delete">{{'contract.delete'| translate}}</a>
+                                                                </li> -->
+                                                            </ul>
+                                                        </span>
+                                                        <span class="pull-right pr10" ng-if="row.contract_status == 'pending review'" tooltip-placement="left" uib-tooltip="{{'contract.pending_review_icon' | translate}}">
+                                                            <i class="fa fa-undo yellow-orange f18"></i>
+                                                        </span>
+                                                        <span class="pull-right pr10" ng-if="row.ideedi == 'itako' && row.is_workflow=='1'" ng-click="goToContratDiscussion(row)" tooltip-placement="left" uib-tooltip="{{'discussion.top_msg_w' | translate}}">
+                                                            <a href="javascript:;">
+                                                                <img style="padding-bottom: 8px; width: 20px;" src="img/discussion.png" />
+                                                            </a>
+                                                        </span>
+    
+                                                 
+                                                        <span ng-if="row.validation_info==3" class="provider-status-active"><i class="fa fa-check-circle" tooltip-placement="top" tooltip-append-to-body="true" uib-tooltip="{{'normal.validation_finalized' | translate}}" style="font-size: 20px; position: absolute;right: 55px;"></i></span>
+                                                        <span ng-if="row.validation_info==2"   class="provider-refresh" style="position: absolute; right: 55px;bottom: 23px;"><i class="fa fa-refresh" uib-tooltip="{{'normal.validation_ongoing' | translate}}"  tooltip-placement="top" tooltip-append-to-body="true" style="font-size: 12px;"></i></span>
+                                                         <span ng-if="row.validation_info==1" ><i class="tss-validation" style="font-size: 17px;position: absolute;right: 55px;" uib-tooltip="{{'contract.validation_preparation' | translate}}" tooltip-placement="top" tooltip-append-to-body="true"></i></span> 
+                                                         <span ng-if="row.validation_info==4" class="exclamatory-circle" ><i class="fa fa-exclamation-circle" style="font-size: 20px;position: absolute;right: 55px;" tooltip-placement="top" tooltip-append-to-body="true" uib-tooltip="{{'contract.validation_preparation' | translate}}"></i></span>
+                                                        <!-- For validation omgoing icon close-->
+                                                  
+                                                      
+                                                        <span class="pull-right pr10" ng-if="row.ideedi == 'itako' && row.is_workflow=='0'" ng-click="goToContratDiscussion(row)" tooltip-placement="left" uib-tooltip="{{'discussion.top_msg' | translate}}">
+                                                            <a href="javascript:;"> 
+                                                                <img style="padding-bottom: 8px; width: 20px;" src="img/discussion.png" />
+                                                            </a>
+                                                        </span>
+                                                   
+                                                    
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-if="isLoading22">
+                                            <tr>
+                                                <td colspan="12" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-if="contractReviews.length==0">
+                                            <tr>
+                                                <td colspan="12" class="text-sm-center f16" style="width: 100%;">{{'general.no_data' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot class="body-bg" ng-if="!emptyTable">
+                                            <tr>
+                                                <td class="text-center" colspan="12">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords1>10">
+                                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages1(displayCount)"
+                                                                ng-options="item for item in pagesNumber" selected>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab index="1" ng-click="buttonClicked(1,'My contributions');getContractsInChart2();" ng-if="(user.access=='bu' || user.access=='bd' || user.access=='eu' || user.access=='bo' ||user.access=='bm')">
+                                    <uib-tab-heading style="font-size: 16px;">
+                                        {{'dashboard.contributing_to' | translate}}
+                                        <span class="badge-num dashboard-tab-counts">{{contributingToContractCount}}</span>
+                                    </uib-tab-heading>
+                                    <table class="table table-custom table-striped table-hover contact-view-table dashboard-td-bg-color" st-pipe="getContributingToContracts" st-table="contributingToContract">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="12" style="background: #efefef!important; padding:0;">
+                                                    <div class="col-sm-12 tableSelect-header">
+                                                                                                             
+                                                        <div class="col-sm-9 p0 table-search pull-right  p-r-3" style="padding-top: 16px; padding-right: 4px;width:217px">
+                                                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event="change" id="search_key2">
+                                                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                                                        </div>
+                                                        <span class="pull-right" style="display:flex;">
+                                                          
+                                                            <!-- <button class="btn btn-primary btn-sm paddFix" ng-class="btn-adv-search" id="btn-adv-search2" type="button" ng-click="getAdvSearch2(1)" 
+                                                                uib-tooltip="Advanced Search Filters" tooltip-placement="left" style="margin-right: 4px;" tooltip-append-to-body="true">
+                                                                <img src="img/search-plus-white.png" alt="">
+                                                            </button>   -->
+                                                            <!-- <button ng-if="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bd') && (user.user.user_type!='external')"
+                                                                class="btn btn-sm btn-primary btn-radius" type="button" ng-click="createContract()"
+                                                                title="{{'contract.create_contract' | translate}}">
+                                                                <i class="icon-plus-circle"></i><span style="padding-left: 5px;" ng-show="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bd')">{{'general.ADD'| translate}}</span>
+                                                            </button> -->
+                                                            <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                                <button ng-if="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm') && (user.user.user_type!='external')"
+                                                                        class="btn btn-sm btn-primary" type="button" ng-click="createContract()"
+                                                                        title="{{'contract.create_contract' | translate}}" style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                                        <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                                    </button>
+                                                                  
+                                                                    <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')"
+                                                                    id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                                    ng-click="$event.stopPropagation();$event.preventDefault();contributionsFunction();"    
+                                                                    uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                                        <i id="arrow-icon-contributions" class="fa fa-angle-double-down"></i>
+                                                                    </button>
+                                                                    <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="showContributions" id="allContributions">
+                                                                        <span   ng-show="(user.access=='ca'|| user.access=='bo'|| user.access=='bd' ||user.access=='bm')" ng-click="createProject()">{{'dashboard.Project'|translate}}</span>
+                                                                        <span  ng-show="(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')" ng-click="createContract()">{{'dashboard.Contract'|translate}}</span>
+                                                                         <span  ng-show="(user.access=='ca')" ng-click="createRelation()">{{'dashboard.Relation'|translate}}</span>
+                                                                         <span  ng-show="(user.access=='ca' || user.access=='bo' ||user.access=='bm')" ng-click="createInternalUser()">{{'dashboard.User'|translate}}</span>
+                                                                         <span   ng-if="(user.access!='eu' || user.access!='ro')" ng-click="createActionItem()">{{'contract.action_item'|translate}}</span>
+                                                                </div>
+                                                                </div>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th width="1%" style="width: 20px;"></th>
+                                                <th st-sort="contract_name" style="max-width: 220px;min-width: 220px;width: 220px;">{{'contract.contract_info_names' | translate}}</th>
+                                                <th st-sort="is_workflow" style="max-width: 100px;min-width: 100px;width: 100px;">{{'contract.activity_topic' | translate}}</th>
+                                                <th st-sort=type style="max-width: 80px;min-width: 80px;width: 80px;">{{'Type'|translate}}</th>
+                                                <th st-sort="relationship_category_name" style="max-width: 80px;min-width: 80px;width: 80px;">{{'contract.category' | translate}}</th>
+                        
+                                                <th class="hand-symbol">{{'contract.complete_by' | translate}}</th>
+                                                <th class=" hand-symbol">{{'contract.last_change' | translate}}</th>
+                                                <th class=" hand-symbol" style="width: 10%;">{{'contract.moduleScore' | translate}}</th>
+                                                <th colspan="2" class=" hand-symbol"> <span class="last-td">{{'contract.module_completion' | translate}}</span> </th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="row in contributingToContract">                                                
+                                                <td style="max-width: 30px;min-width: 30px;width: 30px; text-align: center;">
+                                                    <span ng-if="row.action_item_count>0" tooltip-placement="right" title="{{'contract.action_items' | translate}}" class="label_tag">{{row.action_item_count}}</span>
+                                                </td>                                                
+                                                <td style="max-width: 150px;min-width: 42px;width: 172px;">
+                                                    <!-- <a class="contract-td skyblue pointer" title="{{row.contract_name}}"  ng-click="goToContractDetails(row)"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: block;width:100%; font-size: 18px;">
+                                                        {{row.contract_name}}
+                                                    </a>
+                                                    <p style="margin: 0; display: flex; font-size: 14px;">
+                                                    <a ui-sref="app.contract.contract-overview({pname:(row.provider_name)})" title="{{row.provider_name}}" 
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                                        {{row.provider_name}}
+                                                    </a>
+                                                    <span style="margin: 0 5px;color:#474747;font-size: 14px;">/</span>
+                                                    <span title="{{row.bu_name}}" style="font-size: 14px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">{{row.bu_name}}</span>
+                                                    </p> -->
+                                                    <span ng-if="user.access !='eu'">
+                                                        <a class="contract-td skyblue pointer" title="{{row.contract_name}}"  ng-click="goToContractDetails(row)"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: block;width:100%; font-size: 18px;">
+                                                        {{row.contract_name}}
+                                                    </a>
+                                                    <p style="margin: 0; display: flex; font-size: 14px;">
+                                                    <a ui-sref="app.contract.contract-overview({pname:(row.provider_name)})" title="{{row.provider_name}}" 
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;"
+                                                        n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract with provider ($${{row.provider_name}})"}'>
+                                                        {{row.provider_name}}
+                                                    </a>
+                                                    <span style="margin: 0 5px;color:#474747;font-size: 14px;">/</span>
+                                                    <span title="{{row.bu_name}}" style="font-size: 14px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">{{row.bu_name}}</span>
+                                                    </p> 
+                                                    </span>
+
+                                                    <span ng-if="user.access =='eu'">
+                                                        <a class="contract-td" title="{{row.contract_name}}"
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: block;width:100%; font-size: 18px;">
+                                                        {{row.contract_name}}
+                                                    </a>
+                                                    <p style="margin: 0; display: flex; font-size: 14px;">
+                                                    <span ng-if="user.access !='eu'">
+                                                        <a ui-sref="app.contract.contract-overview({pname:(row.provider_name)})" title="{{row.provider_name}}" 
+                                                        style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">
+                                                        {{row.provider_name}}
+                                                    </a>
+                                                    </span>
+                                               
+                                                    <span  ng-if="user.access =='eu'"  title="{{row.provider_name}}" 
+                                                            style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">
+                                                            {{row.provider_name}}
+                                                    </span>
+                                                  
+                                                   
+                                                    <span style="margin: 0 5px;color:#474747;font-size: 14px;">/</span>
+                                                    <span title="{{row.bu_name}}" style="font-size: 14px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:auto;">{{row.bu_name}}</span>
+                                                    </p> 
+                                                    </span>
+                                                </td>
+                                                
+                                               
+                                                <td style="max-width: 150px;min-width: 150px;width: 150px; position: relative;">
+                                                    <p style="margin: 0; display:flex; font-size: 16px;flex-direction: column;">                                                        
+                                                        <span ng-if="row.is_workflow=='1'" style="text-overflow: ellipsis;
+                                                                                                overflow: hidden;white-space: nowrap;
+                                                                                                display: inline-block;width:auto;font-size: 18px;"
+                                                              class="green" title="{{'calender.workflow' | translate}}">
+                                                             {{'calender.workflow' | translate}}
+                                                        </span>                                                            
+                                                        <span ng-if="row.is_workflow=='0'" style="text-overflow: ellipsis;
+                                                                                                overflow: hidden;white-space: nowrap;
+                                                                                                display: inline-block;width:auto;font-size: 18px;"
+                                                            class="orange" title="{{'calender.review' | translate}}">
+                                                            {{'calender.review' | translate}}
+                                                        </span>
+                                                        <span title="{{row.review_name}}" class="skyblue pointer" style="text-overflow: ellipsis;overflow: hidden;
+                                                                                                        white-space: nowrap;display: inline-block;
+                                                                                                        width:auto;font-size: 14px;"  ng-click="goToReviewPage(row)">
+                                                            {{row.review_name | checkEmpty}}
+                                                        </span>
+                                                    </p>
+                                                </td>
+                                                <td style="min-width: 80px;width: 80px;font-size: 16px;">
+                                                    <span title="{{row.relationship_category_name}}">{{row.type| capitalize}}</span>
+                                                </td>
+                                                <td style="min-width: 80px;width: 80px;font-size: 16px;">
+                                                    <span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name | checkEmpty}}</span>
+                                                </td>
+                                                <!-- <td class="dashboard-complete-by">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td> -->
+                                                <td class="dashboard-complete-by" ng-if="row.overdue ==1">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td>
+                                                <td style="width:100px;max-width:100px;min-width: 100px;font-size: 16px;" ng-if="row.overdue==0">{{row.deadline | utcToLocal: 'date' | checkEmpty}}</td>
+                                                <td style="width:100px;max-width:100px;min-width: 100px;font-size: 16px;">{{row.last_review | utcToLocal: 'date' | checkEmpty}}</td>
+                                                <td ng-if="row.score == 'Amber'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class="amber-active"></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'Red'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class="red-active"></span>
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'Green'" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                        <span class="green-active"></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="!row.score" style="max-width:100px;min-width: 100px;width: 100px;">
+                                                    <div class="status-widget font-weight-bold">
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                        <span class=""></span>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="row.score == 'N/A'">
+                                                    <span class="" style="font-size: 16px;">{{row.score}}</span>
+                                                </td>
+                                                <td style="max-width: 100px;min-width: 100px;width: 100px;position: relative;">
+                                                    <span class="f16">{{row.contract_progress == null ? "0%":row.contract_progress}}</span>
+                                                    <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right">
+                                                        <a href uib-dropdown-toggle class="font-sm">
+                                                            <span class="fa fa-ellipsis-v"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" 
+                                                             uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                            <li ng-if="row.id_contract_review && row.can_review=='1' && row.is_workflow=='0'">
+                                                                <a href="javascript:;" ng-click="goToContractReview(row)" ng-if="row.validation_posible">{{'dashboard.validate' | translate}}</a>
+                                                                <a href="javascript:;" ng-if="!row.validation_posible" ng-click="goToContractReview(row)">{{'contract.complete_review' | translate}}</a>
+                                                            </li>
+                                                            <li ng-if="row.id_contract_review && row.is_workflow=='1'">
+                                                                <a href="javascript:;" ng-click="goToContractReview(row)" ng-if="row.validation_posible">{{'dashboard.validate' | translate}}</a>
+                                                                <a href="javascript:;" ng-if="!row.validation_posible" ng-click="goToContractReview(row)">{{'contract.execute_workflow' | translate}}</a>
+                                                            </li>
+                                                            <li ng-if="row.id_contract_review && row.can_review=='1' && row.is_workflow=='0'">
+                                                                <a href="javascript:;" ng-click="goToContractDashboard(row)">{{'contract.dashboard' | translate}}</a>
+                                                            </li>
+                                                            <li ng-if="row.id_contract_review && row.is_workflow=='1'">
+                                                                <a href="javascript:;" ng-click="goToContractDashboard(row)">{{'contract.dashboard' | translate}}</a>
+                                                            </li>
+                                                            <li ng-if="row.id_contract_review && row.is_subtask==0">
+                                                                <a href="javascript:;" ng-click="exportContractReview(row)">{{'contract.export'
+                                                                    | translate}}</a>
+                                                            </li>
+                                                            <!--- In My Contributions list no need delete option inlist-->
+                                                            <!-- <li ng-if="del==1">
+                                                                <a href="javascript:;" ng-click="deleteContract(row)" class="danger-delete">{{'contract.delete'
+                                                                    | translate}}</a>
+                                                            </li> -->
+                                                        </ul>
+                                                    </span>
+                                                    <!-- <span ng-if="row.validation_contributor">
+                                                        <span style="padding-left: 5px;" title="{{row.validation_title}}" class="green f18 pull-right"><b
+                                                                style="color:{{row.validation_color}}">V</b></span>
+                                                    </span> -->
+                                                <!-- For validation ongoing  icon close-->
+                                                    <span>
+                                                        
+                                                        <span ng-if="row.validation_info==4" class="exclamatory-circle"><i class="fa fa-exclamation-circle" tooltip-placement="top" tooltip-append-to-body="true" uib-tooltip="{{'contract.validation_preparation' | translate}}" style="font-size: 20px;position: absolute;right: 55px;"></i></span>
+                                                        <span ng-if="row.validation_info==3" class="provider-status-active" ><i class="fa fa-check-circle" uib-tooltip="{{'normal.validation_finalized' | translate}}"  tooltip-placement="top" tooltip-append-to-body="true"style="font-size: 20px; position: absolute;right: 55px;"></i></span>
+                                                        <span ng-if="row.validation_info==2" class="provider-refresh" style="position: absolute; right: 55px;bottom: 23px;"><i class="fa fa-refresh" style="font-size: 12px;" tooltip-placement="top" tooltip-append-to-body="true"  uib-tooltip="{{'normal.validation_ongoing' | translate}}"></i></span>
+                                                        <span ng-if="row.validation_info ==1"><i class="tss-validation" style="font-size:17px;position: absolute;right: 55px;" tooltip-placement="top" tooltip-append-to-body="true"  uib-tooltip="{{'contract.validation_preparation' | translate}}"></i></span> 
+                                                       
+                                                    </span>
+                                                    <span class="pull-right pr10" ng-if="row.contract_status == 'pending review'" tooltip-placement="left" uib-tooltip="{{'contract.pending_review_icon' | translate}}">
+                                                        <i class="fa fa-undo yellow-orange f18"></i>
+                                                    </span>
+                                                    <span class="pull-right pr10" ng-if="row.ideedi == 'itako' && row.is_workflow=='0'" ng-click="goToContratDiscussion(row)" tooltip-placement="left" uib-tooltip="{{'discussion.top_msg' | translate}}">
+                                                        <a href="javascript:;">
+                                                            <img style="padding-bottom: 8px; width: 20px;" src="img/discussion.png" />
+                                                        </a>
+                                                    </span>
+
+                                                    
+                                                      <!-- For validation ongoing icon open-->
+                                                      <!-- <span class="pull-right pr10"  tooltip-placement="left" uib-tooltip="validate" ng-if="row.validation_status==2">
+                                                            <a href="javascript:;"> V
+                                                                
+                                                            </a>
+                                                    </span> -->
+                                                    <!-- For validation ongoing  icon close-->
+                                                    <span class="pull-right pr10" ng-if="row.ideedi == 'itako' && row.is_workflow=='1'" ng-click="goToContratDiscussion(row)" tooltip-placement="left" uib-tooltip="{{'discussion.top_msg_w' | translate}}">
+                                                        <a href="javascript:;">
+                                                            <img style="padding-bottom: 8px; width: 20px;" src="img/discussion.png" />
+                                                        </a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="isContributingToLoading">
+                                            <tr>
+                                                <td colspan="11" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="!(contributingToContract.length > 0)">
+                                            <tr>
+                                                <td colspan="11" class="text-sm-center f16" style="width: 100%;">{{'general.no_data' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot class="body-bg" ng-if="contributingToContract.length>0">
+                                            <tr>
+                                                <td class="text-center" colspan="11">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords3>10">
+                                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages3(displayCount)"
+                                                                ng-options="item for item in pagesNumber" selected>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab index="2" ng-click="buttonClicked(2,'Action items');getContractsInChart3();">
+                                    <uib-tab-heading style="font-size: 16px;">
+                                        {{'dashboard.action_items' | translate }}
+                                        <span class="badge-num">{{your_action_items}}</span>
+                                    </uib-tab-heading>
+                                    <table class="table table-custom table-striped table-hover dashboard-td-bg-color"  st-pipe="getActionItems" st-table="actionItemsList">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="12" style="background: #efefef!important; padding:0;">
+                                                    <div class="col-sm-12 tableSelect-header">
+                                                                                                             
+                                                        <div class="col-sm-9 p0 table-search pull-right  p-r-3" style="padding-top: 16px; padding-right: 4px;width:217px">
+                                                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                                                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                                                        </div>
+                                                        <span class="pull-right" style="display:flex;"> 
+                                                            <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                                <button ng-if="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='bd' || user.access=='bm') && (user.user.user_type!='external')"
+                                                                        class="btn btn-sm btn-primary" type="button" ng-click="createContract()"
+                                                                        title="{{'contract.create_contract' | translate}}" style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                                        <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                                    </button>
+                                                                  
+                                                                    <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' || user.access=='bm')"
+                                                                    id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                                    ng-click="$event.stopPropagation();$event.preventDefault();actionItemsFunction();"    
+                                                                    uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                                        <i id="arrow-icon-contributions" class="fa fa-angle-double-down"></i>
+                                                                    </button>
+                                                                    <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="showActionItems" id="allActionItems">
+                                                                        <span   ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')" ng-click="createProject()">{{'dashboard.Project'|translate}}</span>
+                                                                        <span  ng-show="(user.access=='ca'  || user.access=='bo' || user.access=='bd' || user.access=='bm')" ng-click="createContract()">{{'dashboard.Contract'|translate}}</span>
+                                                                         <span  ng-show="(user.access=='ca')" ng-click="createRelation()">{{'dashboard.Relation'|translate}}</span>
+                                                                         <span  ng-show="(user.access=='ca' || user.access=='bo' ||user.access=='bm')" ng-click="createInternalUser()">{{'dashboard.User'|translate}}</span>
+                                                                         <span   ng-if="(user.access!='eu' || user.access!='ro')" ng-click="createActionItem()">{{'contract.action_item'|translate}}</span>
+                                                                </div>
+                                                                </div>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                           
+                                            <tr>
+                                                <th st-sort="action_item" style="width:300px; max-width:300px;">{{'contract.action_item' | translate}}</th>
+                                                <th  st-sort="priority" class="action-items-list-priority">{{'contract.priority' | translate}}</th>
+                                                <th  st-sort="user_name" class="action-items-list-responsible-user">{{'contract.responsible' | translate}}</th>
+                                                <th  st-sort="first_name" class="action-items-list-created-by">{{'contract.created_by' | translate}}</th>
+                                                <th st-sort="original_date" class="action-items-list-original-date">{{'contract.original_date' | translate}}</th>
+                                                <th  st-sort="due_date" class="action-items-list-due-date">{{'contract.due_date' | translate}}</th>
+                                                <th  st-sort="status" class="action-items-list-status" style="text-align: right;">{{'contract.status' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="row in actionItemsList">                                                                                    
+                                                <td class=""  style="width:300px; max-width:300px;">
+                                                    <p class="mb-0">
+                                                        <!-- <span class="f18 ellipis lh16 display-block" style="width:480px;line-height: 1.5rem;"> -->
+                                                            <a class="skyblue custom-td-ellipsis pointer" href="javascript:;" id="{{row.id_contract_review_action_item}}"
+                                                                title="{{row.action_item}}" style="font-size: 14px;"
+                                                                ng-click="updateContractReview(row,'view')">{{row.action_item}}
+                                                            </a>
+                                                        <!-- </span> -->
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <span  class="custom-td-ellipsis lh16 f14 gray display-block" title="{{row.module_name}} / {{row.topic_name}} / {{row.question_text}}">
+                                                        {{row.module_name | checkEmpty}} / {{row.topic_name | checkEmpty}}
+                                                            <span ng-if="row.question_text!='-'">/
+                                                                <a ng-click="goToQuestion(row)" class="skyblue" href="javascript:;">{{row.question_text}}</a>
+                                                            </span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <span class="custom-td-ellipsis lh16 f14 gray display-block" title="{{row.provider_name}} / {{row.contract_name}}">
+                                                            {{row.provider_name | checkEmpty}} / {{row.contract_name | checkEmpty}}</span>
+                                                    </p>                                    
+                                                </td>
+                                                <td  class="action-items-list-priority"><span class="f16">{{row.priority | checkEmpty}}</span></td>
+                                                <td class="action-items-list-responsible-user"><span class="custom-td-ellipsis  orange f16" title="{{row.user_name}}">{{row.user_name}}</span></td>
+                                                
+                                                <td class="action-items-list-created-by"><span class="custom-td-ellipsis  f16" style="width: 250px;" title="{{row.created_by_name}}"> {{row.created_by_name}}</span></td>
+                                                <td class="action-items-list-original-date">
+                                                    <span class="f16" style="white-space:nowrap;">{{row.original_date | utcToLocal:'date' |checkEmpty}}</span>
+                                                </td>
+                                                
+                                                <td  class="action-items-list-due-date"><span class="f16" style="white-space: nowrap;" ng-class="(row.overdue=='1') ?'overdue-date': ''">{{row.due_date | utcToLocal:'date'}}</span></td>
+                                                <td class="action-items-list-status" style="text-align: right; font-size:14px;"><span>{{row.status}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="isLoading1">
+                                            <tr>
+                                                <td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="emptyTable1">
+                                            <tr>
+                                                <td colspan="7" class="text-sm-center f16" style="width: 100%;">{{'general.no_data' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot class="body-bg">
+                                            <tr>
+                                                <td class="text-center" colspan="7">                                                    
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                                ng-options="item for item in pagesNumber" selected>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab index="3">                                    
+                                </uib-tab>
+                            </uib-tabset>
+                        </form>
+                    </div>
+                </div>
+                <div class="pr0 text-sm-center dashbordCharts" id="chart" ng-if="enableChart">
+                    <label class="orange mt-1 mb-0" style="padding: 0px 0px 0px 42px;">{{chartLabel}}</label>
+                    <i class="pull-right icon-times f14" style="float: right;padding: 16px 12px 0px;cursor: pointer;" ng-click="hideChart(true);"></i>
+                    <div class="dashboard-chart main_bubble_chart">
+                        <span class="title_2">
+                            <label class="ellipis">{{myDataSource.classficationRelation['low'] | isUndefinedOrNull}}</label>
+                        </span>
+                        <span class="title_1">
+                            <label class="ellipis">{{myDataSource.classficationRelation['high'] | isUndefinedOrNull}}</label>
+                        </span>
+                        <div fusioncharts height="350" width="100%" type="bubble" dataSource="{{myDataSource | json}}">
+                        </div>
+                        <span class="title_3">{{myDataSource.classficationRelation['left'] | isUndefinedOrNull}}</span>
+                        <span class="title_4">{{myDataSource.classficationRelation['right'] | isUndefinedOrNull}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="prev-next-icon" >
+        <button class="left-paddle paddle hidden" >
+            <i class="fa fa-angle-double-left" aria-hidden="true" ></i>
+        </button>
+        <button class="right-paddle paddle">
+            <i class="fa fa-angle-double-right" aria-hidden="true" ></i>
+        </button>
+    </div> 
+    <!--/row-->
+</div>
+
+<script type="text/ng-template" id="all-activities-graph.html">
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="allActivities1">
+        <a href="#">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="goToOverview()">
+                    <i class="fa fa-list-alt p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'dashboard.all_activities' | translate | uppercase}} 
+                        <p class="dashboard-counts-span">{{dashboardDataCount.all_activities_count}} </p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                              ng-click="$event.stopPropagation();$event.preventDefault();dashboardFunction();"    
+                              uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-activities" class="fa fa-angle-double-down"></i>
+                        </button>
+                   </div>
+                </div>
+
+                <div class="showMenu resolution" ng-show="showPie" id="allActivities"> 
+                     <div class="topSection">
+                         <p><span class="f16 orange fNormal pointer " ng-click="goToActivities('All',1)">{{'normal.all_active_reviews' | translate}}</span>
+                            <a class="f16 orange f500" href="javascript:;" ng-click="goToActivities('All',1)"> {{activitiesCount.all_reviews_count |number}}</a> 
+                        </p>
+                         <p><span class="f16 green fNormal pointer" ng-click="goToActivities('All',2)">{{'normal.all_Active_tasks' | translate}}</span> 
+                            <a class="f16 green f500" href="javascript:;" ng-click="goToActivities('All',2)">{{activitiesCount.all_workflows_count |number}}</a>
+                         </p>
+                    </div>
+                    <span class="f500 activity-title f15">{{'normal.active_overview' | translate}}</span>
+                     <div ng-if="true" id="chart-container" class="activityChart">
+                    </div> 
+               </div> 
+            </div> 
+        </a>
+    </div>
+</script>
+
+<script type="text/ng-template" id="all-contracts-graph.html">
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="endDate1">
+        <a href="#">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="goToContracts()">
+                    <i class="fa fa-list-ul p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'user.breadcrumb.All_CONTRACTS'| translate}}
+                        <p class="dashboard-counts-span" >{{dashboardDataCount.all_contracts_count}}</p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                              ng-click="$event.stopPropagation();$event.preventDefault();endDateFunction();"    
+                              uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-enddates" class="fa fa-angle-double-down"></i>
+                        </button>
+                   </div>
+                </div>
+                <div class="showMenu cursor-normal" ng-show="showEndDate" id="endDate"> 
+                    <div class="topSection">
+                         <p ng-click="goToContracts()">
+                            <span class="f16 fNormal pointer" >{{'user.breadcrumb.All_CONTRACTS'| translate}}</span>
+                            <a class="gray f16 f500" href="javascript:;">{{endDateCounts.all_contracts |number:'0'}}</a>
+                        </p>
+                        <p>
+                            <span class="f16 fNormal cursor-normal">{{'providers.total_value' | translate}}</span>
+                            <a class="f500 f16 gray cursor-normal" href="javascript:;">{{contract_currency_name}}&nbsp;{{endDateCounts.total_projected_spend | number:'0'}}</a>
+                        </p>
+                    </div>
+                     <div class="contract-overview-details" style="height:297px;">
+                        <h6 class="text-center f15 f500">{{'contract.contractOverView'|translate}}</h6>
+                        <ul>
+                            <li class="mb-1">
+                                <p title="{{'contract.contractCreatedThisMonth'|translate}}">{{'contract.contractCreatedThisMonth'|translate}} </p>
+                                <div ng-click ="getContractsthismonth()">{{endDateCounts.created_this_month}}</div>
+                            </li>
+                            <li class="mb-1">
+                                <p title="{{'contract.contractsEndingThisMonth'|translate}}"> {{'contract.contractsEndingThisMonth'|translate}}</p>
+                                <div ng-click="getContractsEndingThisMonth()">{{endDateCounts.ending_this_month}}</div>
+                            </li>
+                            <li>
+                                <p title="{{'contract.contractsEndingWithIn90Days'|translate}}">{{'contract.contractsEndingWithIn90Days'|translate}}</p>
+                                <div ng-click="getEndDateCntracts()">{{endDateCounts.ending_in_90_days}}</div>
+                            </li>
+                            <li>
+                                <p title="{{'contract.contractsWithAutomaticProlongation'|translate}}">{{'contract.contractsWithAutomaticProlongation'|translate}}</p>
+                                <div ng-click="getautomaticProlongation()">{{endDateCounts.automatic_prolongation}}</div>
+                            </li>
+                        </ul>
+                    </div> 
+                </div>                    
+            </div>
+        </a>
+    </div>
+</script>
+<script type="text/ng-template" id="all-action-items.html">
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="abcd1">
+        <a href="javascript:;">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="goToActionItems()">
+                    <i class="icon-settings p-1  gray font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'contract.all_action_item' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardDataCount.action_items_count}}</p>
+                    </div>
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                        ng-click="$event.stopPropagation();$event.preventDefault();myFunction();"    
+                        uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon" class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="showMenu" ng-show="showDiv" id="abcd">
+                    <div class="topSection">
+                        <p>
+                            <span class="pointer" ng-click="goToOpenItem()">{{'normal.open_actions_items' | translate}}</span> 
+                            <span class="gray f16 f500" ng-click="goToOpenItem()">{{ actionItemcount.action_items_count}}</span>                                
+                        </p>
+                        <p>
+                            <span class="overdue-date" style="color:#db441d;"  ng-click="goToOverDueItems()">{{'normal.overdue_actions' | translate}}</span>
+                            <span class="overdue-date" ng-click="goToOverDueItems()">{{ actionItemcount.ovredue_count}}</span>
+                        </p>
+                    </div>
+                    <span class="f15 action-item-title">{{'normal.priorities_actions' | translate}}</span>
+                    <div  ng-if="true" class= "actionitemsChart" fusioncharts id="mychartcontainer" chartid="mychart" height="280" width="100%" type="Column2D" dataSource="{{def | json}}">
+                    </div>
+
+                </div>
+            </div>
+        </a>
+    </div>
+
+</script>
+
+<script type="text/ng-template" id="all-coworkers-graph.html">
+    
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="allCoworkers1">
+        <a href="javascript:;" ng-if="(user.access=='wa' || user.access=='ca' || user.access=='bo' || user.access=='ro' ||user.access=='bm' )">
+            <div class="card">
+                <div class="card-block p-1 clearfix"   ng-if="user.access!='ro'" ng-click="goToUsers()">
+                    <i class="fa icon-on-hand p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'dashboard.co_workers' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardDataCount.co_workers_count}}</p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                        ng-click="$event.stopPropagation();$event.preventDefault();coworkersFunction();"    
+                        uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-coworkers" class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- For report read only disable -->
+                <div class="card-block p-1 clearfix hand-symbol" ng-if="user.access=='ro'">
+                    <i class="fa icon-on-hand p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'dashboard.co_workers' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardData.co_workers}}</p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                        ng-click="$event.stopPropagation();$event.preventDefault();coworkersFunction();"    
+                        uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-coworkers" class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- For report read only disable close-->
+                <div class="showMenu cursor-normal co-worker-chart" ng-show="showCoworkers" id="allCoworkers" style="height:386px;">
+                    <div class="topSection">
+                        <p class="cursor-normal" ng-click="goToUsers()" ng-if="user.access!='ro'">
+                            <span class="f16 pointer">{{'normal.all_co_workers' | translate}}</span> 
+                            <span class="gray f16 f500  pointer">{{ coworkersCount.all_co_workers | number |checkEmpty}}</span>
+                         </p>
+                         <p class="cursor-normal"  ng-if="user.access=='ro'">
+                            <span class="f16 hand-symbol">{{'normal.all_co_workers' | translate}}</span> 
+                            <span class="gray f16 f500 hand-symbol">{{ coworkersCount.all_co_workers | number |checkEmpty}}</span>
+                         </p>
+                        <p class="cursor-normal" ng-click="goToContributors()" ng-if="user.access!='ro'">
+                            <span class="f16 pointer">{{'normal.all_contributions' | translate}}</span> 
+                            <span class="f500 f16 gray  pointer">{{ coworkersCount.all_contributors | number}}</span>
+                        </p>
+                        <p class="cursor-normal"  ng-if="user.access=='ro'">
+                            <span class="f16 hand-symbol">{{'normal.all_contributions' | translate}}</span> 
+                            <span class="f500 f16 gray  hand-symbol">{{ coworkersCount.all_contributors | number}}</span>
+                        </p>
+                    </div>
+                    <span class="co-workers-title f15">{{'normal.total_contributions_pertype' | translate}}</span>
+                    <div fusioncharts class="coWorkersChart" id="coworkercontainer" style="height:202px;" chartid="coworkerchart" height="180" width="100%" type="bar2D" dataSource="{{coworkers | json}}">
+                    </div>
+                      <div class="contributors-details">
+                        <h6 class="text-center f15">{{'normal.contributions_top3' | translate}} </h6>
+                        <ul ng-repeat ="row in topContributors">
+                             <li>
+                                <p>{{row.name}}</p>
+                                <div ng-if="row.contribution_type ==0">{{'normal.expert' | translate}}<span>{{row.contributions}}</span></div>
+                                <div ng-if="row.contribution_type ==1">{{'general.validator' | translate}} <span>{{row.contributions}}</span></div>
+                                <div ng-if="row.contribution_type ==3">{{'user.breadcrumb.relation' | translate}} <span>{{row.contributions}}</span></div>
+                             </li>
+                        </ul>
+                    </div>
+                    
+                      <!-- For Top 3 contributors close-->
+                </div>                        
+
+            </div>
+        </a>
+        <a href="javascript:;" ng-if="(user.access=='bd')">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="goToContributors()">
+                    <i class="fa icon-on-hand p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'dashboard.contributors' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardData.contributors}}</p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                        ng-click="$event.stopPropagation();$event.preventDefault();coworkersFunction();"    
+                        uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-coworkers" class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="showMenu cursor-normal co-worker-chart" ng-show="showCoworkers" id="allCoworkers" style="height:386px;">
+                    <div class="topSection">
+                        <p class="cursor-normal">
+                            <span class="f16 pointer" ng-click="goToUsers()">{{'normal.all_co_workers' | translate}}</span> 
+                            <span class="gray f16 f500 pointer" ng-click="goToUsers()">{{ coworkersCount.all_co_workers | number |checkEmpty}}</span>
+                         </p>
+                        <p class="cursor-normal">
+                            <span class="f16 pointer" ng-click="goToContributors()">{{'normal.all_contributions' | translate}}</span> 
+                            <span class="f500 f16 gray pointer" ng-click="goToContributors()">{{ coworkersCount.all_contributors | number}}</span>
+                        </p>
+                    </div>
+                    <span class="co-workers-title f15">{{'normal.total_contributions_pertype' | translate}}</span>
+                    <div  ng-if="true" class="coWorkersChart" fusioncharts id="coworkercontainer" chartid="coworkerchart" height="180" width="100%" type="bar2D" style="height:202px;"  dataSource="{{coworkers | json}}">
+                    </div>
+                      <div class="contributors-details">
+                        <h6 class="text-center f15">{{'normal.contributions_top3' | translate}}</h6>
+                        <ul ng-repeat ="row in topContributors">
+                           <li>
+                             <p>{{row.name}}</p>
+                             <div ng-if="row.contribution_type ==0">{{'normal.expert' | translate}}<span>{{row.contributions}}</span></div>
+                             <div ng-if="row.contribution_type ==1">{{'general.validator' | translate}} <span>{{row.contributions}}</span></div>
+                             <div ng-if="row.contribution_type ==3">{{'user.breadcrumb.relation' | translate}} <span>{{row.contributions}}</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                      <!-- For Top 3 contributors close-->
+                </div>                        
+
+            </div>
+        </a>
+
+        <div class="card" ng-if="user.access == 'ct'">
+            <div class="card-block p-1 clearfix">
+                <i class="fa icon-on-hand p-1 font-4xl mr-h float-xs-left"></i>
+                <div class="h5 mb-7 mt-h">{{'dashboard.co_workers' | translate | uppercase}}
+                    <p class="dashboard-counts-span">{{dashboardData.co_workers}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu' && user1.iroori == 'itako' && user.access !='ro'">
+        <a href="javascript:;">
+            <div class="card" ng-click="goToUsers()">
+                <div class="card-block p-1 clearfix">
+                    <i class="fa icon-on-hand p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'dashboard.co_workers' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardData.co_workers}}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <!--/.col-->
+</div>
+</script>
+
+<script type="text/ng-template" id="all-providers-graph.html">
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="provider1">
+        <a href="javascript:;">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="goToRelations()">
+                    <i class="tss-provider-1 gray p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'providers.all_providers' | translate | uppercase}}
+                        <p class="dashboard-counts-span">{{dashboardDataCount.all_relations_count}}</p>
+                    </div>
+                    <!-- <span><i class="fa fa-angle-double-up"></i></span> -->
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                        ng-click="$event.stopPropagation();$event.preventDefault();myProvidersFunction();"    
+                        uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-provider" class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="showMenu" ng-show="showProviderDiv" id="provider">
+                    <div class="topSection" ng-click="goToRelations()">
+                        <p>
+                            <span class="pointer">{{'user.breadcrumb.all_relation' | translate}}</span> 
+                            <span class="gray f16 f500">{{ providersCount.providers_count}}</span>                                
+                        </p>
+                        <p>
+                            <span class="overdue-date">{{'providers.total_value' | translate}}</span>
+                            <!-- <span class="overdue-date">{{ providersCount.total_spent}}</span> -->
+                            <a class="f500 f16 gray cursor-normal" href="javascript:;">{{relations_currency_name}}&nbsp;{{providersCount.total_spent | number:'0'}}</a>
+                        </p>
+                    </div>
+                    <h6 class="text-center f15 f500 gray">{{'providers.relation_overview'|translate}}</h6>
+                    <div style="display: flex;">
+                        <div class="all-relation">
+                        <span class="f12"> {{labelsAllrelations[0]}}</span>
+                        <div   ng-if="true" class= "actionitemsChart" fusioncharts id="mychartcontainer" chartid="mychart1" height="280"  width="100%" type="Column2D" dataSource="{{def2 | json}}">
+                        </div>
+                    </div>
+                       <div class="all-relation">
+                        <span class="f12">{{labelsAllrelations[1]}}</span>
+                        <div  ng-if="true" class= "actionitemsChart" fusioncharts id="mychartcontainer" chartid="mychart2" height="280" width="100%" type="Column2D" dataSource="{{def3 | json}}">
+                        </div>
+                    </div>
+
+                    <div class="all-relation">
+                        <span class="f12">{{labelsAllrelations[2]}}</span>
+                        <div  ng-if="true" class= "actionitemsChart" fusioncharts id="mychartcontainer" chartid="mychart3" height="280" width="100%" type="Column2D" dataSource="{{def4 | json}}">
+                        </div>
+                    </div>
+
+                    </div>
+                 
+
+                </div>
+            </div>
+        </a>
+    </div>
+</script>
+
+<script type="text/ng-template" id="all-projects-graph.html">
+    <div class="col-xxs-12 col-xs-12 col-lg-12 custom-pr pl-0" ng-if="user.access !='eu'" id="endProjectDate1">
+        <a href="#">
+            <div class="card">
+                <div class="card-block p-1 clearfix" ng-click="getallProjects()">
+                    <i class="tss-project-setting gray p-1 font-4xl mr-h float-xs-left"></i>
+                    <div class="h5 mb-7 mt-h">{{'user.breadcrumb.All_Projects'| translate}}
+                        <p class="dashboard-counts-span">{{dashboardDataCount.all_projects_count}}</p>
+                    </div>
+
+                    <div class="btn-group toggleDivRep" uib-dropdown is-open="status.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" style="padding: 22px 15px 24px 15px;"
+                              ng-click="$event.stopPropagation();$event.preventDefault();projectendDateFunction();"    
+                              uib-dropdown-toggle ng-disabled="disabled"><i id="arrow-icon-endprojectdates" class="fa fa-angle-double-down"></i>
+                        </button>
+                   </div>
+                </div>
+                <div class="showMenu cursor-normal" ng-show="projectshowEndDate" id="endProjectDate"> 
+                    <div class="topSection">
+                         <p>
+                            <span class="f16 fNormal pointer" ng-click="goToProjects()">{{'user.breadcrumb.All_Projects'| translate}}</span>
+                            <a class="gray f16 f500" href="javascript:;" ng-click="getallProjects()">{{projectsCount.projects |number:'0'}}</a>
+                        </p>
+                        <p>
+                            <span class="f16 fNormal cursor-normal">{{'normal.total_budget' | translate}}</span>
+                            <a class="f500 f16 gray cursor-normal" href="javascript:;">{{project_currency_name}}&nbsp;{{projectsCount.total_projected_spend | number:'0'}}</a>
+                        </p>
+                    </div>
+                     <div class="contract-overview-details" style="height:297px;">
+                        <h6 class="text-center f15 f500">{{'contract.project_overview'|translate}}</h6>
+                        <ul>
+                            <li class="mb-1">
+                                <p title="{{'contract.projectCreatedThisMonth'|translate}}">{{'contract.projectCreatedThisMonth'|translate}} </p>
+                                <div ng-click ="getProjectsthismonth()">{{projectsCount.created_this_month}}</div>
+                            </li>
+                            <li class="mb-1">
+                                <p title="{{'contract.projectEndingThisMonth'|translate}}"> {{'contract.projectEndingThisMonth'|translate}}</p>
+                                <div ng-click="getProjectsEndingThisMonth()">{{projectsCount.ending_this_month}}</div>
+                            </li>
+                            <li>
+                                <p title="{{'contract.projectEndingWithIn90Days'|translate}}">{{'contract.projectEndingWithIn90Days'|translate}}</p>
+                                <div ng-click="getEndDateProjects()">{{projectsCount.ending_in_90_days}}</div>
+                            </li>
+                            <li>
+                                <p title="{{'contract.projectEndingWithIn180Days'|translate}}">{{'contract.projectEndingWithIn180Days'|translate}}</p>
+                                <div ng-click="getEndDateProjects180()">{{projectsCount.ending_in_180_days}}</div>
+                            </li>
+                        </ul>
+                    </div> 
+                </div>                    
+            </div>
+        </a>
+    </div>
+</script>
+
+<script type="text/ng-template" id="menuHeaderTemplate">
+    <div></div>
+</script>
+<div style="visibility: hidden;">
+    <div class="dashboardAlignments">
+        <ul class="user-dashboard-scroll">
+            <li class="user-dashboard-item">1</li>
+    <li class="user-dashboard-item">2</li>
+    <li class="user-dashboard-item">3</li>
+    <li class="user-dashboard-item">4</li>
+    <li class="user-dashboard-item">5</li>
+    <li class="user-dashboard-item">6</li>
+        </ul>
+    
+        <div class="prev-next-icon">
+            <button class="left-paddle paddle hidden">
+                <
+            </button>
+            <button class="right-paddle paddle">
+                >
+            </button>
+        </div>
+    
+    </div>
+</div>
+<script>
+    $('body').delegate('#single-button', 'click' , function(){  
+        console.log('asdasd');      
+       $(this).parent().parent().parent().find('.showMenu').toggle();
+       
+       // $(this).parents('li .dashboardTab').addClass('showTab');
+        // $(this).closest('div').find('.dashboardTab').addClass('showTab');
+    }); 
+    
+
+    var userAccess = localStorage.getItem('ngStorage-curUser');
+    var  roleAceess = JSON.parse(userAccess);
+    //console.log(roleAceess.data.data.access);
+    if(roleAceess.data.data.access=='eu'){
+        $('.prev-next-icon').hide();
+    }
+    else{
+        $('.prev-next-icon').show();
+    }
+    //console.log('retrievedObject: ', JSON.parse(userAccess));
+   // duration of scroll animation
+var scrollDuration = 500;
+// paddles
+var leftPaddle = document.getElementsByClassName('left-paddle');
+var rightPaddle = document.getElementsByClassName('right-paddle');
+// get items dimensions
+var itemsLength = $('.user-dashboard-item').length;
+var itemSize = $('.user-dashboard-item').outerWidth(true);
+// get some relevant size for the paddle triggering point
+var paddleMargin = 20;
+
+// get wrapper width
+var getMenuWrapperSize = function() {
+	return $('.dashboardAlignments').outerWidth();
+}
+var menuWrapperSize = getMenuWrapperSize();
+// the wrapper is responsive
+$(window).on('resize', function() {
+	menuWrapperSize = getMenuWrapperSize();
+});
+// size of the visible part of the menu is equal as the wrapper size 
+var menuVisibleSize = menuWrapperSize;
+
+// get total width of all menu items
+var getMenuSize = function() {
+	return itemsLength * itemSize;
+};
+var menuSize = getMenuSize();
+// get how much of menu is invisible
+var menuInvisibleSize = menuSize - menuWrapperSize;
+
+// get how much have we scrolled to the left
+var getMenuPosition = function() {
+    
+	return $('.user-dashboard-scroll').scrollLeft();
+   
+};
+// console.log(menuVisibleSize);
+// console.log(menuSize);
+// console.log(menuInvisibleSize)
+// finally, what happens when we are actually scrolling the menu
+$('.user-dashboard-scroll').on('scroll', function() {
+
+	// get how much of menu is invisible
+	menuInvisibleSize = menuSize - menuWrapperSize;
+	// get how much have we scrolled so far
+	var menuPosition = getMenuPosition();
+
+	var menuEndOffset = menuInvisibleSize - paddleMargin;
+           //  console.log(menuEndOffset)
+	// show & hide the paddles 
+	// depending on scroll position
+	//if (menuPosition <= paddleMargin) {
+	//	$(leftPaddle).addClass('hidden');
+	//$(rightPaddle).removeClass('hidden');
+	//}
+    //  else if (menuPosition >= menuEndOffset) {
+	// 	// show both paddles in the middle
+	// 	$(leftPaddle).removeClass('hidden');
+	// 	$(rightPaddle).removeClass('hidden');
+	// } 
+//     else if (menuPosition < menuEndOffset) {
+// 		$(leftPaddle).removeClass('hidden');
+// 		$(rightPaddle).addClass('hidden');
+// }
+});
+$(leftPaddle).addClass('hidden');
+// scroll to left
+$(rightPaddle).on('click', function() {
+	$('.user-dashboard-scroll').animate( { scrollLeft: menuInvisibleSize}, scrollDuration);
+    $(".showMenu").removeClass("showDivMenu");
+    $('#single-button i').removeClass('fa fa-angle-double-up');
+    $('#single-button i').addClass('fa fa-angle-double-down');
+    $('.custom-pr').removeClass('showTab');
+   
+    setTimeout(function() {
+        $('.user-dashboard-scroll li.user-dashboard-item:nth-child(3)').addClass('leftmove');
+    $('.user-dashboard-scroll li.user-dashboard-item:nth-child(4)').addClass('leftmove');
+   $('.user-dashboard-scroll li.user-dashboard-item:nth-child(5)').addClass('leftmoves');
+  $('.user-dashboard-scroll li.user-dashboard-item:nth-child(6)').addClass('leftmoves');
+}, 600);
+$(leftPaddle).removeClass('hidden');
+		$(rightPaddle).addClass('hidden');
+});
+
+// scroll to right
+$(leftPaddle).on('click', function() {
+     
+         var scrollDuration = 50;
+          $('.user-dashboard-scroll').animate( { scrollLeft: menuInvisibleSize}, scrollDuration);
+    
+  
+     $(".showMenu").removeClass("showDivMenu");
+     $('#single-button i').removeClass('fa fa-angle-double-up');
+     $('#single-button i').addClass('fa fa-angle-double-down');
+     $('.custom-pr').removeClass('showTab');
+    
+     $('.user-dashboard-scroll li.user-dashboard-item:nth-child(3)').removeClass('leftmove');
+    $('.user-dashboard-scroll li.user-dashboard-item:nth-child(4)').removeClass('leftmove');
+    $('.user-dashboard-scroll li.user-dashboard-item:nth-child(5)').removeClass('leftmoves');
+    $('.user-dashboard-scroll li.user-dashboard-item:nth-child(6)').removeClass('leftmoves');
+    var scrollDuration = 300;
+    //   setTimeout(function() {
+    //      scrollDuration = 1000;
+     $('.user-dashboard-scroll').animate( { scrollLeft: '0' }, scrollDuration);
+    //  }, 1000);
+		$(rightPaddle).removeClass('hidden');
+        $(leftPaddle).addClass('hidden');
+});
+</script>
+
+<script type="text/ng-template" id="create-action-items.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title"> {{'contract.add_action_item' |translate}} :
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form class="form-horizontal profile-form" name="actionform" novalidate 
+        ng-submit="actionform.$valid && addActionItem(action)">
+        <div class="modal-body clearfix" id="modal-body">
+            <div class="form-group col-sm-4">
+                <label>{{'contract.connect_to' | translate}} *</label>
+                <select class="form-control"  ng-model="action.type_id" name="type_id" ng-change="getSelectedValue(action.type_id)">
+                    <option value="" class="font-italic">- {{'general.select' | translate}} -</option>                               
+                    <option value="1">{{'events.contract'| translate}}</option>
+                    <option value="2">{{'events.project'|translate}}</option>
+                    <option value="3">{{'user.breadcrumb.relation'|translate}}</option>
+                </select>
+            </div>
+    
+            
+           
+           
+            <div class="form-group col-sm-8" ng-if="idInfo=='1'">
+                <div class="col-sm-12 dashboard-action-mutliple p-0">
+                    <label></label>
+                    <select chosen
+                            id="add-chosen"
+                            ng-change="getSelectedContract('contract_id')"
+                            allow-single-deselect="true"
+                            placeholder-text-multiple="'{{'normal.placeholder_more_contracts' | translate}}'"
+                            multiple ng-model="action.contract_id"
+                            name="contract_id" size="1"
+                            class="chosen-choices" required
+                            ng-options="item.id_contract as item.contract_name for item in contractNames">
+                    </select>
+                    <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+
+            <div class="form-group col-sm-8" ng-if="idInfo=='2'">
+                <div class="col-sm-12 dashboard-action-mutliple p-0">
+                    <label></label>
+                    <select chosen
+                            id="add-chosen"
+                            ng-change="getSelectedContract('project_id')"
+                            allow-single-deselect="true"
+                            placeholder-text-multiple="'{{'normal.placeholder_more_projects' | translate}}'"
+                            multiple ng-model="action.contract_id"
+                            name="contract_id" size="1"
+                            class="chosen-choices" required
+                            ng-options="item.id_contract as item.contract_name for item in projectNames">
+                    </select>
+                    <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-8" ng-if="idInfo=='3'">
+                <div class="col-sm-12 dashboard-action-mutliple p-0">
+                    <label></label>
+                    <select chosen
+                            id="add-chosen"
+                            ng-change="getSelectedContract('provider_id')"
+                            allow-single-deselect="true"
+                            placeholder-text-multiple="'{{'normal.placeholder_more_relations' | translate}}'"
+                            multiple ng-model="action.contract_id"
+                            name="contract_id" size="1"
+                            class="chosen-choices" required
+                            ng-options="item.id_provider as item.provider_name for item in providers">
+                    </select>
+                    <span class="error-message" ng-if="actionform.$submitted && actionform.contract_id.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label>{{'contract.action_item' | translate}} *</label>
+                <input type="text" class="form-control" name="action_item" ng-model="action.action_item" required>
+                <span class="error-message" ng-if="actionform.action_item.$error.required && actionform.$submitted">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12 resposibleUser">
+                <label>{{'contract.responsible_user_id' | translate}} *</label> 
+                <select chosen class="form-control chosen-choices"  id="add-chosen"
+                    onchange="chosen()"
+                    allow-single-deselect="true"
+                    placeholder-text-single="'{{'normal.placeholder_responsible_user' | translate}}'"
+                    name="responsible_user_id" required
+                    ng-model="action.responsible_user_id" 
+                    ng-options="item.id_user as item.name for item in userList"> {{item.name}}
+                </select>
+                <span class="error-message" ng-show="actionform.responsible_user_id.$error.required && actionform.$submitted">{{'general.required_field' | translate}}</span>
+            </div>
+           
+            <div class="form-group col-sm-6">
+                <label>{{'contract.due_date' | translate}} *</label>
+                <div class="input-group clearfix form-group-custom">
+                    <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                         name="due_date"  ng-model="action.due_date" is-open="openCal" datepicker-options="{showWeeks:false}" show-button-bar="false" readonly required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </span>
+                </div>
+                 <span class="error-message" ng-if="actionform.due_date.$error.required && actionform.$submitted">{{'general.required_field' | translate}}</span> 
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label>{{'contract.priority' | translate}}</label>
+                <select class="form-control" id="priority" name="priority" size="1" ng-model="action.priority">
+                    <option value="">-{{'general.select' | translate}}-</option>
+                    <option value="Urgent">{{'contract.urgent' | translate}}</option>
+                    <option value="Medium">{{'contract.medium' | translate}}</option>
+                    <option value="Low">{{'contract.low' | translate}}</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-12">
+                <label class=" form-control-label" for="textarea-responsibility">{{'contract.description' | translate}} </label>
+                <textarea id="textarea-responsibility" ng-model="action.description" name="description" rows="3" class="form-control"></textarea>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+            </button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+                {{'general.cancel' | translate}}
+            </button>
+        </div>
+    </form>
+</script>
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<script type="text/javascript" src="plugins/angular-fusionchart/src/fusioncharts.js?ver=6.2.6"></script>
+<script type="text/javascript" src="plugins/angular-fusionchart/src/fusioncharts.theme.fint.js?ver=6.2.6"></script>
+<script type="text/javascript" src="plugins/angular-fusionchart/src/angular-fusioncharts.js?ver=6.2.6"></script> 
+<style>
+
+.showTab{
+    position: absolute;
+    width: calc(25% - 8px);
+}
+/* #customTab{
+    position: relative;
+} */
+.user-dashboard-scroll li:first-child .showTab{
+    left: 15px;
+    right: auto;
+}
+.user-dashboard-scroll li:nth-child(2) .showTab{
+    left: calc(25% + 7px);
+    right: auto;
+}
+.user-dashboard-scroll li:nth-child(3) .showTab{
+    left: 50%;
+    right: auto;
+}
+.user-dashboard-scroll li:nth-child(4) .showTab{
+    left: calc(75% - 7px);
+    right: auto;
+}
+
+.user-dashboard-scroll li.leftmoves:nth-child(5){
+  position: absolute;
+  left: 50%;
+    right: auto;
+    width: calc(25% - 7.5px);
+    min-width: calc(25% - 7.5px);
+}
+.user-dashboard-scroll li.leftmoves:nth-child(6){
+    position: absolute;
+    left: calc(75% - 7px);
+    right: auto;
+    width: calc(25% - 7.5px);
+    min-width: calc(25% - 7.5px);
+}
+.user-dashboard-scroll li.leftmove:nth-child(3){
+    position: absolute;
+    left: 15px;
+    right: auto;
+    width: calc(25% - 7.5px);
+    min-width: calc(25% - 7.5px);
+}
+.user-dashboard-scroll li.leftmove:nth-child(4){
+    position: absolute;
+    left: calc(25% + 7px);
+    right: auto;
+    width: calc(25% - 7.5px);
+    min-width: calc(25% - 7.5px);
+}
+.user-dashboard-scroll li.leftmove:nth-child(3) .showTab,
+.user-dashboard-scroll li.leftmove:nth-child(4) .showTab,
+.user-dashboard-scroll li.leftmoves:nth-child(5) .showTab,
+.user-dashboard-scroll li.leftmoves:nth-child(6) .showTab{
+    position: relative;
+    width: 100%;
+    left: inherit;
+    right: inherit;
+}  
+.dashboard-drop-menu.dashboard-acceletor {
+        padding: 10px;
+    }
+    
+    .dashboard-drop-menu.dashboard-acceletor span {
+        display: inline-block;
+        margin-top: 0;
+    }
+.user-dashboard-scroll	{
+	/* height: 120px; */
+	box-sizing: border-box;
+	
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+}
+/* width */
+.user-dashboard-scroll::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+.user-dashboard-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.user-dashboard-scroll::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.user-dashboard-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.user-dashboard-scroll .showMenu{
+    position: relative;
+    top: 0;
+    margin-top: 15px;
+}
+.user-dashboard-scroll .card{
+    background-color: transparent !important;
+}
+.user-dashboard-scroll .card .card-block{
+    background-color: #fff;
+    position: relative;
+}
+	.user-dashboard-item {
+		display: inline-block;
+		height: 100%;
+	
+	}
+    .dashboard-widget .card{
+        margin-bottom: 1rem;
+    }
+    .dashboard-widget .card .card-block i {
+    border-right: 1px solid #ccc;
+    color: #989898;
+}
+.dashboard-widget .card .card-block i.tss-project-setting,
+.dashboard-widget .card .card-block i.tss-provider-1{
+    line-height: 10px;
+}
+.paddle {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    background-color: #fff;
+    min-height: 68px;
+    border: none;
+    color: green;
+    padding: 0;
+    cursor: pointer;
+}
+.left-paddle {
+	right: 0px;
+}
+.right-paddle {
+	right: 0px;
+}
+.hidden {
+	display: none;
+}
+.paddle:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+
+.collapse-btn {
+    background-color: #DFDFDF;
+    font-weight: bold;
+    border: 1px solid #CDCDCD;
+    border-radius: 3px;
+    color: #464646;
+    outline: none !important;
+}
+
+.tab-form-demo ul.nav-tabs li a {
+    min-height: 38px;
+}
+
+.tab-form-demo ul.nav-tabs li:last-child {
+    float: right;
+    margin: 0;
+
+}
+
+.tab-form-demo ul.nav-tabs li:last-child a {
+    padding: 0;
+    padding-top: 0px;
+    background-color: transparent !important;
+}
+
+.tab-form-demo ul.nav-tabs li:last-child a .icon-plus-circle {
+    font-size: 16px;
+}
+
+.tableSelect-header {
+    margin-top: 0;
+    position: absolute;
+    top: 0;
+    right: 0px;
+    z-index: 9;
+    width: 350px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hide {
+    display: none !important;
+}
+
+.block {
+    display: block !important;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: 0;
+}
+
+.activeReviewShowHide {
+    top: 5px;
+}
+
+.tableSelect-header {
+    top: -12px;
+}
+.table-search{
+    width: 160px;
+}
+
+#single-button{
+    background: transparent;
+    padding: 0;
+    border: 0;
+}
+#single-button::after{
+    display: none;
+}
+#single-button i{
+    color: green;
+    border-right: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+.btn-group.toggleDivRep{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+.showMenu{
+    padding: 10px 15px;
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+    background: #FFF;
+    display: none;
+    top: 85px;
+    box-shadow: 1px 5px 8px #b7b5b5;
+}
+.topSection{
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+    padding: 0 0 10px 0;
+}
+.showMenu.showDivMenu{
+    display: block;
+}
+.showMenu p{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+.showMenu p span:first-child{
+    font-size: 16px;
+    color: #999;
+}
+.showMenu p span:last-child{
+    font-weight: bold;
+    font-size: 16px;
+}
+.mb-7{
+    margin-bottom: -7px;
+}
+.contract-overview-details ul{
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0px 0px;
+}
+.contract-overview-details ul li{
+    width: 50%;
+    font-size: 12px;
+    padding-right: 10px;
+    color: #7b7b7b !important;
+    text-align: center;
+    white-space: normal;
+}
+.contract-overview-details ul li p {
+    line-height: 15px;
+    margin-bottom: 4px;
+    max-height: 30px;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: flex;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.contract-overview-details ul li:nth-child(2),
+.contract-overview-details ul li:nth-child(4){
+    padding-right: 0px;
+}
+.contract-overview-details ul li>div{
+    border: 2px dashed #cccccc;
+    padding: 6px;
+    text-align:center;
+    font-size: 30px;
+    color:#e63507;
+    cursor: pointer;
+}
+.contract-overview-details h6{
+    text-align: center;
+    color: #999 !important;
+    font-weight: normal;
+    font-size: 14px;
+    margin: 10px 0px;
+}
+.contributors-details ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.contributors-details ul li{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.contributors-details ul li p{
+    font-size: 12px;
+    color:#756a6a;
+}
+.contributors-details ul li>div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 80px;
+    font-size: 12px;
+    color:#756a6a;
+}
+.contributors-details h6 {
+    font-size: 14px;
+    color: #999 !important;
+    text-align: center;
+}
+.green {
+    color: #5bb166 !important;
+}
+.co-workers-title{
+    text-align: center;
+    align-items: center;
+    padding-left: 43px;
+    color: #989898;
+    font-weight: 500;
+}
+.action-item-title{
+    text-align: center;
+    align-items: center;
+    padding-left: 32px;
+    color: #989898;
+    font-weight: 500;
+}
+.f500{
+    font-weight: 500 !important;
+}
+.gray-color{
+    color: #979797 !important;
+}
+.fNormal{
+    font-weight: normal !important;
+}
+.activity-title {
+    text-align: center;
+    align-items: center;
+    padding-left: 64px;
+    color: #989898;
+    font-weight: 500;
+}
+.raphael-group-8-datalabel{
+    cursor:  pointer !important;
+}
+.cursor-normal{
+    cursor: auto !important;
+}
+.equals{
+    padding: 10px 15px;
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+    background: #FFF;
+    display: none;
+    top: 85px;
+}
+.activityChart svg{
+    margin-left:-45px !important; 
+    background-color: transparent !important;
+
+}
+.resolution .activity-title,
+ .action-item-title,.co-workers-title {
+    display: block;
+    padding-left: 0px;
+}
+.resolution  .activityChart > span,
+.actionitemsChart >span,.coWorkersChart >span {
+    margin: 0 auto !important;
+    display: block !important;
+    text-align: center !important;
+}
+.resolution .activityChart svg,
+.actionitemsChart svg,.coWorkersChart svg{
+    margin: 0 auto !important;
+}
+.pointer {
+  cursor: pointer  !important;
+}
+.user-dashboard-scroll{
+    display: flex;
+    margin-right: 15px;
+    margin-left:15px;
+}
+.pl-0{
+    padding-left: 0px;
+}
+.user-dashboard-scroll .user-dashboard-item{
+    width: 25%;
+    min-width: 25%;
+}
+.dashboardAlignments{
+    /* overflow-x: hidden; */
+    position: relative;
+}
+
+.prev-next-icon{
+    color: green;
+    position: absolute;
+    right: -26px;
+    top: 0;
+    width: 20px;
+    background-color: #fff;
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.prev-next-icon i{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.all-relation{
+    width:33.3%;
+    min-width:33.3%;
+}
+
+.all-relation .actionitemsChart {
+    height:257px !important;
+}
+.all-relation .actionitemsChart svg{
+    height:265px !important;
+}
+.actionitemsChart #mychart{
+    left: -5px;
+}
+/* .activityChart .chartobject-1{
+    overflow: hidden;
+} */
+.all-relation span.f12{
+    color: #9999a2;
+}
+
+#single-button.dashboard-custom-drop{
+    background: #4d97f2;
+    padding: 5px 8px;
+
+}
+#single-button.dashboard-custom-drop:hover{
+    background: #0a68b4;
+}
+#single-button.dashboard-custom-drop i{
+    font-size: 16px;
+    color: #fff;
+}
+.showMenu.dashboard-drop-menu{
+ top:30px;
+ left:auto;
+ right: 0;
+}
+@media (max-width: 1440px){
+    .resolution .activityChart svg{
+        margin-left: -30px !important;
+    }
+    .activityChart .fusioncharts-container{
+        width:290px !important;
+        text-align:center !important;
+    }
+    .actionitemsChart{
+        width:280px !important;
+    }
+    .coWorkersChart{
+        width: 250px !important;
+    }
+    .all-relation .actionitemsChart {
+    width: 100% !important;
+    min-width: 100% !important;
+}
+}
+@media(max-width: 1365px){
+.custom-pr {
+    padding-right: 15px;
+}
+.prev-next-icon,
+.paddle{
+    min-height: 64px;
+}
+}
+@media(max-width: 1300px){
+    .activityChart .fusioncharts-container{
+        width:230px !important;
+    }
+    .all-relation .actionitemsChart {
+    width: 100% !important;
+    min-width: 100% !important;
+}
+    .actionitemsChart{
+        width:calc(100% + 29px) !important;
+    }
+    .actionitemsChart svg{
+        margin-left: -28px !important;
+    }
+    .all-relation .actionitemsChart svg{
+        margin-left: 0px !important;
+    }
+    .coWorkersChart{
+        width:calc(100% + 29px) !important;
+        /* height: 180px !important; */
+    }
+    .coWorkersChart svg{
+        margin-left: -28px !important;
+    }
+    .coWorkersChart svg text{
+        font-size: 11px !important;
+    }
+    .resolution .activityChart svg{
+        margin-left: -15px !important;
+    }
+    .actionitemsChart #mychart {
+    left: 0px;
+}
+}
+@media(max-width: 1199px){
+    .dashboard-widget .showMenu .f16{
+     font-size: 14px !important;
+    }
+    .showMenu p span:first-child,
+    .showMenu p span:last-child {
+       font-size: 14px;
+    }
+    .co-worker-chart{
+        height: 380px !important;
+    }
+    .actionitemsChart svg text{
+        font-size: 9px !important;
+    }
+}
+@media(max-width: 1100px){
+    .activityChart .fusioncharts-container{
+        width:280px !important;
+    }
+    /* .dashboard-widget .showMenu{
+        top:65px;
+    } */
+    .prev-next-icon, .paddle {
+    min-height: 55px;
+}
+    /* .all-relation .actionitemsChart {
+    width: 105px !important;
+    min-width: 105px !important;
+} */
+    .dashboard-widget .showMenu .f16,
+    .showMenu p span:first-child,
+    .showMenu p span:last-child{
+     font-size: 13px !important;
+    }
+    .dashboard-widget .showMenu .f15{
+     font-size: 13px !important;
+    }
+    .contract-overview-details ul li p{
+        font-size: 11px !important;
+    }
+    .contract-overview-details h6{
+        margin: 6px 0px 10px 0px;
+    }
+    .contributors-details ul li p {
+       font-size: 10.5px;
+    }
+    .contributors-details ul li>div{
+        min-width: 60px;
+        font-size: 10.5px;
+    }
+    .co-worker-chart{
+        height: 373px !important;
+    }
+}
+.provider-refresh {
+    background-color:#2468ab;
+    color: #fff;
+    border-radius: 50px;
+    width:18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.user-dashboard-scroll .all-relation{
+    text-align: center;
+}
+@media( max-width:1024px){
+    .resolution .activityChart svg{
+        margin-left: -85px !important;
+    }
+}
+
+</style>
+
+

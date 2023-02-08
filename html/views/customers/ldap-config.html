@@ -1,0 +1,198 @@
+<div ng-init="tab=1" ng-class="{active: $index == 0}">
+    <div class="modal-header modal-tabs" id="myDIV">
+        <div class="cb active pointer" ng-click="tab = 1">
+            <h6 class="modal-title " id="modal-title">{{title | translate}} LDAP
+            </h6>
+        </div>
+    
+            <div class="cb pointer" ng-click="tab = 2">
+                <h6 class="modal-title" id="modal-title">{{title1 | translate}} SAML
+                </h6>
+            </div>
+            <a  ng-click="cancel()" style="margin-left: auto;padding: 8px 15px;" title="{{'general.close' | translate}}" class=" pull-right icon-times pointer"></a>
+    
+    </div>
+    <div ng-show="tab == 1">
+    <form novalidate name="ldapForm" ng-submit="save(ldap, ldapForm)">
+        <div class="modal-body clearfix" id="modal-body">
+            <div class="col-md-3 form-group" ng-if="isEdit">
+                <label>{{'customer.enable_ldap' | translate}}</label>
+                <div class="onoffswitch" ng-init="!ldap.enableLDAP?'1':ldap.enableLDAP">
+                    <input type="checkbox" name="status" class="onoffswitch-checkbox"
+                           ng-model="ldap.status"
+                           ng-true-value="'1'"
+                           ng-false-value="'0'"
+                           ng-checked="ldap.status == 1"
+                           id="enable_radio">
+                    <label class="onoffswitch-label assessment-switch mb-0"
+                           for="enable_radio">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-9 form-group">
+                <label>{{'customer.url_ssco' | translate}} </label><span ng-if="ldap.status==1">*</span>
+                <input type="text" ng-model="ldap.sso_check" class="form-control" name="sso_check" ng-required="ldap.status==1"/>
+                <span class="error-message display" ng-if="ldapForm.sso_check.$error.required && ldapForm.$submitted">{{'general.required_field' | translate}}</span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>{{'customer.host' | translate}} *</label>
+                <input type="text" ng-model="ldap.host" class="form-control" name="host" required/>
+                <span class="font-italic gray ng-binding">{{'customer.example' | translate}}</span>
+                <div class="error-message display" ng-if="ldapForm.host.$error.required && ldapForm.$submitted">{{'general.required_field' | translate}}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>{{'customer.dc' | translate}} *</label>
+                <input type="text" ng-model="ldap.dc" class="form-control" name="dc" required/>
+                <span class="font-italic gray ng-binding">{{'customer.example_com' | translate}}</span>
+                <div class="error-message display" ng-if="ldapForm.dc.$error.required && ldapForm.$submitted">{{'general.required_field' | translate}}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>{{'customer.port' | translate}} *</label>
+                <input type="text" ng-model="ldap.port" class="form-control" name="port" required only-digits/>
+                <span class="font-italic gray ng-binding">{{'customer.example_389' | translate}}</span>
+                <div class="error-message display" ng-if="ldapForm.port.$error.required && ldapForm.$submitted">{{'general.required_field' | translate}}</div>
+            </div>
+            <ng-form name="test_ldap_form" novalidate>
+                <div class="col-md-12 p0">
+                    <div class="col-md-5 form-group">
+                        <label>{{'customer.user_name' | translate}} </label>
+                        <input type="text" class="form-control" name="email_id" ng-model="ldap.email_id" required/>
+                        <!-- <span ng-if="ldapForm.email_id.$error.required && testFormSubmitted" class="error-message">{{'general.required_field' | translate}}</span>
+                        <span ng-if="ldapForm.email_id.$error.email && testFormSubmitted" class="error-message">{{'general.enter_valid_email' | translate}}</span> -->
+                    </div>
+                    <div class="col-md-5 form-group">
+                        <label>{{'customer.password' | translate}} </label>
+                        <input type="password" class="form-control" name="password" ng-model="ldap.password" required/>
+                        <!-- <span ng-if="ldapForm.password.$error.email && testFormSubmitted" class="error-message">{{'general.required_field' | translate}}</span> -->
+                    </div>
+                    <div class="col-md-2 form-group" style="margin-bottom: 0;padding-top: 35px;">
+                        <!--<label style="color: white">Test</label>-->
+                        <button ng-disabled="test_ldap_form.$invalid" type="button" class="btn btn-sm btn-primary" ng-click="testLDAP(ldap, test_ldap_form.$valid)" name="testbutton" id="testbutton">
+                            {{'customer.test' | translate}}</button>
+                        <span class="circle1" ng-if="testFormSubmitted && ldapResult.status" ><i class="fa fa-check" style="color:green;"></i></span>
+                         <span class="circle2" ng-if="testFormSubmitted && ldapResult.status==false" > <i class="fa fa-close" style="color:red;"></i> </span>
+                    </div>
+                </div>
+    
+    
+          </ng-form>
+    
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+    </div>
+    <div ng-show="tab == 2">
+        <form novalidate name="samlForm" ng-submit="saveSaml(saml, samlForm)">
+            <div class="modal-body clearfix" id="modal-body">
+                <div class="col-md-3 form-group">
+                    <label>{{'customer.enable_saml' | translate}}</label>
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="status" class="onoffswitch-checkbox"
+                               ng-model="saml.status"
+                               ng-true-value="'1'"
+                               ng-false-value="'0'"
+                               ng-checked="saml.status == 1"
+                               id="enable_radio1">
+                        <label class="onoffswitch-label assessment-switch mb-0"
+                               for="enable_radio1">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-9 form-group">
+                    <label> {{'customer.url_ssco' | translate}}</label><span ng-if="saml.status == 1">*</span>
+                    <input type="text" ng-model="saml.sso_check" class="form-control" name="sso_check" ng-required="saml.status == 1"/>
+                    <span class="error-message display" ng-if="samlForm.sso_check.$error.required && samlForm.$submitted">{{'general.required_field' | translate}}</span>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>{{'customer.entity_id' | translate}} *</label>
+                    <input type="text" ng-model="saml.issuer_url" class="form-control" name="issuer_url" required/>
+                    <span class="font-italic gray ng-binding">{{'customer.example_company' | translate}}</span>
+                    <div class="error-message display" ng-if="samlForm.issuer_url.$error.required && samlForm.$submitted">{{'general.required_field' | translate}}</div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>{{'customer.certificate' | translate}} *</label>
+                    <textarea type="text" class="form-control white-bg bg-white"  style="height: 120px;" ng-model="saml.certificate" name="certificate" required> </textarea>
+                    <span class="error-message display" ng-if="samlForm.certificate.$error.required && samlForm.$submitted">{{'general.required_field' | translate}}</span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>{{'customer.login_url' | translate}} </label>
+                    <input type="text" ng-model="saml.login_url"  class="form-control" name="login_url"/>
+                    <span class="font-italic gray ng-binding" style="font-size: 11px;">{{'customer.example_saml' | translate}}</span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>{{'customer.logout_url' | translate}} </label>
+                    <input type="text" ng-model="saml.logout_url" class="form-control" name="logout_url"/>
+                    <span class="font-italic gray ng-binding" style="font-size: 11px;">{{'customer.example_logut' | translate}}</span>
+                </div>
+                <ng-form name="test_ldap_form" novalidate>
+                    <div class="col-md-12 p0">
+                        <div class="col-md-5 form-group">
+                            <label>{{'customer.user_name' | translate}} </label>
+                            <input type="text" class="form-control" name="email_id" ng-model="saml.email_id" required/>
+                        </div>
+                        <div class="col-md-5 form-group">
+                            <label>{{'customer.password' | translate}} </label>
+                            <input type="password" class="form-control" name="password" ng-model="saml.password" required/>
+                        </div>
+                        <div class="col-md-2 form-group" style="margin-bottom: 0;padding-top: 35px;">
+                            <!-- <button ng-disabled="test_ldap_form.$invalid" type="button" class="btn btn-sm btn-primary" ng-click="testLDAP(ldap, test_ldap_form.$valid)" name="testbutton" id="testbutton">
+                                Test</button> -->
+                            <span class="circle1" ng-if="testFormSubmitted && ldapResult.status" ><i class="fa fa-check" style="color:green;"></i></span>
+                             <span class="circle2" ng-if="testFormSubmitted && ldapResult.status==false" > <i class="fa fa-close" style="color:red;"></i> </span>
+                        </div>
+                    </div>
+              </ng-form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> {{bottom1 | translate}}</button>
+                <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+        </form>
+                
+    </div>
+    </div>
+
+    <script>
+        var header = document.getElementById("myDIV");
+        var btns = header.getElementsByClassName("cb");
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].addEventListener("click", function() {
+          var current = document.getElementsByClassName("active");
+          current[0].className = current[0].className.replace(" active", "");
+          this.className += " active";
+          });
+        }
+    </script>
+        
+    <style>
+        .cb {    
+        list-style: none;
+        padding: 10px;
+        display:inline-block;
+    }
+    .modal-tabs.modal-header>.cb.active, 
+    .modal-tabs.modal-header>.cb:hover{
+        background-color: #bfbfbf;
+        }
+
+    .modal-tabs.modal-header {
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+
+    .modal-tabs.modal-header>.cb {
+        border: 1px solid #8d8d8d;
+        border-left: 0;
+        padding: 8px 40px 8px 10px;
+    }
+    </style>

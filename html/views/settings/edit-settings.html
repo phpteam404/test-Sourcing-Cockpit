@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="settingsForm" ng-submit="settingsForm.$valid && save(settings)">
+    <div class="modal-body clearfix" id="modal-body">
+
+    <div class="col-md-12 form-group">
+        <label>{{settings.name}}</label>
+        <input type="text" ng-model="settings.value" class="form-control" name="value" required/>
+        <span class="error-message" ng-if="settingsForm.value.$error.required && settingsForm.$submitted">{{'general.required_field' | translate}}</span>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary"
+        ><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</form>

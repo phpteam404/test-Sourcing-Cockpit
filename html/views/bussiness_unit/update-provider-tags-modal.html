@@ -1,0 +1,1727 @@
+<div class="modal-body clearfix" ng-if="info==2">
+    <div class="col-lg-12 p015">
+        <div class="row" ng-init="indextab = 1">
+            <div class="col-sm-12 col-lg-12 p-0 info-tabs-div">
+                <div class="modal-closer-contract">
+                    <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+                 </div>
+                <uib-tabset active="indextab" >
+                    <uib-tab index="0" heading="{{'providers.relation_info' | translate}} ({{infoObj.provider_information}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">                        
+                                <div class="clearfix">
+                                    <div class="col-md-12 p0" style="margin-top: 10px;">
+                                        <form novalidate name="providerForm" ng-submit="providerForm.$valid && updateProviderInfo(infoObj)">
+                                            <div class="custom-row">
+                                                <div class="form-group col-sm-6 ">
+                                                    <label>{{'providers.id' | translate}} *</label>
+                                                    <input type="text" class="form-control" ng-model="infoObj.unique_id" ng-disabled="!disabled" alpha-numeric name="provider_id" required/>
+                                                    <span class="error-message" ng-if="providerForm.provider_id.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.provider_name' | translate}} *</label>
+                                                    <input type="text" ng-model="infoObj.provider_name" class="form-control" name="provider_name" required/>
+                                                    <span class="error-message" ng-if="providerForm.provider_name.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                </div>
+                                               
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.address' | translate}} </label>
+                                                    <input type="text" ng-model="infoObj.company_address" class="form-control" name="address" />
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.city' | translate}} </label>
+                                                    <input type="text" ng-model="infoObj.city" class="form-control" name="city"/>
+                                                </div>
+                                               
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.country' | translate}} </label>
+                                                    <select class="form-control" name="country"  ng-model="infoObj.country"
+                                                           ng-options="item.id_country as item.country_name for item in countriesList">
+                                                        <option value="">--{{'general.select_country' | translate}}--</option>
+                                                    </select>
+                                                </div>
+                       
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.category' | translate}} </label>
+                                                <select ng-model="infoObj.category_id"  class="form-control" name="category_id"  
+                                                         ng-options="opt.id_provider_relationship_category as opt.relationship_category_name group by opt.type for opt in relationshipCategoryList">
+                                                <option value="">-- {{'general.select' | translate}} --</option>
+                                                </select>
+                                                </div>
+                       
+                                                 <div class="form-group col-sm-6">
+                                                    <label>{{'providers.postal_code' | translate}} </label>
+                                                    <input type="text" ng-model="infoObj.postal_code" class="form-control" name="postal_code"/>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'providers.vat' | translate}} </label>
+                                                    <input type="text" ng-model="infoObj.vat" class="form-control" name="vat"/>
+                                                </div>
+                                               
+                                             
+                                                <div class="form-group col-sm-6">
+                                                    <label>{{'general.status' | translate}} *</label>
+                                                    <select class="form-control" ng-model="infoObj.status" name="provider_status" required>
+                                                        <option value="">-- {{'general.select' | translate}} --</option>
+                                                        <option value="1">{{'general.active' | translate}}</option>
+                                                        <option value="0">{{'general.inactive' | translate}}</option>
+                                                    </select>
+                                                    <span class="error-message" ng-if="providerForm.provider_status.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                </div>
+                                               
+                                               
+                                                <div class="form-group col-sm-12">
+                                                    <label>{{'providers.description' | translate}}  </label>
+                                                    <textarea type="text" ng-model="infoObj.description" class="form-control" name="description"  style="height: 80px;"></textarea>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="modal-footer form-group col-sm-12">
+                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-dot-circle-o"></i> {{bottom |translate}}</button>
+                                                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                           
+                                         
+                                        </form>
+                                    </div>                                    
+                                   
+                                </div>
+                            </div>
+                        </div>
+   
+                       
+                    </uib-tab>
+                    <uib-tab index="1" heading="{{'providers.relation_tags' | translate}} ({{infoObj.provider_tags}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">
+                                <div class="clearfix">
+                                    <div class="col-md-12 p-0" style="margin-top: 10px;">
+                                        <div class="col-sm-12 p0">
+                                                <div class="col-sm-12" style="padding: 0px 25px;">
+                                                   <table class="w-100 provider-tag-form">
+                                                       <thead>
+                                                           <tr>
+                                                              <th class="provider-name-th"></th>
+                                                              <th class="provider-radio-th"></th>
+                                                              <th class="provider-comment-th"></th>
+                                                           </tr>
+                                                       </thead>
+                                                       <tbody ng-repeat="providerTags in providertagsInfo track by $index">
+                                                           <tr ng-repeat="tag in providerTags.tag_details track by $index"  ng-if="tag.tag_type == 'rag' && tag.bu_name==null"> {{$index}}
+                                                               <td>{{tag.tag_text}}</td>
+                                                               <td class="provider-tag-radio" style="width:30%;">
+                                                                  <div class="radio_widget">
+                                                                      <span ng-repeat="option in tag.options">  
+                                                                          <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                              checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                           <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                          <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                          <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                          <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                      </span>
+                                                                      <span style="padding-left: 50px;">
+                                                                        <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                        ng-click="tag.tag_answer=''"></i>
+                                                                   </span>
+                                                                  </div>
+                                                               </td>
+                                                               <td class="provider-comment-td" >
+                                                                  <span>
+                                                                      <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                      ng-model="tag.comments">
+                                       
+                                                                  </span>
+                                                               </td>
+                                                           </tr>
+                                                       </tbody>
+                                                   </table>
+                                              </div>
+                                              <div class="col-sm-12 custom-row tagsGrouping input-group" ng-repeat="providerTags in providertagsInfo" ng-if=" !providerTags.bu_name">
+                                                <div  class="form-group col-sm-4" ng-repeat="tag in providerTags.tag_details" 
+                                                      ng-if="tag.tag_type!='rag'">
+                                                    <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                    <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                    <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                     <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                        
+                                                  <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                          ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                  </select>
+                                        
+                                        
+                                                    <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                            ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                     <option value="">-- {{'general.select' |translate}} --</option>
+                                                 </select>
+                                                 
+                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                        ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                  <option value="">-- {{'general.select' |translate}} --</option>
+                                              </select>
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                      ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                  <option value="">-- {{'general.select' |translate}} --</option>
+                                              </select>
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                      ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                  <option value="">-- {{'general.select' |translate}} --</option>
+                                              </select>
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                      ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                  <option value="">-- {{'general.select' |translate}} --</option>
+                                              </select>
+    
+    
+                                              <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                                      chosen id="add-chosen" allow-single-deselect="true"
+                                                      multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                      ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                          </select>
+    
+                                              <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                                      chosen id="add-chosen" allow-single-deselect="true"
+                                                      multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                      ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                            </select>
+    
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                                  chosen id="add-chosen" allow-single-deselect="true"
+                                                  multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                  ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                          </select>
+    
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                                  chosen id="add-chosen" allow-single-deselect="true"
+                                                  multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                  ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                          </select>
+    
+                                          <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                                  chosen id="add-chosen" allow-single-deselect="true"
+                                                  multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                  ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                          </select>
+                                                  <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                     <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                        ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                        show-button-bar="false" readonly>
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                    
+                                                </div> 
+                                            </div>
+                                            </div>
+                                                    <div class="col-sm-12 custom-row p-0 input-group" ng-repeat="providerTags in providertagsInfo track by $index" ng-if="providerTags.bu_name">
+                                                        <uib-accordion class="card widget2 inputs-accordion" style="margin-bottom:5px !important;width: 100%;" close-others="oneAtATime">
+                                                            <div uib-accordion-group class="panel-default" heading="Stakeholders"
+                                                                template-url="group-template0.html" ng-init="open=false;" is-open="open">
+                                                                <uib-accordion-heading ng-click="open= !open">
+                                                                    <span style="width: 20px;">
+                                                                        <i class="glyphicon" 
+                                                                            ng-class="{'fa-solid fa-caret-down': open,'fa-solid fa-caret-right': !open}" style="color: #000;font-size: 18px;"></i>
+                                                                    </span>
+                                                                    <span style="z-index: 2;background-color: #fff;padding-right: 5px;">{{providerTags.bu_name}} ({{providerTags.count}})</span>
+                                                                    <span ng-if="providerTags.status==0" style="background: #fff;z-index: 1;padding-right: 4px;">({{'general.inactive' | translate}})</span>
+                                                                </uib-accordion-heading>
+
+                                                                <div class="card-block" style="padding:7px 25px;">
+                                                                    <table class="w-100 provider-tag-form">
+                                                                        <thead>
+                                                                            <tr>
+                                                                               <th class="provider-name-th"></th>
+                                                                               <th class="provider-radio-th"></th>
+                                                                               <th class="provider-comment-th"></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        
+                                                                           
+                                                                             <tbody>
+                                                                                <tr ng-repeat="tag in providerTags.tag_details"  ng-if="tag.tag_type == 'rag' && tag.bu_name!=null">
+                                                                                    <td>{{tag.tag_text}}</td>
+                                                                                    <td class="provider-tag-radio" style="width:30%;">
+                                                                                       <div class="radio_widget">
+                                                                                           <span ng-repeat="option in tag.options">  
+                                                                                               <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                                                   checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                                                <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                                               <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                                               <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                                               <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                                           </span>
+                                                                                           <span style="padding-left: 50px;">
+                                                                                             <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                                             ng-click="tag.tag_answer=''"></i>
+                                                                                        </span>
+                                                                                       </div>
+                                                                                    </td>
+                                                                                    <td class="provider-comment-td" >
+                                                                                       <span>
+                                                                                           <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                                           ng-model="tag.comments">
+                                                            
+                                                                                       </span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody> 
+                                                                        </table>
+    
+                                                                        
+                                                                </div>
+                                                                <div class="card-block" style="padding:7px 15px;">
+                                                                            <div class="col-md-12 p-0 tagsGrouping">
+                                                                            <div  class="form-group col-sm-4" ng-repeat="tag in providerTags.tag_details" ng-if="tag.tag_type!='rag'">
+                                                                            <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                                            <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                                            <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                                            <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                                                
+                                                                        <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                                <option value="">-- {{'general.select' |translate}} --</option>
+                                                                            </select>
+                                                                
+                                                                
+                                                                            <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+                                                                        
+                                                                        <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                                    </select>
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                                    </select>
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                                    </select>
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                        ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                                        <option value="">-- {{'general.select' |translate}} --</option>
+                                                                    </select>
+    
+    
+                                                                    <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                                                        chosen id="add-chosen" allow-single-deselect="true"
+                                                                        multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                        ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                    </select>
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                                                    chosen id="add-chosen" allow-single-deselect="true"
+                                                                    multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                    ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                                </select>
+    
+                                                                <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                                                    chosen id="add-chosen" allow-single-deselect="true"
+                                                                    multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                    ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                                </select>
+    
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                                                    chosen id="add-chosen" allow-single-deselect="true"
+                                                                    multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                    ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                                </select>
+    
+                                                                <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                                                    chosen id="add-chosen" allow-single-deselect="true"
+                                                                    multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                    ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                                </select>
+    
+                                                        
+                                                                        
+                                                                        <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                                            <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                                                ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                                                show-button-bar="false" readonly>
+                                                                            <span class="input-group-btn">
+                                                                                <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            
+                                                                        </div>
+                                                                            
+                                                                        
+                                                                    </div>
+                                                                            </div>
+                                                                </div>
+                                                            </div>
+                                                        </uib-accordion>
+                                                    </div>
+                                                    <div ng-if="providertagsInfo.length ==0" class="text-sm-center">
+                                                        {{ 'tags.no_tags_found' |translate}}
+                                                    </div>
+                                               <div class="clearfix"></div>
+                                               <div class="modal-footer form-group col-sm-12 mb-0" ng-if="providertagsInfo.length>0">
+                                                   <button type="submit" class="btn btn-sm btn-primary"
+                                                   ng-click="updateTags(providertagsInfo)">
+                                                       <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                                                   <button type="button" ng-click="cancel1()" class="btn btn-sm btn-danger">
+                                                       <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                               </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="{{'providers.relation_Attachments' | translate}} ({{infoObj.provider_attachments}})">
+                        <div class="card">
+                            <form novalidate name="attachmentForm" >
+                                <uib-tabset active="active" class="clearfix" style="padding: 10px;" ng-init="active=0;">
+                                    <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                                        <div class="col-sm-12 m-t-3 form-group p-0">
+                                            
+                                            <attachment-files ng-model="fdata.file.attachments" ng-if="!isView"></attachment-files>
+                                            <attachment-list-template  ng-if="!isView"></attachment-list-template>
+                                        </div>
+                                        <div class="p-b-1">
+                                            <p ng-if="infoObj.unique_attachment.documents.length>0" ng-repeat="a in infoObj.unique_attachment.documents">
+                                                <a download="{{a.document_name}}" target="_blank" href="#" ng-click="getDownloadUrl(a)" download="{{a.document_name}}">
+                                                  
+                                                    <i class="fa fa-download" style="vertical-align: middle;"></i>&nbsp;{{a.document_name}}</a>
+
+                                                    <span>
+                                                        <span class="tss-lock"  style="color: red; position:absolute; right:50px; margin-top:3px;cursor:pointer; font-size: 20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span>
+                                                        <span class="tss-unlock" style="color: green; position:absolute; right:50px; margin-top:3px;cursor:pointer; font-size: 20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                    </span>
+                                                    <a href="#" class="gray">
+                                                        <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1"
+                                                            title="{{'general.delete' | translate}}" ng-click="deleteModalAttachment(a.id_document,a.document_name)">
+                                                        </i>
+                                                    </a>
+                                                <span class="display-block f12 pl20">
+                                                    <span class="gray">{{'attachment.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                    <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                </span>
+                                            </p>
+                                            <p ng-show="infoObj.unique_attachment.documents.length==0" class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+                                        </div>                
+                                        <div class="modal-footer">
+                                            <button class="btn btn-sm btn-primary" type="submit"
+                                                    ng-click="uploadAttachment(fdata,data)">
+                                                <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                            </button>
+                                        </div>
+                                    </uib-tab>
+                                    <uib-tab index="1"  class="clearfix" heading="{{'links.ad_link' | translate}}">
+                                        <div class="clearfix" style="background: #EEEDF5; padding: 10px;">
+                                            <ng-form name="linkForm" class="modalUniqCls">
+                                                <div class="col-md-5 pl-0">
+                                                    <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" required>
+                                                </div>
+                                                <div class="col-md-7 pl-0" style="display:-webkit-inline-box; padding-right: 5px;">
+                                                    <input type="text" style="width:86.5%" class="form-control" ng-model="contractLink.url" required placeholder="{{'normal.placeholder_add_link_url' | translate}}">
+                                                    <span>
+                                                        <button style="padding: 0.03rem 0.5rem;" type="button" title="{{'contract.verify_link' | translate}}" ng-disabled="!linkForm.$valid" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                                            <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p></button>
+                                                    </span>
+                                                </div>
+                                            </ng-form>
+                                            <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length && !isLink" style="overflow-y: scroll;">
+                                                <div class="list-header clearfix">
+                                                    <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                                                </div>
+                                                <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                                    <ul class="list-items files-list">
+                                                        <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                                            <div class="col-sm-11 p0">
+                                                                <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                                                <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                                            </div>
+                                                         
+                                                            <div class="col-sm-1 pull-right">
+                                                                <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray"></i> </a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>                    
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="p-b-1" style="padding-top: 25px;">
+                                            <p ng-if="infoObj.unique_attachment.links.length>0" ng-repeat="a in infoObj.unique_attachment.links" style="position:relative">
+                                                <a  ng-click="redirectUrl(a.document_source)" href="javascript:;" class="ellipis" title="{{a.document_source}}"
+                                                    style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i> {{a.document_name}}</a>
+                                                <a href="#" class="gray">
+                                                    <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1"
+                                                        title="{{'general.delete' | translate}}" ng-click="deleteModalAttachment(a.id_document,a.document_name)">
+                                                    </i>
+                                                </a>
+                                                <span>
+                                                    <span class="tss-lock"  style="color: red;position:absolute; right:30px; margin-top:3px; cursor:pointer; font-size: 20px;
+                                                    " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span>
+                                                    <span class="tss-unlock" style="color: green;position:absolute; right:30px; margin-top:3px; cursor:pointer; font-size: 20px;
+                                                    " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                </span>
+                                                <span class="display-block f12 pl20">
+                                                    <span class="gray">{{'links.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user_name}}</span>
+                                                    <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                </span>
+                                            </p>
+                                            <p ng-show="infoObj.unique_attachment.links.length==0" class="text-sm-center pt20">{{'links.no_links' | translate}}</p>
+                                        </div>      
+                                        <div class="modal-footer">
+                                            <button class="btn btn-sm btn-primary" type="submit"
+                                                    ng-click="contractLinks && uploadLinks(contractLinks,data)">
+                                                <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                            </button>
+                                        </div>
+                                    </uib-tab>
+                                </uib-tabset>
+                            </form>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="3" heading="{{'providers.relation_stakholders' | translate}} ({{infoObj.provider_stakeholders}})">
+                        <div class="card">
+                            <form novalidate name="form" ng-submit="form.$valid && update(contractParters)">
+                                <div class="col-sm-12 mb-2 p0 internal-box form-group bg-white">
+                                    <div class="col-sm-12 p0">
+                                        <div class="col-sm-4"></div>
+                                        <div class="col-sm-4">
+                                            <label class="f16">{{'contract.internal' | translate}}</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="f16">{{'contract.provider' | translate}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 mb-2 p0">
+                                        <div class="col-sm-4" ng-init="showLabel=true ;">
+                                            <a ng-show="showLabel"  href="javascript:;" style="color:#464646 !important;" ng-click="showLabel=false;">
+                                                <label class="pointer">{{contractParters.stake_holder_lables.lable1 | checkEmpty}}</label> &nbsp;
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </a>
+                                            <input type="text" ng-show="!showLabel" class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable1?'':'req-filter'"
+                                                    ng-model="contractParters.stake_holder_lables.lable1"/>
+                                            <span ng-show="!showLabel && contractParters.stake_holder_lables.lable1" class="green pointer" style="padding-left: 3px;"
+                                                ng-click="showLabel=true" uib-tooltip="Save">
+                                                <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-4" id="internal_contract_sponsor">
+                                            <input type="text" class="form-control" autofocus only-text  style="width:90%;display:inline-block;"
+                                                ng-disabled="disableOne" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                maxlength="70" name="internal_contract_sponsor" ng-model="contractParters.internal_contract_sponsor">                        
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.internal_contract_sponsor">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableSponsor('internal_contract_sponsor',1);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.internal_contract_sponsor">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                    ng-disabled="contractParters.internal_contract_sponsor"
+                                                    class="btn btn-primary" ng-click="addInternalUsers('internal_contract_sponsor')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-4" id="provider_contract_sponsor">
+                                            <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70"
+                                                ng-disabled="disableFour" placeholder="{{'normal.placeholder_text_icon' | translate}}" only-text
+                                                name="provider_contract_sponsor" ng-model="contractParters.provider_contract_sponsor">
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.provider_contract_sponsor">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableProvider('provider_contract_sponsor',4);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.provider_contract_sponsor">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                    class="btn btn-primary"  ng-click="addInternalUsers('provider_contract_sponsor')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-12 p0" ng-show="showInnerDiv && (field == 'internal_contract_sponsor' || field == 'provider_contract_sponsor')">
+                                            <div class="innerDiv-cls" ng-if="field=='internal_contract_sponsor'">
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen" single allow-single-deselect="false"
+                                                        on-change="change();"
+                                                        ng-change="getUserList(contractParters.data.internal_contract_sponsor.business_unit)"
+                                                        placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                        name="business_unit" ng-model="contractParters.data.internal_contract_sponsor.business_unit"
+                                                        ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                        <option value=""></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen1" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="internal_contract_sponsor" ng-model="contractParters.data.internal_contract_sponsor.user"
+                                                        ng-options="item as item.name for item in usersList">
+                                                    </select>
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalSponser(contractParters.data.internal_contract_sponsor,'internal_contract_sponsor',1)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="innerDiv-cls" ng-if="field=='provider_contract_sponsor'">
+                                                <div class="form-group col-sm-6 pl-0">
+                                                    <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                    <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                        <option value=""> {{provider.provider_name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen3" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="provider_contract_sponsor" ng-model="contractParters.data.provider_contract_sponsor.user"
+                                                        ng-options="item as item.name for item in providerUsersList">
+                                                    </select>
+                                                </div>                            
+                                                <div class="clearfix" style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalProvider(contractParters.data.provider_contract_sponsor,'provider_contract_sponsor',4)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 mb-2 p0">
+                                        <div class="col-sm-4" ng-init="showLabel2=true">
+                                            <a ng-show="showLabel2" class="pointer" href="javascript:;" style="color:#464646 !important;" ng-click="showLabel2=false;">
+                                                <label class="pointer">{{contractParters.stake_holder_lables.lable2 | checkEmpty}}</label> &nbsp;
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </a>
+                                            <input type="text" ng-show="!showLabel2" class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable2?'':'req-filter'"
+                                                    ng-model="contractParters.stake_holder_lables.lable2" />
+                                            <span ng-show="!showLabel2 && contractParters.stake_holder_lables.lable2" class="green pointer" style="padding-left: 3px;"
+                                                ng-click="showLabel2=true" uib-tooltip="Save">
+                                                <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-4" id="internal_partner_relationship_manager">
+                                            <input type="text" style="width:90%;display:inline-block;" class="form-control" only-text maxlength="70"
+                                                ng-disabled="disableTwo" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                name="relationship_manager" ng-model="contractParters.internal_partner_relationship_manager">
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.internal_partner_relationship_manager">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableSponsor('internal_partner_relationship_manager',2);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.internal_partner_relationship_manager">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                    class="btn btn-primary"  ng-click="addInternalUsers('internal_partner_relationship_manager')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                         <div class="col-sm-4" id="provider_partner_relationship_manager">
+                                            <input type="text" style="width:90%;display:inline-block;" class="form-control"  only-text maxlength="70"
+                                                ng-disabled="disableFive" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                name="partner_contract" ng-model="contractParters.provider_partner_relationship_manager">
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.provider_partner_relationship_manager">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableProvider('provider_partner_relationship_manager',5);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.provider_partner_relationship_manager">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                    class="btn btn-primary"  ng-click="addInternalUsers('provider_partner_relationship_manager')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-12 p0" ng-show="showInnerDiv && (field == 'internal_partner_relationship_manager' || field == 'provider_partner_relationship_manager')">
+                                            <div class="innerDiv-cls" ng-if="field=='internal_partner_relationship_manager'">
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen4" single allow-single-deselect="false"
+                                                        on-change="change();"
+                                                        ng-change="getUserList(contractParters.data.internal_partner_relationship_manager.business_unit)"
+                                                        placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                        name="business_unit" ng-model="contractParters.data.internal_partner_relationship_manager.business_unit"
+                                                        ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                        <option value=""></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen5" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="internal_partner_relationship_manager" ng-model="contractParters.data.internal_partner_relationship_manager.user"
+                                                        ng-options="item as item.name for item in usersList">
+                                                    </select>
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalSponser(contractParters.data.internal_partner_relationship_manager,'internal_partner_relationship_manager',2)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="innerDiv-cls" ng-if="field=='provider_partner_relationship_manager'">
+                                                <div class="form-group col-sm-6 pl-0">
+                                                    <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                    <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                        <option value="">{{provider.provider_name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen3" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="provider_partner_relationship_manager" ng-model="contractParters.data.provider_partner_relationship_manager.user"
+                                                        ng-options="item as item.name for item in providerUsersList">
+                                                    </select>
+                                                </div>                            
+                                                <div class="clearfix" style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalProvider(contractParters.data.provider_partner_relationship_manager,'provider_partner_relationship_manager',5)">
+                                                        <i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 p0">
+                                        <div class="col-sm-4" ng-init="showLabel3=true">
+                                            <a ng-show="showLabel3" class="pointer" href="javascript:;" style="color:#464646 !important;" ng-click="showLabel3=false;">
+                                                <label class="pointer">{{contractParters.stake_holder_lables.lable3 | checkEmpty}}</label>&nbsp;
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </a>
+                                            <input type="text" ng-show="!showLabel3"  class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable3?'':'req-filter'"
+                                                        maxlength="30" ng-model="contractParters.stake_holder_lables.lable3" />
+                                            <span ng-show="!showLabel3 && contractParters.stake_holder_lables.lable3" class="green pointer" style="padding-left: 3px;"
+                                                    ng-click="showLabel3=true" uib-tooltip="Save">
+                                                <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-4" id="internal_contract_responsible">
+                                            <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70" only-text
+                                                ng-disabled="disableThree" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                name="contract_responsible" ng-model="contractParters.internal_contract_responsible">
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.internal_contract_responsible">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableSponsor('internal_contract_responsible',3);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.internal_contract_responsible">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        class="btn btn-primary" ng-click="addInternalUsers('internal_contract_responsible')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-4" id="provider_contract_responsible">
+                                            <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70"
+                                                only-text ng-disabled="disableSix" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                name="provider_contract_responsible" ng-model="contractParters.provider_contract_responsible">
+                                            <span style="float:left;position: absolute;" ng-if="contractParters.provider_contract_responsible">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                    class="btn btn-primary" ng-click="enableProvider('provider_contract_responsible',6);">
+                                                    <span class="icon-times f12"></span>
+                                                </button>
+                                            </span>
+                                            <span style="float:left;position: absolute;" ng-if="!contractParters.provider_contract_responsible">
+                                                <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                    class="btn btn-primary"  ng-click="addInternalUsers('provider_contract_responsible')">
+                                                    <span class="icon-plus-circle"></span>
+                                                </button>
+                                            </span>
+                                        </div>  
+                                         <div class="col-sm-12 p0"
+                                            ng-show="showInnerDiv && (field == 'internal_contract_responsible' || field == 'provider_contract_responsible')">
+                                            <div class="innerDiv-cls" ng-if="field=='internal_contract_responsible'">
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen6" single allow-single-deselect="false"
+                                                        on-change="change();"
+                                                        ng-change="getUserList(contractParters.data.internal_contract_responsible.business_unit)"
+                                                        placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                        name="business_unit" ng-model="contractParters.data.internal_contract_responsible.business_unit"
+                                                        ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                        <option value=""></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen7" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="internal_contract_responsible" ng-model="contractParters.data.internal_contract_responsible.user"
+                                                        ng-options="item as item.name for item in usersList">
+                                                    </select>
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalSponser(contractParters.data.internal_contract_responsible,'internal_contract_responsible',3)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="innerDiv-cls" ng-if="field=='provider_contract_responsible'">
+                                                <div class="form-group col-sm-6 pl-0">
+                                                    <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                    <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                        <option value="">{{provider.provider_name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6 clearfix col-sm-6">
+                                                    <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                    <select chosen class="form-control chosen-choices"
+                                                        id="add-chosen3" single allow-single-deselect="true"
+                                                        placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                        name="provider_contract_responsible" ng-model="contractParters.data.provider_contract_responsible.user"
+                                                        ng-options="item as item.name for item in providerUsersList">
+                                                    </select>
+                                                </div>                            
+                                                <div class="clearfix" style="text-align: center;">
+                                                    <button type="button" class="btn btn-success"
+                                                        ng-click="addInternalProvider(contractParters.data.provider_contract_responsible,'provider_contract_responsible',6)">
+                                                        <i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                    <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+                <!-- tabs 1 end -->
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal-body clearfix" ng-if="info==3">
+        <div class="col-lg-12 p015">
+            <div class="row" ng-init="indextab = 2">
+                <div class="col-sm-12 col-lg-12 p-0 info-tabs-div">
+                    <div class="modal-closer-contract">
+                        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+                     </div>
+                    <uib-tabset active="indextab"  >
+                        <uib-tab index="0" heading="{{'providers.relation_info' | translate}} ({{infoObj.provider_information}})">
+                            <div class="card">                            
+                                <div class="card-block card-space">                        
+                                    <div class="clearfix">
+                                        <div class="col-md-12 p0" style="margin-top: 10px;">
+                                            <form novalidate name="providerForm" ng-submit="providerForm.$valid && updateProviderInfo(infoObj)">
+                                                <div class="custom-row">
+                                                    <div class="form-group col-sm-6 ">
+                                                        <label>{{'providers.id' | translate}} *</label>
+                                                        <input type="text" class="form-control" ng-model="infoObj.unique_id" ng-disabled="!disabled" alpha-numeric name="provider_id" required/>
+                                                        <span class="error-message" ng-if="providerForm.provider_id.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.provider_name' | translate}} *</label>
+                                                        <input type="text" ng-model="infoObj.provider_name" class="form-control" name="provider_name" required/>
+                                                        <span class="error-message" ng-if="providerForm.provider_name.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                    </div>
+                                                   
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.address' | translate}} </label>
+                                                        <input type="text" ng-model="infoObj.company_address" class="form-control" name="address" />
+
+                                                       
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.city' | translate}} </label>
+                                                        <input type="text" ng-model="infoObj.city" class="form-control" name="city" />
+                                                        
+                                                    </div>
+                                                   
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.country' | translate}} </label>
+                                                        <select class="form-control" name="country"  ng-model="infoObj.country"
+                                                               ng-options="item.id_country as item.country_name for item in countriesList">
+                                                            <option value="">--{{'general.select_country' | translate}}--</option>
+                                                        </select>
+                                                        
+                                                    </div>
+                           
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.category' | translate}} </label>
+                                                    <select ng-model="infoObj.category_id"  class="form-control" name="category_id"  
+                                                             ng-options="opt.id_provider_relationship_category as opt.relationship_category_name group by opt.type for opt in relationshipCategoryList">
+                                                    <option value="">-- {{'general.select' | translate}} --</option>
+                                                    </select>
+                                                    </div>
+                           
+                                                     <div class="form-group col-sm-6">
+                                                        <label>{{'providers.postal_code' | translate}} </label>
+                                                        <input type="text" ng-model="infoObj.postal_code" class="form-control" name="postal_code" />
+                                                        
+                                                    </div>
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'providers.vat' | translate}} </label>
+                                                        <input type="text" ng-model="infoObj.vat" class="form-control" name="vat"/>
+                                                    </div>
+                                                   
+                                                 
+                                                    <div class="form-group col-sm-6">
+                                                        <label>{{'general.status' | translate}} *</label>
+                                                        <select class="form-control" ng-model="infoObj.status" name="provider_status" required>
+                                                            <option value="">-- {{'general.select' | translate}} --</option>
+                                                            <option value="1">{{'general.active' | translate}}</option>
+                                                            <option value="0">{{'general.inactive' | translate}}</option>
+                                                        </select>
+                                                        <span class="error-message" ng-if="providerForm.provider_status.$error.required && providerForm.$submitted">{{'general.required_field' | translate}}</span>
+                                                    </div>
+                                                   
+                                                   
+                                                    <div class="form-group col-sm-12">
+                                                        <label>{{'providers.description' | translate}}  </label>
+                                                        <textarea type="text" ng-model="infoObj.description" class="form-control" name="description"  style="height: 80px;"></textarea>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="modal-footer form-group col-sm-12">
+                                                        <button type="submit" class="btn btn-sm btn-primary">
+                                                            <i class="fa fa-dot-circle-o"></i> {{bottom |translate}}</button>
+                                                        <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                                            <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                               
+                                             
+                                            </form>
+                                        </div>                                    
+                                       
+                                    </div>
+                                </div>
+                            </div>
+       
+                           
+                        </uib-tab>
+                        <uib-tab index="1" heading="{{'providers.relation_tags' | translate}} ({{infoObj.provider_tags}})">
+                            <div class="card">                            
+                                <div class="card-block card-space">
+                                    <div class="clearfix">
+                                        <div class="col-md-12 p-0" style="margin-top: 10px;">
+                                            <div class="col-sm-12 p0">
+                                                    <div class="col-sm-12" style="padding: 0px 25px;">
+                                                       <table class="w-100 provider-tag-form">
+                                                           <thead>
+                                                               <tr>
+                                                                  <th class="provider-name-th"></th>
+                                                                  <th class="provider-radio-th"></th>
+                                                                  <th class="provider-comment-th"></th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody ng-repeat="providerTags in providertagsInfo track by $index">
+                                                               <tr ng-repeat="tag in providerTags.tag_details track by $index"  ng-if="tag.tag_type == 'rag' && tag.bu_name==null"> {{$index}}
+                                                                   <td>{{tag.tag_text}}</td>
+                                                                   <td class="provider-tag-radio" style="width:30%;">
+                                                                      <div class="radio_widget">
+                                                                          <span ng-repeat="option in tag.options">  
+                                                                              <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                                  checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                               <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                              <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                              <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                              <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                          </span>
+                                                                          <span style="padding-left: 50px;">
+                                                                            <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                            ng-click="tag.tag_answer=''"></i>
+                                                                       </span>
+                                                                      </div>
+                                                                   </td>
+                                                                   <td class="provider-comment-td" >
+                                                                      <span>
+                                                                          <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                          ng-model="tag.comments">
+                                           
+                                                                      </span>
+                                                                   </td>
+                                                               </tr>
+                                                           </tbody>
+                                                       </table>
+                                                  </div>
+                                                  <div class="col-sm-12 custom-row tagsGrouping input-group" ng-repeat="providerTags in providertagsInfo" ng-if=" !providerTags.bu_name">
+                                                    <div  class="form-group col-sm-4" ng-repeat="tag in providerTags.tag_details" 
+                                                          ng-if="tag.tag_type!='rag'">
+                                                        <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                        <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                        <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                         <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                            
+                                                      <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                              ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                      </select>
+                                            
+                                            
+                                                        <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                                ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                         <option value="">-- {{'general.select' |translate}} --</option>
+                                                     </select>
+                                                     
+                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                            ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                      <option value="">-- {{'general.select' |translate}} --</option>
+                                                  </select>
+                                                  <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                          ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                      <option value="">-- {{'general.select' |translate}} --</option>
+                                                  </select>
+                                                  <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                          ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                      <option value="">-- {{'general.select' |translate}} --</option>
+                                                  </select>
+                                                  <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                          ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                      <option value="">-- {{'general.select' |translate}} --</option>
+                                                  </select>
+        
+        
+                                                  <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                                          chosen id="add-chosen" allow-single-deselect="true"
+                                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                          ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                              </select>
+        
+                                                  <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                                          chosen id="add-chosen" allow-single-deselect="true"
+                                                          multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                          ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                </select>
+        
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                                      chosen id="add-chosen" allow-single-deselect="true"
+                                                      multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                      ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                              </select>
+        
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                                      chosen id="add-chosen" allow-single-deselect="true"
+                                                      multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                      ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                              </select>
+        
+                                              <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                                      chosen id="add-chosen" allow-single-deselect="true"
+                                                      multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                      ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                              </select>
+                                                      <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                         <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                            ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                            show-button-bar="false" readonly>
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                        
+                                                    </div> 
+                                                </div>
+                                                </div>
+                                                        <div class="col-sm-12 custom-row p-0 input-group" ng-repeat="providerTags in providertagsInfo track by $index" ng-if="providerTags.bu_name">
+                                                            <uib-accordion class="card widget2 inputs-accordion" style="margin-bottom:5px !important;width: 100%;" close-others="oneAtATime">
+                                                                <div uib-accordion-group class="panel-default" heading="Stakeholders"
+                                                                    template-url="group-template0.html" ng-init="open=false;" is-open="open">
+                                                                    <uib-accordion-heading ng-click="open= !open">
+                                                                        <span style="width: 20px;">
+                                                                            <i class="glyphicon" 
+                                                                                ng-class="{'fa-solid fa-caret-down': open,'fa-solid fa-caret-right': !open}" style="color: #000;font-size: 18px;"></i>
+                                                                        </span>
+                                                                        <span style="z-index: 2;background-color: #fff;padding-right: 5px;">{{providerTags.bu_name}} ({{providerTags.count}})</span>
+                                                                        <span ng-if="providerTags.status==0" style="background: #fff;z-index: 1;padding-right: 4px;">({{'general.inactive' | translate}})</span>
+                                                                    </uib-accordion-heading>
+    
+                                                                    <div class="card-block" style="padding:7px 25px;">
+                                                                        <table class="w-100 provider-tag-form">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                   <th class="provider-name-th"></th>
+                                                                                   <th class="provider-radio-th"></th>
+                                                                                   <th class="provider-comment-th"></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            
+                                                                               
+                                                                                 <tbody>
+                                                                                    <tr ng-repeat="tag in providerTags.tag_details"  ng-if="tag.tag_type == 'rag' && tag.bu_name!=null">
+                                                                                        <td>{{tag.tag_text}}</td>
+                                                                                        <td class="provider-tag-radio" style="width:30%;">
+                                                                                           <div class="radio_widget">
+                                                                                               <span ng-repeat="option in tag.options">  
+                                                                                                   <input type="radio" id="radio1_{{$index}}_{{tag.tag_id}}" name="same_{{tag.tag_id}}" value="{{option.id_tag_option}}"
+                                                                                                       checked ng-model="tag.tag_answer" ng-disabled="row.readOnly">
+                                                                                                    <label ng-if="option.tag_option_name == 'G'" for="radio1_{{$index}}_{{tag.tag_id}}" class="first_label" uib-tooltip="Green" ng-disabled="row.readOnly"></label>
+                                                                                                   <label ng-if="option.tag_option_name == 'A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="sec_label" uib-tooltip="Amber" ng-disabled="row.readOnly"></label>
+                                                                                                   <label ng-if="option.tag_option_name == 'R'" for="radio1_{{$index}}_{{tag.tag_id}}" class="third_label" uib-tooltip="Red" ng-disabled="row.readOnly"></label>
+                                                                                                   <label ng-if="option.tag_option_name == 'N/A'" for="radio1_{{$index}}_{{tag.tag_id}}" class="fourth_label" uib-tooltip="Not Applicable" ng-disabled="row.readOnly"></label>
+                                                                                               </span>
+                                                                                               <span style="padding-left: 50px;">
+                                                                                                 <i class="fa fa-undo fa-lg" style="cursor: pointer; font-size: 14px;line-height: 23px;" ng-if="tag.tag_answer"   
+                                                                                                 ng-click="tag.tag_answer=''"></i>
+                                                                                            </span>
+                                                                                           </div>
+                                                                                        </td>
+                                                                                        <td class="provider-comment-td" >
+                                                                                           <span>
+                                                                                               <input type="text" class="form-control" id="feedback_{{tag.id_tag}}" value="{{option.id_tag_option}}"
+                                                                                               ng-model="tag.comments">
+                                                                
+                                                                                           </span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody> 
+                                                                            </table>
+        
+                                                                            
+                                                                    </div>
+                                                                    <div class="card-block" style="padding:7px 15px;">
+                                                                                <div class="col-md-12 p-0 tagsGrouping">
+                                                                                <div  class="form-group col-sm-4" ng-repeat="tag in providerTags.tag_details" ng-if="tag.tag_type!='rag'">
+                                                                                <label class="ellipis w_95">{{tag.tag_text}}</label>
+                                                                                <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'text'" class="form-control" ng-model="tag.tag_answer">
+                                                                                <input type="text" only-digits ng-if="tag.tag_type == 'input' && tag.field_type == 'number'" class="form-control" ng-model="tag.tag_answer">
+                                                                                <input type="text" ng-if="tag.tag_type == 'input' && tag.field_type == 'currency'" maxlength="30" ui-number-mask="0" class="form-control" ng-model="tag.tag_answer">
+                                                                    
+                                                                            <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='0'"  ng-model="tag.tag_answer" class="form-control"
+                                                                                ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                                    <option value="">-- {{'general.select' |translate}} --</option>
+                                                                                </select>
+                                                                    
+                                                                    
+                                                                                <select ng-if="tag.tag_type == 'radio'" ng-model="tag.tag_answer" class="form-control"
+                                                                                ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                                <option value="">-- {{'general.select' |translate}} --</option>
+                                                                            </select>
+                                                                            
+                                                                            <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+                                                                        <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='project' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+                                                                        <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+                                                                        <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='0'" ng-model="tag.tag_answer" class="form-control"
+                                                                            ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                                            <option value="">-- {{'general.select' |translate}} --</option>
+                                                                        </select>
+        
+        
+                                                                        <select ng-if="tag.tag_type == 'dropdown' && tag.multi_select=='1'" 
+                                                                            chosen id="add-chosen" allow-single-deselect="true"
+                                                                            multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                            ng-options="item.id_tag_option as item.tag_option_name for item in tag.options">
+                                                                        </select>
+                                                                        <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='contract' && tag.multi_select=='1'" 
+                                                                        chosen id="add-chosen" allow-single-deselect="true"
+                                                                        multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                        ng-options="item.id_contract as item.contract_name for item in selectedInfoContract">
+                                                                    </select>
+        
+                                                                    <select ng-if="tag.tag_type == 'selected'  && tag.selected_field =='project' && tag.multi_select=='1'" 
+                                                                        chosen id="add-chosen" allow-single-deselect="true"
+                                                                        multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                        ng-options="item.id_project as item.contract_name for item in selectedInfoProject">
+                                                                    </select>
+        
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='relation' && tag.multi_select=='1'" 
+                                                                        chosen id="add-chosen" allow-single-deselect="true"
+                                                                        multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                        ng-options="item.id_provider as item.provider_name for item in selectedInfoProvider">
+                                                                    </select>
+        
+                                                                    <select ng-if="tag.tag_type == 'selected' && tag.selected_field =='catalogue' && tag.multi_select=='1'" 
+                                                                        chosen id="add-chosen" allow-single-deselect="true"
+                                                                        multiple  ng-model="tag.tag_answer" name="tag_answer" class="chosen-choices" placeholder="select field"
+                                                                        ng-options="item.id_catalogue as item.catalogue_name for item in selectedInfoCatalogue">
+                                                                    </select>
+        
+                                                            
+                                                                            
+                                                                            <div ng-if="tag.tag_type =='date'" style="display: flex;">
+                                                                                <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy"  
+                                                                                    ng-model="tag.tag_answer"  name="date" is-open="openCal3" datepicker-options="{showWeeks:false}"
+                                                                                    show-button-bar="false" readonly>
+                                                                                <span class="input-group-btn">
+                                                                                    <button type="button" class="btn btn-default border" ng-click="openCal3 = true">
+                                                                                        <i class="fa fa-calendar"></i>
+                                                                                    </button>
+                                                                                </span>
+                                                                                
+                                                                            </div>
+                                                                                
+                                                                            
+                                                                        </div>
+                                                                                </div>
+                                                                    </div>
+                                                                </div>
+                                                            </uib-accordion>
+                                                        </div>
+                                                        <div ng-if="providertagsInfo.length ==0" class="text-sm-center">
+                                                            {{ 'tags.no_tags_found' |translate}}
+                                                        </div>
+                                                   <div class="clearfix"></div>
+                                                   <div class="modal-footer form-group col-sm-12 mb-0" ng-if="providertagsInfo.length>0">
+                                                       <button type="submit" class="btn btn-sm btn-primary"
+                                                       ng-click="updateTags(providertagsInfo)">
+                                                           <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                                                       <button type="button" ng-click="cancel1()" class="btn btn-sm btn-danger">
+                                                           <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                                   </div>
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+                        <uib-tab index="2" heading="{{'providers.relation_Attachments' | translate}} ({{infoObj.provider_attachments}})">
+                            <div class="card">
+                                <form novalidate name="attachmentForm" >
+                                    <uib-tabset active="active" class="clearfix" style="padding: 10px;" ng-init="active=0;">
+                                        <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                                            <div class="col-sm-12 m-t-3 form-group p-0">
+                                                <!-- <attachment-files ng-model="attachments"></attachment-files> -->
+                                                <attachment-files ng-model="fdata.file.attachments" ng-if="!isView"></attachment-files>
+                                                <attachment-list-template  ng-if="!isView"></attachment-list-template>
+                                            </div>
+                                            <div class="p-b-1">
+                                                <p ng-if="infoObj.unique_attachment.documents.length>0" ng-repeat="a in infoObj.unique_attachment.documents">
+                                                    <a download="{{a.document_name}}" target="_blank" href="#" ng-click="getDownloadUrl(a)" download="{{a.document_name}}">
+                                                        <!-- <i class="icon-arrow-down-circle f16"></i> {{a.document_name}}</a> -->
+                                                        <i class="fa fa-download" style="vertical-align: middle;"></i>&nbsp;{{a.document_name}}</a>
+
+                                                        <span>
+                                                            <span class="tss-lock attach-lock"  style="color: red; position:absolute;right:50px; margin-top:1px;cursor:pointer; font-size: 20px;
+                                                            " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span>
+                                                            <span class="tss-unlock attach-lock" style="color: green; position:absolute; right:50px; margin-top:1px; cursor:pointer; font-size: 20px;
+                                                            " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                        </span>
+                                                        <a href="#" class="gray">
+                                                            <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1"
+                                                                title="{{'general.delete' | translate}}" ng-click="deleteModalAttachment(a.id_document,a.document_name)">
+                                                            </i>
+                                                        </a>
+                                                    <span class="display-block f12 pl20">
+                                                        <span class="gray">{{'attachment.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                        <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                    </span>
+                                                </p>
+                                                <p ng-show="infoObj.unique_attachment.documents.length==0" class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+                                            </div>                
+                                            <div class="modal-footer">
+                                                <button class="btn btn-sm btn-primary" type="submit"
+                                                        ng-click="uploadAttachment(fdata,data)">
+                                                    <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                    <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                                </button>
+                                            </div>
+                                        </uib-tab>
+                                        <uib-tab index="1"  class="clearfix" heading="{{'links.ad_link' | translate}}">
+                                            <div class="clearfix" style="background: #EEEDF5; padding: 10px;">
+                                                <ng-form name="linkForm" class="modalUniqCls">
+                                                    <div class="col-md-5 pl-0">
+                                                        <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" required>
+                                                    </div>
+                                                    <div class="col-md-7 pl-0" style="display:-webkit-inline-box; padding-right: 5px;">
+                                                        <input type="text" style="width:86.5%" class="form-control" ng-model="contractLink.url" required placeholder="{{'normal.placeholder_add_link_url' | translate}}">
+                                                        <span>
+                                                            <button style="padding: 0.03rem 0.5rem;" type="button" title="{{'contract.verify_link' | translate}}" ng-disabled="!linkForm.$valid" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                                                <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p></button>
+                                                        </span>
+                                                    </div>
+                                                </ng-form>
+                                                <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length && !isLink" style="overflow-y: scroll;">
+                                                    <div class="list-header clearfix">
+                                                        <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                                                    </div>
+                                                    <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                                        <ul class="list-items files-list">
+                                                            <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                                                <div class="col-sm-11 p0">
+                                                                    <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                                                    <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                                                </div>
+                                                             
+                                                                <div class="col-sm-1 pull-right">
+                                                                    <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray"></i> </a>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>                    
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="p-b-1" style="padding-top: 25px;">
+                                                <p ng-if="infoObj.unique_attachment.links.length>0" ng-repeat="a in infoObj.unique_attachment.links" style="position:relative">
+                                                    <a  ng-click="redirectUrl(a.document_source)" href="javascript:;" class="ellipis" title="{{a.document_source}}"
+                                                        style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i> {{a.document_name}}</a>
+                                                    <a href="#" class="gray">
+                                                        <i ng-if="a.daad == 'itako' && user1.iroori != 'itako'" class="pull-right icon-trash m-t-1"
+                                                            title="{{'general.delete' | translate}}" ng-click="deleteModalAttachment(a.id_document,a.document_name)">
+                                                        </i>
+                                                    </a>
+                                                    <span>
+                                                        <span class="tss-lock"  style="color: red;position:absolute; bottom:21px; right:30px;cursor:pointer; font-size: 20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==1"></span>
+                                                        <span class="tss-unlock" style="color: green;position:absolute; bottom:21px; right:30px;cursor:pointer; font-size: 20px;
+                                                        " ng-click="changeLockingStatus(a)" ng-if="a.is_lock==0"></span>
+                                                    </span>
+                                                    <span class="display-block f12 pl20">
+                                                        <span class="gray">{{'links.uploaded_by' | translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                                        <span class="gray">{{'general.on' | translate}}:</span>&nbsp;<span>{{a.uploaded_on | utcToLocal:'toLocalDate'}}</span>
+                                                    </span>
+                                                </p>
+                                                <p ng-show="infoObj.unique_attachment.links.length==0" class="text-sm-center pt20">{{'links.no_links' | translate}}</p>
+                                            </div>      
+                                            <div class="modal-footer">
+                                                <button class="btn btn-sm btn-primary" type="submit"
+                                                        ng-click="contractLinks && uploadLinks(contractLinks,data)">
+                                                    <i class="icon-plus"></i>&nbsp;{{'general.save' | translate}}
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" type="button" ng-click="cancel()">
+                                                    <i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}
+                                                </button>
+                                            </div>
+                                        </uib-tab>
+                                    </uib-tabset>
+                                </form>
+                            </div>
+                        </uib-tab>                  
+                        <uib-tab index="3" heading="{{'providers.relation_stakholders' | translate}} ({{infoObj.provider_stakeholders}})">
+                            <div class="card">
+                                <form novalidate name="form" ng-submit="form.$valid && update(contractParters)">
+                                    <div class="col-sm-12 mb-2 p0 internal-box form-group bg-white">
+                                        <div class="col-sm-12 p0">
+                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-4">
+                                                <label class="f16">{{'contract.internal' | translate}}</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="f16">{{'contract.provider' | translate}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 mb-2 p0">
+                                            <div class="col-sm-4" ng-init="showLabel=true ;">
+                                                <a ng-show="showLabel"  href="javascript:;" style="color:#464646 !important;" ng-click="showLabel=false;">
+                                                    <label class="pointer">{{contractParters.stake_holder_lables.lable1 | checkEmpty}}</label> &nbsp;
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </a>
+                                                <input type="text" ng-show="!showLabel" class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable1?'':'req-filter'"
+                                                        ng-model="contractParters.stake_holder_lables.lable1"/>
+                                                <span ng-show="!showLabel && contractParters.stake_holder_lables.lable1" class="green pointer" style="padding-left: 3px;"
+                                                    ng-click="showLabel=true" uib-tooltip="Save">
+                                                    <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4" id="internal_contract_sponsor">
+                                                <input type="text" class="form-control" autofocus only-text  style="width:90%;display:inline-block;"
+                                                    ng-disabled="disableOne" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                    maxlength="70" name="internal_contract_sponsor" ng-model="contractParters.internal_contract_sponsor">                        
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.internal_contract_sponsor">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableSponsor('internal_contract_sponsor',1);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.internal_contract_sponsor">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        ng-disabled="contractParters.internal_contract_sponsor"
+                                                        class="btn btn-primary" ng-click="addInternalUsers('internal_contract_sponsor')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4" id="provider_contract_sponsor">
+                                                <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70"
+                                                    ng-disabled="disableFour" placeholder="{{'normal.placeholder_text_icon' | translate}}" only-text
+                                                    name="provider_contract_sponsor" ng-model="contractParters.provider_contract_sponsor">
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.provider_contract_sponsor">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableProvider('provider_contract_sponsor',4);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.provider_contract_sponsor">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        class="btn btn-primary"  ng-click="addInternalUsers('provider_contract_sponsor')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-12 p0" ng-show="showInnerDiv && (field == 'internal_contract_sponsor' || field == 'provider_contract_sponsor')">
+                                                <div class="innerDiv-cls" ng-if="field=='internal_contract_sponsor'">
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen" single allow-single-deselect="false"
+                                                            on-change="change();"
+                                                            ng-change="getUserList(contractParters.data.internal_contract_sponsor.business_unit)"
+                                                            placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                            name="business_unit" ng-model="contractParters.data.internal_contract_sponsor.business_unit"
+                                                            ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen1" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="internal_contract_sponsor" ng-model="contractParters.data.internal_contract_sponsor.user"
+                                                            ng-options="item as item.name for item in usersList">
+                                                        </select>
+                                                    </div>
+                                                    <div style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalSponser(contractParters.data.internal_contract_sponsor,'internal_contract_sponsor',1)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                                <div class="innerDiv-cls" ng-if="field=='provider_contract_sponsor'">
+                                                    <div class="form-group col-sm-6 pl-0">
+                                                        <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                        <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                            <option value=""> {{provider.provider_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen3" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="provider_contract_sponsor" ng-model="contractParters.data.provider_contract_sponsor.user"
+                                                            ng-options="item as item.name for item in providerUsersList">
+                                                        </select>
+                                                    </div>                            
+                                                    <div class="clearfix" style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalProvider(contractParters.data.provider_contract_sponsor,'provider_contract_sponsor',4)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 mb-2 p0">
+                                            <div class="col-sm-4" ng-init="showLabel2=true">
+                                                <a ng-show="showLabel2" class="pointer" href="javascript:;" style="color:#464646 !important;" ng-click="showLabel2=false;">
+                                                    <label class="pointer">{{contractParters.stake_holder_lables.lable2 | checkEmpty}}</label> &nbsp;
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </a>
+                                                <input type="text" ng-show="!showLabel2" class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable2?'':'req-filter'"
+                                                        ng-model="contractParters.stake_holder_lables.lable2" />
+                                                <span ng-show="!showLabel2 && contractParters.stake_holder_lables.lable2" class="green pointer" style="padding-left: 3px;"
+                                                    ng-click="showLabel2=true" uib-tooltip="Save">
+                                                    <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4" id="internal_partner_relationship_manager">
+                                                <input type="text" style="width:90%;display:inline-block;" class="form-control" only-text maxlength="70"
+                                                    ng-disabled="disableTwo" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                    name="relationship_manager" ng-model="contractParters.internal_partner_relationship_manager">
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.internal_partner_relationship_manager">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableSponsor('internal_partner_relationship_manager',2);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.internal_partner_relationship_manager">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        class="btn btn-primary"  ng-click="addInternalUsers('internal_partner_relationship_manager')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                             <div class="col-sm-4" id="provider_partner_relationship_manager">
+                                                <input type="text" style="width:90%;display:inline-block;" class="form-control"  only-text maxlength="70"
+                                                    ng-disabled="disableFive" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                    name="partner_contract" ng-model="contractParters.provider_partner_relationship_manager">
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.provider_partner_relationship_manager">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableProvider('provider_partner_relationship_manager',5);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.provider_partner_relationship_manager">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        class="btn btn-primary"  ng-click="addInternalUsers('provider_partner_relationship_manager')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-12 p0" ng-show="showInnerDiv && (field == 'internal_partner_relationship_manager' || field == 'provider_partner_relationship_manager')">
+                                                <div class="innerDiv-cls" ng-if="field=='internal_partner_relationship_manager'">
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen4" single allow-single-deselect="false"
+                                                            on-change="change();"
+                                                            ng-change="getUserList(contractParters.data.internal_partner_relationship_manager.business_unit)"
+                                                            placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                            name="business_unit" ng-model="contractParters.data.internal_partner_relationship_manager.business_unit"
+                                                            ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen5" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="internal_partner_relationship_manager" ng-model="contractParters.data.internal_partner_relationship_manager.user"
+                                                            ng-options="item as item.name for item in usersList">
+                                                        </select>
+                                                    </div>
+                                                    <div style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalSponser(contractParters.data.internal_partner_relationship_manager,'internal_partner_relationship_manager',2)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                                <div class="innerDiv-cls" ng-if="field=='provider_partner_relationship_manager'">
+                                                    <div class="form-group col-sm-6 pl-0">
+                                                        <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                        <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                            <option value="">{{provider.provider_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen3" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="provider_partner_relationship_manager" ng-model="contractParters.data.provider_partner_relationship_manager.user"
+                                                            ng-options="item as item.name for item in providerUsersList">
+                                                        </select>
+                                                    </div>                            
+                                                    <div class="clearfix" style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalProvider(contractParters.data.provider_partner_relationship_manager,'provider_partner_relationship_manager',5)">
+                                                            <i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <div class="col-sm-12 p0">
+                                            <div class="col-sm-4" ng-init="showLabel3=true">
+                                                <a ng-show="showLabel3" class="pointer" href="javascript:;" style="color:#464646 !important;" ng-click="showLabel3=false;">
+                                                    <label class="pointer">{{contractParters.stake_holder_lables.lable3 | checkEmpty}}</label>&nbsp;
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </a>
+                                                <input type="text" ng-show="!showLabel3"  class="form-control col-sm-6 w90" ng-class="contractParters.stake_holder_lables.lable3?'':'req-filter'"
+                                                            maxlength="30" ng-model="contractParters.stake_holder_lables.lable3" />
+                                                <span ng-show="!showLabel3 && contractParters.stake_holder_lables.lable3" class="green pointer" style="padding-left: 3px;"
+                                                        ng-click="showLabel3=true" uib-tooltip="Save">
+                                                    <button class="btn btn-success sponser-label-save" type="button"><i class="fa fa-floppy-o"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4" id="internal_contract_responsible">
+                                                <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70" only-text
+                                                    ng-disabled="disableThree" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                    name="contract_responsible" ng-model="contractParters.internal_contract_responsible">
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.internal_contract_responsible">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableSponsor('internal_contract_responsible',3);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.internal_contract_responsible">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                            class="btn btn-primary" ng-click="addInternalUsers('internal_contract_responsible')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4" id="provider_contract_responsible">
+                                                <input type="text" style="width:90%;display:inline-block;" class="form-control" maxlength="70"
+                                                    only-text ng-disabled="disableSix" placeholder="{{'normal.placeholder_text_icon' | translate}}"
+                                                    name="provider_contract_responsible" ng-model="contractParters.provider_contract_responsible">
+                                                <span style="float:left;position: absolute;" ng-if="contractParters.provider_contract_responsible">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Clear"
+                                                        class="btn btn-primary" ng-click="enableProvider('provider_contract_responsible',6);">
+                                                        <span class="icon-times f12"></span>
+                                                    </button>
+                                                </span>
+                                                <span style="float:left;position: absolute;" ng-if="!contractParters.provider_contract_responsible">
+                                                    <button type="button" style="padding:0.5rem;" uib-tooltip="Manage"
+                                                        class="btn btn-primary"  ng-click="addInternalUsers('provider_contract_responsible')">
+                                                        <span class="icon-plus-circle"></span>
+                                                    </button>
+                                                </span>
+                                            </div>  
+                                             <div class="col-sm-12 p0"
+                                                ng-show="showInnerDiv && (field == 'internal_contract_responsible' || field == 'provider_contract_responsible')">
+                                                <div class="innerDiv-cls" ng-if="field=='internal_contract_responsible'">
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="business_unit">{{'reports.bu_unit'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen6" single allow-single-deselect="false"
+                                                            on-change="change();"
+                                                            ng-change="getUserList(contractParters.data.internal_contract_responsible.business_unit)"
+                                                            placeholder-text-single="'{{'normal.placeholder_search_business' | translate}}'"
+                                                            name="business_unit" ng-model="contractParters.data.internal_contract_responsible.business_unit"
+                                                            ng-options="item.id_business_unit as item.bu_name for item in businessUnitList">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'user.breadcrumb.internal_user'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen7" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="internal_contract_responsible" ng-model="contractParters.data.internal_contract_responsible.user"
+                                                            ng-options="item as item.name for item in usersList">
+                                                        </select>
+                                                    </div>
+                                                    <div style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalSponser(contractParters.data.internal_contract_responsible,'internal_contract_responsible',3)"><i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                                <div class="innerDiv-cls" ng-if="field=='provider_contract_responsible'">
+                                                    <div class="form-group col-sm-6 pl-0">
+                                                        <label class="col-sm-12 clearfix p0" >{{'contract.provider'|translate}}</label>
+                                                        <select class="form-control" ng-disabled="true" style="height: 24px;padding: 0;">
+                                                            <option value="">{{provider.provider_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6 clearfix col-sm-6">
+                                                        <label for="internal-user">{{'contract.relation_users'|translate}}</label>
+                                                        <select chosen class="form-control chosen-choices"
+                                                            id="add-chosen3" single allow-single-deselect="true"
+                                                            placeholder-text-single="'{{'normal.placeholder_user_name' | translate}}'"
+                                                            name="provider_contract_responsible" ng-model="contractParters.data.provider_contract_responsible.user"
+                                                            ng-options="item as item.name for item in providerUsersList">
+                                                        </select>
+                                                    </div>                            
+                                                    <div class="clearfix" style="text-align: center;">
+                                                        <button type="button" class="btn btn-success"
+                                                            ng-click="addInternalProvider(contractParters.data.provider_contract_responsible,'provider_contract_responsible',6)">
+                                                            <i class="fa fa-dot-circle-o"></i>&nbsp;{{'general.ok' | translate}}</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="removeAfterIcon();"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                                        <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                            <i class="fa fa-ban"></i>&nbsp; {{'general.cancel' | translate}}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </uib-tab>
+                       
+                    </uib-tabset>
+                    <!-- tabs 1 end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+
+
+<style>
+    .chosen-container{
+        width:100% !important;
+    }
+    .contract-list-popup .modal-dialog{
+        max-width: 960px !important;
+    }
+    .custom-row{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .modal-closer-contract{
+        position: absolute;
+        right: 3px;
+        top: 8px;
+        cursor: pointer;
+    }
+    .info-tabs-div .tab-content .tab-pane {
+        background-color: #fff;
+    }
+    .card-space{
+        padding: 0 !important;
+    }
+    .p015{
+        padding: 0 15px;
+    }
+    .modal-body {
+        padding: 5px;
+    }
+    .icon-arrow-down-circle{
+        vertical-align: middle;
+    }
+    .icon-trash{
+        font-size: 20px;
+        position: relative;
+        top:3px;
+    }
+    .nav-tabs .nav-item .nav-link {
+       background: #f9f9f9 !important;
+    }
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        background: #ffff !important;
+        border-bottom: 1px solid #fff !important;
+    }
+    .attach-lock.tss-lock:before, .attach-lock.tss-unlock:before  {
+    position: relative;
+    top: 3px;
+    }
+    .chosen-container .chosen-results li.active-result,
+    .chosen-container .chosen-results li.result-selected {
+        border-bottom: 0 !important;
+        padding: 5px;
+    }
+    .chosen-container-multi .chosen-choices li.search-field input[type=text] {
+        width: unset !important;
+    }
+
+</style>

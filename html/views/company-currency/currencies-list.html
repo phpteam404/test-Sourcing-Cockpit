@@ -1,0 +1,318 @@
+<div class="row">
+    <div class="card">
+        <div class="card-block card-space currency-main-list">
+            <div class="form-group col-sm-12 p-0">
+                <div class="form-group col-sm-5 pl-0 pr-3">
+                    <label> {{'currency.main_curr'| translate}}* </label> 
+                    <div class="input-group clearfix form-group-custom">
+                     <select chosen class="form-control chosen-choices"
+                         id="add-chosen1" onchange="chosen1()"
+                        ng-disabled="disablefields"   placeholder-text-single="'{{'normal.placeholder_currency_code' | translate}}'"
+                         allow-single-deselect="true"  ng-change="currencyChange(mainCurrency.currency_name)"
+                          name="currency_full_name" ng-model="mainCurrency.currency_name" 
+                          ng-options="item.currency_name as item.currency_full_name for item in currenciesList"
+                          required>
+                             <option value=""></option>
+                 </select>
+                    </div>
+                </div>
+               
+                <div class="form-group col-sm-2">
+                    <label>  {{'currency.currency_code'| translate}} </label>
+                        <input type="text" class="form-control" name="currency_name" ng-model="mainCurrency.currency_name" ng-disabled="true">
+                    
+                </div>
+               
+    
+    
+                <div class="" st-pipe="getCurrencyList" st-table="currencyInfo">
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="col-sm-12 clearfix p0">
+                                       
+                                        <div class="col-sm-12 clearfix p0">
+                                            <div class="action-head clearfix mb0">
+                                                <!-- <div class="onlyactive1 pull-right ">
+                                                    <span class="mrg-space">Active only</span>
+                                                    <div class="onoffswitch" style="margin-left: 3px;">
+                                                        <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                                ng-true-value="1" ng-false-value="0"
+                                                                ng-model="can_access"
+                                                                ng-checked="can_access == 1"
+                                                                ng-change="getContractsByAccess(can_access)"
+                                                                id="status">
+                                                        <label class="onoffswitch-label assessment-switch mb-0"
+                                                                for="status">
+                                                            <span class="onoffswitch-inner mt0"></span>
+                                                            <span class="onoffswitch-switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div> -->
+                                                <div class="pull-right" style="padding-left:5px !important;">
+                                                    <a href="javascript:;" ng-click="AddCurrencyForm()">
+                                                        <button type="button" class="btn btn-sm btn-primary  btn-radius ng-scope">
+                                                        <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}    
+                                                    </button>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-4 p0 table-search pull-right">
+                                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event="change">
+                                                    <i class="fa icon-search"></i>
+                                                </div>
+                                                <div class="col-sm-4 p0 table-search pull-left">
+                                                    <strong>{{'currency.additional_currencies' | translate}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="currency-fullname" st-sort="currency_full_name">{{'currency.currency_name' | translate}}</th>
+                                <th class="currency-name" st-sort="currency_name" >{{'currency.Code' | translate}}</th>
+                                <th class="currency-euro" st-sort="euro_equivalent_value">{{'currency.exchange_rate' | translate}}</th>
+                                <th class="currency-rate">{{'currency.conversion'| translate}}</th>
+                                <th  class="currency-status" st-sort="status">{{'currency.status' | translate}}</th>
+                                <th class="currency-actions">{{'general.actions' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!currencyLoading">
+                            <tr ng-repeat="row in currencyInfo">
+                                <td class="currency-fullname custom-ellipsis">
+                                    <span class="ellipsis-block">{{row.currency_full_name |checkEmpty}}</span>
+                                </td>
+                                <td class="currency-name custom-ellipsis">
+                                    <span class="ellipsis-block">{{row.currency_name |checkEmpty}}</span>
+                                </td>
+                                <td class="currency-euro custom-ellipsis">
+                                    <span class="ellipsis-block">{{row.euro_equivalent_value |checkEmpty}}</span>
+                                </td>
+                                <td class="currency-rate custom-ellipsis">
+                                    <span class="ellipsis-block">1 {{row.currency_name |checkEmpty}} = {{row.euro_equivalent_value |checkEmpty}} {{mainCurrency.currency_name |checkEmpty}}</span>
+                                </td>
+                                <td class="currency-status">
+                                    <span ng-if="row.status == 1" class="green">{{'general.active' | translate}}</span>
+                                    <span ng-if="row.status == 0" class="red">{{'general.inactive' | translate}}</span>
+                                </td>
+                                <td class="currency-actions">
+                                    <span style="padding-right: 5px;width:15px; display:inline-block;" ng-click="AddCurrencyForm(row)" title="{{'general.edit' | translate}}">
+                                    <i class="fa fa-pencil pointer"></i>
+                            </span>
+                                </td>
+    
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="currencyLoading">
+                            <tr>
+                                <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="emptyCurrencyTable">
+                            <tr>
+                                <td colspan="8" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td class="text-center" colspan="8" >
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="currencyCount>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPagesCurrency(displayCount)"
+                                             ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group col-sm-3 p-0"></div>
+        </div>
+    </div>
+    </div>
+    <script type="text/ng-template" id="currencyform.html">
+        <div class="modal-header">
+            <h6 class="modal-title" id="modal-title"> {{title |translate}} {{'tags.add_currency' | translate}}
+                <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+            </h6>
+        </div>
+        <div class="modal-body clearfix">
+            <div class="card-block p-0">
+                <form novalidate name="currencyform" style="padding: 0px;" ng-submit="currencyform.$valid && addCurrency(currency)">
+                    <div class="form-group col-sm-12 p-0">
+                        <div class="form-group col-sm-10 currency-choices">
+                            <label ng-if="!isEdit"> {{'currency.avail_curr'| translate}}* </label>
+                            <label ng-if="isEdit"> {{'currency.selected_currency'|translate}} * </label>
+                           
+                          
+                            <select chosen class="form-control chosen-choices"
+                            id="add-chosen"
+                            onchange="chosen()"
+                            ng-disabled="isEdit" 
+                            allow-single-deselect="true"
+                            placeholder-text-single="'{{'normal.placeholder_currency_code' | translate}}'"
+                            ng-change="currencyChanges(currency.currency_full_name)"
+                            name="currency_full_name" ng-model="currency.currency_full_name" 
+                            ng-options="item.currency_full_name as item.currency_full_name for item in avaiableCurrency"
+                            required>
+                            <option value=""></option>
+                        </select>
+                        <span class="error-message" ng-if="currencyform.currency_full_name.$error.required && currencyform.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+    
+                        <div class="form-group col-sm-2 pl-0 currency-code">
+                            <label>  {{'currency.currency_code'| translate}} </label>
+                            <!-- <div class="input-group clearfix form-group-custom currency-code">
+                                <input name="currency_name" ng-model="currency.currency_code" ng-disabled="disablefieldCurrency">
+                            </div> -->
+                            <input type="text" class="form-control" name="currency_name" ng-model="currency.currency_code" ng-disabled="true">
+                                
+                            
+                        </div>
+                        <div class="form-group col-sm-12 exchange-rate-value">
+                            <label>{{'currency.exchange_rate' | translate}} * </label>
+                            <input type="text" class="form-control" name="exchange_rate" ng-model="currency.exchange_rate" numeric-Comma required>
+                            <span class="error-message" ng-if="currencyform.exchange_rate.$error.required && currencyform.$submitted">{{'general.required_field' |translate}}</span>
+
+                        </div>
+    
+                        <div class="form-group col-sm-12 exchange-rate-value">
+                            <label>{{'currency.status' | translate}} </label>
+                            <select class="form-control" name="status" ng-model="currency.status">
+                                    <option value="">- {{'general.select' |translate}} -</option>
+                                    <option value="1">{{'currency.active' | translate}}</option>
+                                    <option value="0">{{'currency.inactive' | translate}}</option>
+                                </select>
+                        </div>
+    
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-sm-12 text-center m-t-3">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                        <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+    </script>
+    <script>
+        function chosen() {
+            $("#add-chosen").trigger("chosen:updated");
+        }
+    </script>
+      <script>
+        function chosen1() {
+            $("#add-chosen1").trigger("chosen1:updated");
+        }
+    </script>
+    <style>
+        .card-space.currency-main-list {
+            padding-top: 20px !important;
+        }
+        
+        .currency-code input {
+            height: 35px;
+            text-align: center;
+            width: 74px;
+        }
+        .main_currency_code input{
+            height: 36px;
+            text-align: center;
+            width: 74px;
+        }
+        
+        .currency-search {
+    width: calc(100% - 965px);
+}
+        
+        .exchange-rate-value .form-control {
+            width: 19%;
+        }
+        .currency-currency_full_name{
+            width:25%;
+        }
+        .currency-fullname{
+            width:30%;
+        }
+        .currency-name{
+            width:16%;
+        }
+        .currency-euro{
+            width:16%;
+        }
+        .currency-rate{
+            width:21%;
+        }
+        .currency-status{
+            width:10%;
+        }
+        .currency-actions{
+            width:7%;
+        }
+        .onlyactive1 .onoffswitch-inner:before, .onlyactive1 .onoffswitch-inner::after {
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+    }
+    .onlyactive1 .onoffswitch-switch {
+        width: 14px;
+        height: 12px;
+        margin-top: 4px;
+    }
+    .onlyactive1 {
+        margin-top: -11px;
+        margin-left: 20px;
+    }
+    .onlyactive1 .mrg-space{
+        padding-right: 0px !important;
+    }
+    .onoffswitch-inner{
+        margin-top: 0px !important;
+    }
+
+
+
+    .currency-main-list .chosen-container-single .chosen-single{
+        height: 34px;
+        line-height: 31px;
+    }
+    .currency-main-list .chosen-container-single.chosen-disabled .chosen-single {
+        background: #cfd8dc;
+}
+    .currency-main-list .chosen-container-single .chosen-single div {
+        top: 5px;
+    }
+    .currency-choices .chosen-container-single .chosen-single{
+        height: 34px;
+        line-height: 31px;  
+    }
+    .currency-choices .chosen-container-single .chosen-single div {
+        top: 5px;
+    }
+    .currency-choices .chosen-container-singlechosen-disabled .chosen-single{
+        background: #cfd8dc;
+    }
+    .chosen-container-single .chosen-single abbr {
+    top: 12px !important;
+}
+.chosen-container.chosen-container-single.chosen-disabled{
+    width:100% !important;
+}
+    /* .currency-code input {
+    height: 35px;
+} */
+/* .currency-search {
+    width: calc(100% - 965px);
+} */
+    </style>
+    
+

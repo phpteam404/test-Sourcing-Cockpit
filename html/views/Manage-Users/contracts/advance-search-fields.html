@@ -1,0 +1,118 @@
+    <div class="modal-header">
+        <h6 class="modal-title">
+            {{'events.advance_search' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="form" ng-submit="getSearchRecords(searchFields)">
+        <div class="form-group col-sm-12">
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="automatic_prolongation"> 
+                        <input type="checkbox" name="inline-checkbox1" id="automatic_prolongation" ng-model="searchFields.automatic_prolongation"
+                                ng-true-value="1" ng-false-value="0">{{'contract.automatic_prolongation' | translate}} <span class="gray f11">(Yes/No)</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="bu_name"> 
+                        <input type="checkbox" name="inline-checkbox1" id="bu_name" ng-model="searchFields.bu_name"
+                                ng-true-value="1" ng-false-value="0">{{'bussiness.bussiness_unit' | translate}}
+                    </label>
+                </div>
+            </div>  
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="relationship_category_name" > 
+                        <input type="checkbox" name="inline-checkbox1" id="relationship_category_name" ng-model="searchFields.relationship_category_name"
+                                ng-true-value="1" ng-false-value="0">{{'contract.category' | translate}}
+                    </label>
+                </div>
+            </div>          
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="contract_name" > 
+                        <input type="checkbox" name="inline-checkbox1" id="contract_name" ng-model="searchFields.contract_name"
+                             ng-true-value="1" ng-false-value="0">{{'contract.contract_name' | translate}}
+                    </label>
+                </div>                
+            </div>           
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="owner"> 
+                        <input type="checkbox" name="inline-checkbox1" id="owner" ng-model="searchFields.owner"
+                             ng-true-value="1" ng-false-value="0">{{'contract.responsible' | translate}}
+                    </label>
+                </div>                
+            </div>
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="delegate_name"> 
+                        <input type="checkbox" name="inline-checkbox1" id="delegate_name" ng-model="searchFields.delegate"
+                             ng-true-value="1" ng-false-value="0">{{'contract.delegates' | translate}}
+                    </label>
+                </div>                
+            </div>
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="classification_name"> 
+                        <input type="checkbox" name="inline-checkbox1" id="classification_name" ng-model="searchFields.classification"
+                             ng-true-value="1" ng-false-value="0">{{'contract.classification' | translate}}
+                    </label>
+                </div>                
+            </div>                        
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="contract_value"> 
+                        <input type="checkbox" name="inline-checkbox1" id="contract_value" ng-model="searchFields.contract_value"
+                             ng-true-value="1" ng-false-value="0">{{'contract.annual_contract_value' | translate}}
+                    </label>
+                </div>                
+            </div>            
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="description"> 
+                        <input type="checkbox" name="inline-checkbox1" id="description" ng-model="searchFields.description"
+                             ng-true-value="1" ng-false-value="0">{{'contract.contract_desc' | translate}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-sm-6 pt-h">
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="provider_name_search"> 
+                        <input type="checkbox" name="inline-checkbox1" id="provider_name_search" ng-model="searchFields.provider_name_search"
+                                ng-true-value="1" ng-false-value="0">{{'contract.provider' | translate}}
+                    </label>
+                </div>                
+            </div>
+            <div class="form-group col-sm-6 pt-h">                
+                <div class="input-group clearfix form-group-custom">
+                    <label class="checkbox" for="tag_option_value"> 
+                        <input type="checkbox" name="inline-checkbox1" id="tag_option_value" ng-model="searchFields.tag_option_value"
+                             ng-true-value="1" ng-false-value="0">{{'tags.tags' | translate}} <span class="gray">(On Option Value)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <span><b>{{'events.note' | translate}} : </b>{{'events.selecte_filed_Advanced' | translate}}</span>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success">
+                <i class="fa fa-dot-circle-o"></i> {{'general.ok' | translate}}</button>            
+        </div>
+    </form> 
+
+<style>
+.adv-search-model .modal-dialog {
+    max-width:450px;
+}
+.adv-search-model .form-group{
+    margin-bottom: 0.5rem;
+}
+.adv-search-model .form-group label{
+    margin-bottom: 0
+}
+</style>
+    

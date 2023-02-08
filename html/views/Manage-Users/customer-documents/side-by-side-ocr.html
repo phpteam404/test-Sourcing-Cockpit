@@ -1,0 +1,509 @@
+<!-- <button class="back-btn-icon" ng-click="closeDocument()"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button> -->
+<div class="row">
+    <div class="col-sm-6 p-0 document-pdf">
+        <iframe height="100%" width="100%" src="{{fileAccessurl}}" style="border: none;"></iframe>
+    </div>
+
+    <div class="col-sm-6 pr-0">
+        <form class="form-horizontal scp-pdf-right-block profile-form" name="form" novalidate ng-submit="form.$valid">
+            <div class="row scp-pdf-div m-0">
+                <div class="col-sm-6">
+                    <p class="m-0">{{'documents.validation_completion' | translate}} {{validatePercentage}} ({{validatationInfo}})
+                    </p>
+                </div>
+                <div class="col-sm-6 p-0">
+                    <div class="col-sm-5 scp-pdf-statues p-0">
+                        <div class="form-group table-search m-0">
+                            <select class="form-control" id="select1" name="select2" size="1" ng-model="search.status">
+                                <option value="" class="font-italic">-{{'contract.status' |translate}}-</option>
+                                <option value="V">{{'contract.validate' |translate}}</option>
+                                <option value="A">{{'documents.approved' |translate}}</option>
+                                <option value="E">{{'documents.edited' |translate}}</option>
+                                <option value="R">{{'documents.reject' |translate}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-7 p-0">
+                        <div class="form-group table-search m-0">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                id="search_key" ng-model="search.key">
+                            <i class="fa icon-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scp-pdf-right-block-content">
+                
+            <div class="row m-0" ng-repeat="validate in validateResult | ocrFilter:search track by $index">
+                <div class="col-md-12" >
+                    <label class="bold pt-1" >{{validate.field_name}}</label>
+                    <span>
+                        <a  href="javascript:;" class="icon-plus-circle gray plusIcon-more"
+                        uib-popover-template="dynamicPopover.templateUrl"
+                        popover-placement="right" popover-trigger="'outsideClick'"
+                       class="btn btn-default"></a>
+                    </span>
+                   
+                </div>
+                <div class="row m-0" ng-repeat="option in validate.options track by $index">
+                    <div class="form-group col-sm-9 scp-pdf-validation-input pr-8">
+                        <small class="form-text text-muted">Option {{$index+1}}</small>
+                            <textarea class="form-control" ng-disabled="documentSubmit" ng-change="setOptionStatus(validate,$index,'E')" ng-model="validate.options[$index]" row="2"></textarea>
+                    </div>
+                    <div class="form-group col-sm-3 validate p-0">
+                        <div class="scp-pdf-validation">
+                            <span class="validation-percentage" ng-if="validate.percentage>0">{{validate.percentage[$index]}}%</span>
+                            <span class="validation-percentage" ng-if="validate.percentage=='null'||validate.percentage=='undefined' || validate.percentage==''|| validate.percentage==0">---</span>
+
+
+
+                            <!-- <button type="button" class="btn btn-danger"
+                                ng-if="validate.status[$index]=='R'">{{'documents.reject'|translate}}</button> -->
+
+                            <button class="btn btn-success" ng-disabled="documentSubmit"
+                                ng-if="validate.status[$index]=='A'">{{'documents.approved'|translate}}</button>
+                            <button class="btn btn-danger" ng-disabled="documentSubmit"
+                                ng-if="validate.status[$index]=='R'">{{'documents.reject'|translate}}</button>
+                            <button class="btn btn-warning" ng-if="validate.status[$index]=='E'" ng-disabled="documentSubmit">{{'documents.edited'
+                                |translate}}</button>
+                            <button ng-click="setOptionStatus(validate,$index,'A')" class="btn btn-primary" ng-disabled="documentSubmit"
+                                ng-if="validate.status[$index]=='V'">{{'contract.validate' |translate}}</button>
+
+                            <button type="button" ng-if="validate.status[$index]=='A'" ng-disabled="documentSubmit"
+                                class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" ng-if="validate.status[$index]=='R'" ng-disabled="documentSubmit"
+                                class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" ng-if="validate.status[$index]=='V'" ng-disabled="documentSubmit"
+                                class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" ng-if="validate.status[$index]=='E'" ng-disabled="documentSubmit"
+                                class="btn btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                            </button>
+
+                            <ul class="dropdown-menu" ng-model="validate.status[$index]" name="validate_status">
+                                <!-- <li class="dropdown-item" value="V" class ="btn-primary" style="background-color: rgb(45, 27, 148);">
+                                    {{'documents.validate'|translate}}</li> -->
+                                <!-- <li class="dropdown-item" ng-click='' value="E" class="btn-warning"
+                                    style="background-color: rgb(195, 183, 16);">
+                                    {{'documents.edited'|translate}}</li> -->
+                                <li class="dropdown-item"
+                                    ng-if="(validate.status[$index]=='R' || validate.status[$index]=='V')"
+                                    ng-click="setOptionStatus(validate,$index,'A')" class="btn-success pointer"
+                                    style="background-color: #55bf0d;">
+                                    {{'documents.approved'|translate}}</li>
+                                <li class="dropdown-item" ng-if="validate.status[$index]!=='R'"
+                                    ng-click="setOptionStatus(validate,$index,'R')" class="btn-danger pointer"
+                                    style="background-color: #ff0c0c;">
+                                    {{'documents.reject'|translate}}</li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group col-sm-12 mt-1 scp-pdf-group-buttons">
+                <button type="submit" class="btn btn-sm btn-defualt text-center form-submit-btn"
+                    ng-if="!submitValidation">
+                    {{'contract.module_questions.validation' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-success text-center form-submit-btn"
+                    ng-if="submitValidation && validateStatus!='C'" ng-click="submitDocument(validateResult)">
+                    {{'contract.module_questions.validation' | translate}}</button>
+                <button class="btn btn-sm btn-primary" ng-if="validateStatus!='C'" ng-click="saveDocument(validateResult)">
+                    <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+                <button type="button" ng-click="closeDocument()" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+
+            </div>
+        </div>
+
+        </form>
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <div class="">
+        <span ng-click="goToSpecifiedPage(10)">Page 1</span>
+    </div>
+</script>
+<style>
+    .validate {
+        margin-top: 20px;
+        width: 165px;
+        margin-bottom: 5px;
+    }
+
+    .scp-pdf-right-block-content{
+          max-height: calc(100vh - 197px);
+          overflow-y: auto;
+    }
+
+    .scp-pdf-right-block {
+        background-color: #fff;
+        border: 1px solid #cfd8dc;
+    }
+  
+    .scp-pdf-right-block .scp-pdf-statues {
+        padding-right: 8px !important;
+    }
+    .scp-pdf-right-block .pt-1{
+        padding-top: 0.7rem !important;
+    }
+    .scp-pdf-right-block .scp-pdf-div {
+        background: #d0d0d0;
+        display: flex;
+        align-items: center;
+        padding: 3px;
+    }
+
+    .scp-pdf-validation {
+        display: flex;
+    }
+    .scp-pdf-right-block label{
+        margin-bottom: 0.1rem;
+    }
+    .scp-pdf-right-block-content .form-control{
+        min-height: 35px;
+        height: auto;
+    }
+    .scp-pdf-right-block-content .form-control::-webkit-scrollbar {
+    width: 5px;
+    }
+    .scp-pdf-right-block-content .form-control::-webkit-scrollbar-track {
+        background-color: #f1f1f1d9;
+    }
+    .scp-pdf-right-block-content .form-control::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+    }
+
+
+    .btn-success:active,
+    .btn-success:focus,
+    .btn:focus{
+        outline: none !important;
+    }
+    .scp-pdf-validation .validation-percentage {
+        align-items: center;
+        display: flex;
+        padding-right: 5px;
+        width: 42px;
+        min-width: 42px;
+        justify-content: center;
+    }
+
+    .scp-pdf-validation-input {
+        width: calc(100% - 178px);
+        margin-bottom: 5px;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-success {
+        background-color: #385723;
+        border-color: #385723;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-success,
+    .scp-pdf-conditons-approved {
+        background-color: #70ad47;
+        border-color: #70ad47;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-primary {
+        background-color: #002060;
+        border-color: #002060;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-primary {
+        background-color: #4472c4;
+        border-color: #4472c4;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-danger {
+        background-color: #c00000;
+        border-color: #c00000;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-danger,
+    .scp-pdf-conditons-rejected {
+        background-color: #ff0000;
+        border-color: #ff0000;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-warning {
+        background-color: #c55a11;
+        border-color: #c55a11;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-warning {
+        background-color: #ffc000;
+        border-color: #ffc000;
+        color: #fff;
+    }
+
+    .scp-pdf-group-buttons {
+        text-align: right;
+    }
+
+    .scp-pdf-group-buttons .btn-defualt {
+        background-color: #d0d0d0;
+        border-color: #d0d0d0;
+        color: #fff;
+        margin-right: 90px;
+    }
+
+    .scp-pdf-conditons-approved,
+    .scp-pdf-conditons-rejected {
+        padding: 7px;
+    }
+
+    /* .scp-pdf-right-block .showMenu.showDivMenu{
+            width: 59%;
+            margin: 0 auto;
+        } */
+    .scp-pdf-starting-date,
+    .scp-pdf-starting-date .scp-pdf-validation-input input {
+        background-color: #efefef;
+    }
+
+    .document-pdf {
+        height: calc(100vh - 162px);
+    }
+    footer.footer{
+        position: absolute;
+    }
+    /* .validate {
+        margin-top: 18px;
+    } */
+
+    .scp-pdf-right-block {
+        background-color: #fff;
+        border: 1px solid #cfd8dc;
+    }
+
+    .scp-pdf-right-block .scp-pdf-statues {
+        padding-right: 8px !important;
+    }
+
+    .scp-pdf-right-block .scp-pdf-div {
+        background: #d0d0d0;
+        display: flex;
+        align-items: center;
+        padding: 3px;
+    }
+
+    .scp-pdf-validation {
+        display: flex;
+    }
+
+    /* .scp-pdf-validation .validation-percentage {
+        align-items: center;
+        display: flex;
+        padding-right: 5px;
+    } */
+
+    /* .scp-pdf-validation-input {
+            width: 73%;
+        } */
+    .scp-pdf-validation .btn-sm.btn-success {
+        background-color: #385723;
+        border-color: #385723;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-success,
+    .scp-pdf-conditons-approved,
+    .scp-pdf-validation .btn-success:active {
+        background-color: #70ad47;
+        border-color: #70ad47;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-primary {
+        background-color: #002060;
+        border-color: #002060;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-primary,
+    .scp-pdf-validation .btn-primary:active {
+        background-color: #4472c4;
+        border-color: #4472c4;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn-danger {
+        background-color: #c00000;
+        border-color: #c00000;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-danger,
+    .scp-pdf-conditons-rejected,
+    .scp-pdf-validation .btn-danger:active {
+        background-color: #ff0000;
+        border-color: #ff0000;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-sm.btn {
+        width: inherit;
+    }
+
+    .scp-pdf-validation .btn {
+        width: 90px;
+        min-width: 90px;
+        padding: 0.5rem;
+        text-align: left;
+    }
+    .scp-pdf-validation .btn.dropdown-toggle-split{
+     width: 30px;
+     min-width: 30px;
+     padding: 0;
+     text-align: center;
+}
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-danger,
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-danger.active  {
+ background-color: #c10302;
+ border: none;
+    outline: none;
+}
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-warning,
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-warning.active  {
+    background-color: #d75300; 
+    border: none;
+    outline: none;
+}
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-success,
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-success.active  {
+    background-color: #2b5c25;
+    border: none;
+    outline: none;
+}
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-primary,
+.scp-pdf-validation .btn.dropdown-toggle-split.btn-primary.active {
+    background-color: #00215e;  
+    border: none;
+    outline: none;
+}
+.scp-pdf-validation .btn-warning:focus,
+.scp-pdf-validation .btn-success:focus,
+.scp-pdf-validation .btn-primary:focus,
+.scp-pdf-validation .btn-danger:focus{
+    outline: none;
+}
+    .scp-pdf-validation .btn-sm.btn-warning {
+        background-color: #c55a11;
+        border-color: #c55a11;
+        color: #fff;
+    }
+
+    .scp-pdf-validation .btn-warning,
+    .scp-pdf-validation .btn-warning:active {
+        background-color: #ffc000;
+        border-color: #ffc000;
+        color: #fff;
+    }
+
+    .scp-pdf-group-buttons {
+        text-align: right;
+    }
+
+    .scp-pdf-group-buttons .btn-defualt {
+        background-color: #d0d0d0;
+        border-color: #d0d0d0;
+        color: #000;
+        margin-right: 90px;
+    }
+
+    .scp-pdf-conditons-approved,
+    .scp-pdf-conditons-rejected {
+        padding: 7px;
+        width: 97px;
+        margin-left: 32px;
+        text-align: center;
+    }
+
+    .scp-pdf-starting-date,
+    .scp-pdf-starting-date .scp-pdf-validation-input input {
+        background-color: #efefef;
+    }
+
+    /* .document-pdf {
+        height: calc(100vh + 50px);
+    } */
+
+    /* .form-submit-btn {
+        margin-right: 120px;
+    } */
+
+    .dropdown-item {
+        font-size: 13px;
+        padding: 5px 0.5rem;
+        /* text-align: center; */
+        color: #fff !important;
+
+    }
+
+    .dropdown-toggle:after {
+        content: none
+    }
+
+
+    .open>.dropdown-menu {
+        display: block;
+        width: 91px;
+        min-width: 91px;
+        left: 42px;
+        top: 33px;
+        border: none;
+    }
+    .open>.dropdown-menu li{
+        cursor: pointer;
+    }
+    .pr-8{
+        padding-right: 8px !important;
+    }
+    .back-btn-icon{
+        position: absolute;
+    right: 15px;
+    top: 60px;
+    font-size: 30px;
+    color: #db4429;
+    padding: 0;
+    line-height: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    }
+    .back-btn-icon:focus{
+        outline: none;
+    }
+    .back-btn-icon:hover{
+        color: #d62606;
+    }
+    .form-submit-btn {
+        margin-right: -204px !important;
+        position: relative;
+        right: 50%;
+   }
+   
+   .plusIcon-more{
+      position: unset;
+   }
+</style>

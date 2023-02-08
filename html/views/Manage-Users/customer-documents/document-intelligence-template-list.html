@@ -1,0 +1,173 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+               
+                <div class="card" st-pipe="callServer" st-table="contractsList">
+                    <div class="col-sm-12 tableSelect-header">
+                        <div class="form-group col-sm-2 pl0 custom-field pt10 wid-105 r-padding">
+                            <select class="form-control" id="select"
+                                name="select1" size="1"
+                                ng-model="business_unit_id" 
+                                ng-class="(business_unit_id)?'active-filter':''"
+                                st-input-event="change" st-search="business_unit_id" 
+                                ng-change="getProviderList(business_unit_id);" 
+                                ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit">
+                                <option value="" class="font-italic">-{{'documents.field_type'| translate}}-</option>
+                            </select>
+                        </div>
+                 
+                        <span class="pull-right pr40">                         
+                                                    
+                                <button class="btn btn-sm btn-primary btn-radius"
+                                type="button" ng-click="documentIntelligenceQuestion()" title="{{'contract.create_contract' | translate}}">
+                                <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}
+                            </button>
+                        
+                        </span>
+                        <div class="col-sm-3 p0 table-search pull-right  p-r-3 wid-55 wid-95 w375" style="padding-top: 10px; padding-right: 4px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search" style="padding-top: 10px;"></i>
+                        </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover contact-view-table alternate-td-bg-color">
+                        <thead>
+                            <tr>    
+                                <th st-sort="provider_name" >{{'documents.field_name' | translate}}</th>
+                                <th st-sort="contract_name" >{{'documents.field_type' | translate}}</th>
+                                <th st-sort="relationship_category_name" >{{'questions.questions' | translate}}</th>
+                                <th class="hand-symbol">{{'general.actions'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="contractsList.length>0">
+                            <tr ng-repeat="row in contractsList" >
+                                <td class="category-name">
+                                    <span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name | checkEmpty}}</span>
+                                </td>
+                                <td class="start-date">
+                                    <span>{{row.contract_start_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                </td>
+                                <td  class="end-date">
+                                    <span>{{row.contract_end_date | utcToLocal: 'date'  | checkEmpty}}</span>
+                                </td>
+                                <td>
+                                    <span ng-if="user.access !='ro'">
+                                        <span ng-click="deleteContract(row)" class="pointer" ng-if="row.can_access=='1'">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                        <span  class="hand-symbol" ng-if="row.can_access=='0'">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                    </span>
+                                  
+                                </td>
+                            </tr>
+                           
+                        </tbody>
+                        <tbody ng-show="isLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="emptyTable">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <!-- <div st-pagination="" st-items-by-page="displayCount" st-template="pagination.html" class="text-sm-center"></div> -->
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="pagination.html">
+<div class="pagination" ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+        </li>
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+        </li>
+    </ul>
+</div>
+</script>
+<script type="text/ng-template" id="templateQuestionForm.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{'documents.document_intelligence_question' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <div class="card-block p-0">
+            <form novalidate name="templateform" style="padding: 0px;" ng-submit="templateQuestionform.$valid && addTemplateQuestion(templateQuestion)">
+                <div class="form-group col-sm-12 p-0">
+
+                    <div class="form-group col-sm-12">
+                        <label>{{'documents.field_name' | translate}} * </label>
+                        <input type="text" class="form-control" name="template_question_name" ng-model="templateQuestion.field_name"  required>
+                        <span class="error-message" ng-if="templateQuestionform.template_question_name.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>{{'documents.field_type' | translate}}* </label>
+                        <select class="form-control" name="field_type" ng-model="templateQuestion.field_type" required>
+                                <option value="">- {{'general.select' |translate}} -</option>
+                                <option value="1">{{'currency.active' | translate}}</option>
+                                <option value="0">{{'currency.inactive' | translate}}</option>
+                            </select>
+                        <span class="error-message" ng-if="templateQuestionform.field_type.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+
+                    </div>
+                    <div class="clearfix"> </div>
+                    <div class="form-group col-sm-12">
+                        <label>{{'questions.question' | translate}} </label>
+                        <textarea type="text" class="form-control" name="question_name" ng-model="templateQuestion.question"  required></textarea>
+                        <span class="error-message" ng-if="templateQuestionform.question_name.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+                  
+
+                <div class="modal-footer form-group col-sm-12 text-right m-t-3">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</script>
+
+
+<style>
+ 
+   
+
+   
+</style>

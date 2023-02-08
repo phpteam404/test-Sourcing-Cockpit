@@ -1,0 +1,133 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                <div class="card" st-pipe="getContractBuilderList" st-table="builderData">
+                    <div class="col-sm-12 tableSelect-header">
+                        <div class="col-sm-3 p0 table-search pull-right  p-r-3 wid-55 wid-95 w200" style="padding-top: 10px; padding-right: 4px; margin-right: 66px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search" style="padding-top: 10px;"></i>
+                        </div>
+                    </div>
+                    
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>    
+                                <th st-sort="name" class="builder_template" >{{'normal.templt_name' | translate}}</th>
+                                <th st-sort="language" class="builder_language" >{{'customer.language' | translate}}</th>
+                                <th st-sort="availableForAll" class="builder_available">{{'documents.available' | translate}}</th>
+                                <th class="builder_customer">{{'documents.select_customers'|translate}}</th>
+                                <th class="builder_status">{{'user.profile.status'|translate}}</th>
+                                <th class="builder_actions">{{'user.breadcrumb.actions'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!builderLoading">
+                            <tr ng-repeat="row in builderData">
+                                
+                                <td class="builder_template custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.name}}">{{row.name}}</span>
+                                </td>
+                                <td class="builder_language custom-ellipsis">
+                                    <span  class="ellipsis-block" title="{{row.language}}">{{row.language}}</span>
+                                </td>                               
+                                
+                                <td class="builder_available custom-ellipsis">
+                                    <span class="ellipsis-block">
+                                        <div class="onoffswitch" style="margin-left: 3px;">
+                                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"                                                    
+                                                    ng-true-value="1" ng-false-value="0"
+                                                    ng-checked="row.availableForAll==1" disabled>
+                                            <label class="onoffswitch-label assessment-switch mb-0"
+                                                    for="status">
+                                                <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </span>
+                                </td>
+                    
+                                <td class="builder_customer custom-ellipsis">
+
+                                        <span class="ellipsis-block" href="javascript:;" style="padding-left: 5px;" ng-if="!row.customers[0]">---</span>
+                                        
+                                        <span class="ellipsis-block" ng-if="!row.customers[1]" class="ellipsis-block">{{row.customers[0].name}}</span>
+                                        <a class="" ng-if="row.customers[1]">{{'general.multi_selected' | translate}}</a>
+                                        <a ng-if="row.customers[1]" href="javascript:;" style="padding: 0px 0px 5px;" uib-popover-template="dynamicPopover.templateUrl" class="icon-plus-circle gray ml-h" popover-placement="right" popover-trigger="'outsideClick'" class="btn btn-default"></a>
+                                </td>
+                                <td  class="builder_status custom-ellipsis" ng-if="row.status!=''">
+                                    <span class="ellipsis-block" title="{{row.status}}">{{row.status}}</span>
+                                </td>
+
+                                <td  class="builder_status custom-ellipsis" ng-if="row.status==''">
+                                    <span class="ellipsis-block" title="{{row.status}}">---</span>
+                                </td>
+                                <td class="builder_actions custom-ellipsis">
+                                    <span class="ellipsis-block">
+                                    <a href="javascript:;" ng-click="previewTemplate(row)" class="icon-eye gray mr-1" title="{{'general.preview' | translate}}"></a>
+                                </span>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                        <tbody ng-show="builderLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="builderTable">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultBuilderPages(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tfoot> 
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="builderCustomersPopover.html">
+    <div class="" ng-repeat="item in row.customers">
+        <span>{{item.name}}</span>
+    </div>
+</script>
+
+
+<style>
+    .builder_template{
+        width: 25%;
+    }
+    .builder_language{
+        width: 10%;
+    }
+    .builder_available{
+        width: 20%;
+    }
+    .builder_customer{
+        width: 25%;
+    }
+    .builder_status{
+        width: 10%;
+    }
+    .builder_actions{
+        width: 10%;
+    }
+</style>

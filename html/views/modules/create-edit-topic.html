@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'topic.topic' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="topicForm" ng-submit="topicForm.$valid && save(topic)">
+    <div class="modal-body clearfix" id="modal-body">
+        <div class="col-md-12 form-group">
+            <label>{{'topic.topic_name' | translate}} *</label>
+            <input type="text" ng-model="topic.topic_name" class="form-control" name="topic_name" required/>
+            <span class="error-message" ng-if="topicForm.topic_name.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="col-md-12 form-group">
+            <label>{{'topic.topic_type' | translate}} *</label>
+            <select  ng-model="topic.topic_type" class="form-control" name="topic_type" required
+                     ng-options="item.key as item.value for item in topicTypes">
+                <option value=""> -- {{'general.select' | translate}} -- </option>
+            </select>
+            <span class="error-message" ng-if="topicForm.topic_type.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="form-group col-sm-4" ng-if="isEdit">
+            <label >{{'general.status' | translate}} *</label>
+            <select class="form-control"  ng-model="topic.topic_status" name="topic_status" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="1">{{'general.active' | translate}}</option>
+                <option value="0">{{'general.inactive' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="topicForm.topic_status.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary"
+        ><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</form>

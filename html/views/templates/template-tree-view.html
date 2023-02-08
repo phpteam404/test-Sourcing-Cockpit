@@ -1,0 +1,238 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div ng-if="!templateModules.length>0" class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+                {{'templates.no_modules' | translate}}
+            </div>
+            <div class="col-lg-12 pl0 large-widget">
+
+                <div ui-sortable="sortableOptions1" ng-model="templateModules" class="col-lg-12 p0 mb-h sortable-divs">
+                    <div ng-repeat="module in templateModules track by $index" ng-init="moduleIndx=$index;" class="panel-default mb-h">
+                        <div class="handle">                            
+                            <span class="display-block" ng-click="open(module)">
+                                <div class="myLabes">
+                                    <span class="Omodule">M</span>
+                                </div>
+                                <a href="javascript:;" data-id-parent="{{$index}}"  style="width: 90%;display: inline-block;">
+                                    {{module.module_name | capitalize}}
+                                </a>
+                                <div class="myLabels" ng-if="module.topic_count_notassigned>0" uib-tooltip="{{'templates.available_topics' | translate}}"
+                                    ng-click="loadTopicModal($event, module.id_template_module, moduleIndx,'view')">
+                                    <span class="Btopic pointer">{{module.topic_count_notassigned}}</span>
+                                </div>
+                                <span uib-dropdown on-toggle="toggled(open);" class="c-dropdown width-20 pull-right">
+                                    <a href uib-dropdown-toggle class="font-sm" ng-click="$event.stopPropagation();" style="padding: 0px 26px 0px 5px;">
+                                        <span class="fa fa-ellipsis-v gray"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right madule-dropdown" dropdown-append-to-body="true" 
+                                        uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                        <li  ng-click="loadTopicModal($event, module.id_template_module, moduleIndx,'add')">
+                                            <a href="javascript:;"> {{'topic.add_topic' | translate}}</a>
+                                        </li>
+                                        <li ng-click="deleteTemplateModule($event, module)" >
+                                            <a href="javascript:;" style="background-color:#f9dddd"><span class="icon-trash"></span> <span>{{'module.delete_module' | translate}}</span></a>
+                                        </li>
+                                    </ul>
+                                </span>
+                                <i class="glyphicon pull-right pointer" style="font-size: 17px;margin-left: 4px;margin-right: 30px;line-height: 22px;"
+                                ng-class="{'fa fa-angle-up gray': module.open, 'fa fa-angle-down gray': !module.open}"></i>
+                            </span>
+                            <div ng-if="module.topics.length<=0" ng-show="module.open">
+                                <p style="padding:5px 5px 5px 30px;margin: 0">{{'topic.add_topic_for_tree' | translate}}</p>
+                            </div>
+                            <div ui-sortable="sortableOptions2" ng-model="module.topics" ng-show="module.open" class="sort-inner">
+                                <div ng-repeat="topic in module.topics track by $index" class="main-topic"
+                                        ng-init="topicIndx=$index;"  data-id="{{topicIndx}}" data-array-id="{{moduleIndx}}">
+                                    <div class="topic" style="position:relative">
+                                        <span class="display-block" ng-click="open(topic)">
+                                            <div class="myLabes">
+                                                    <span class="Btopic">T</span>
+                                            </div>
+                                            <div class="myLabels" style="right:36px" ng-if="topic.question_count_notassigned>0" uib-tooltip="{{'templates.available_questions' | translate}}"
+                                                    ng-click="addQuestionModal($event, topic.id_template_module_topic, moduleIndx, topicIndx,'view')">
+                                                <span class="Gquestion pointer">{{topic.question_count_notassigned}}</span>
+                                            </div>
+                                            <a href="javascript:;"  style="width: 90%;display: inline-block;">{{topic.topic_name | capitalize}}</a>
+                                            <span uib-dropdown on-toggle="toggled(open);" class="c-dropdown width-20 pull-right">
+                                                <a href uib-dropdown-toggle class="font-sm" ng-click="$event.stopPropagation();" style="padding: 0px 20px 0px 5px;">
+                                                    <span class="fa fa-ellipsis-v gray"></span>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-right madule-dropdown" 
+                                                    dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                    <li ng-click="addQuestionModal($event, topic.id_template_module_topic, moduleIndx, topicIndx,'add')">
+                                                        <a href="javascript:;">{{'questions.add_question' | translate}}</a>
+                                                    </li>
+                                                    <li ng-click="deleteTemplateTopic($event, topic, moduleIndx)" >
+                                                        <a href="javascript:;" style="background-color:#f9dddd"><span class="icon-trash"></span> 
+                                                            <span>{{'topic.delete_topic' | translate}}</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                            <i class="glyphicon pull-right pointer" style="font-size: 17px;margin-left: 19px;margin-right: 30px;"
+                                            ng-class="{'fa fa-angle-up gray': topic.open, 'fa fa-angle-down gray': !topic.open}"></i>
+                                        </span>
+                                        <div ng-if="topic.questions.length<=0" ng-show="topic.open">
+                                            <p style="padding:5px 5px 5px 30px;margin: 0">{{'questions.add_question_for_tree' | translate}}</p>
+                                        </div>
+                                        <div ui-sortable="sortableOptions3" ng-model="topic.questions" ng-show="topic.open" class="topic-question">
+                                            <div ng-repeat="row in topic.questions track by $index" ng-class="{'relation-active':row.relation_question==1}" 
+                                            class="main-topic main-topic-q"                                                                   
+                                                data-parent-id="{{moduleIndx}}" data-array-id="{{topicIndx}}">
+                                                <div class="question" style="position:relative">
+                                                    <span class="display-block">
+                                                        <div class="myLabes">
+                                                            <span class="Gquestion">Q</span>
+                                                        </div>
+                                                        <a href="javascript:;"  style="width: 90%;display: inline-block;">{{row.question_text | capitalize}}</a>
+                                                        <span uib-dropdown on-toggle="toggled(open);" class="c-dropdown width-20 pull-right">
+                                                            <a href uib-dropdown-toggle class="font-sm" ng-click="$event.stopPropagation();" style="padding: 0px 15px">
+                                                                <span class="fa fa-ellipsis-v gray"></span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-right madule-dropdown" 
+                                                                dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">                                                                
+                                                                <li ng-click="deleteQuestion($event, row, moduleIndx, topicIndx, $index)" >
+                                                                    <a href="javascript:;" style="background-color:#f9dddd"><span class="icon-trash"></span> 
+                                                                        <span>{{'questions.delete_question' | translate}}</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </span>
+                                                    </span>
+                                                    <div ng-if="topic.questions.length<=0" ng-show="topic.open">
+                                                        <p style="padding:5px 5px 5px 30px;margin: 0">{{'questions.add_question_for_tree' | translate}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>                                         
+                        </div>
+                    </div> 
+                </div>
+                <div class="clearfix pb-1">
+                    <!-- <button class="pull-right btn btn-sm btn-primary " style="padding: 5px;"
+                            ng-click="addModuleModal(template_id)">{{'module.add_module' | translate}}</button> -->
+                    <button class="pull-right btn btn-sm btn-primary moduleLabel"
+                            ng-click="addModuleModal(template_id)">{{'module.add_module' | translate}}
+                        <span class="Omodule" tooltip-placement="top-right" uib-tooltip="{{'templates.available_modules' | translate}}" ng-if="unAssignedModules.availablemodule_count>0">{{unAssignedModules.availablemodule_count}} </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+    <script type="text/ng-template" id="templates-module-modal.html">
+        <div class="modal-header" >
+            <h6 class="modal-title">
+                <span ng-if="info">{{'general.add' | translate}} {{'module.module' | translate}}</span>
+                <span ng-if="!info">{{'templates.available' | translate}} {{'templates.modules' | translate}}</span>
+                <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+            </h6>
+        </div>
+        <form novalidate name="ModuleForm" ng-submit="addModules(modules)">
+            <div class="modal-body clearfix" ng-if="modulesListToAdd[0]">
+                <ul>
+                    <li ng-repeat="module in modulesListToAdd track by $index">
+                        <label class="checkbox" for="{{$index}}">
+                            <input type="checkbox" id="{{$index}}" name="inline-checkbox1" ng-if="info"
+                                ng-model="modules[module.id_module]" ng-true-value="1"
+                                ng-false-value="0">
+                                <span  ng-if="!info">{{$index+1}}. </span>{{module.module_name}}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="!modulesListToAdd[0]">
+                <span class="text-sm-center text-center" style="padding-left: 45%">{{'general.no_data'|translate}}</span>
+            </div>
+            <div class="modal-footer" ng-if="info">
+                <button type="submit" class="btn btn-sm btn-primary" ng-if="modulesListToAdd[0].module_name">
+                    <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+                <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+        </form>
+    </script>
+    <script type="text/ng-template" id="templates-topic-modal.html">
+        <div class="modal-header" >
+            <h6 class="modal-title">
+                <span ng-if="topicInfo">{{title | translate}} {{'topic.topic' | translate}}</span>
+                <span ng-if="!topicInfo">{{'templates.available' | translate}} {{'templates.topics' | translate}}</span>
+                <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+            </h6>
+        </div>
+        <form novalidate name="topicForm" ng-submit="addTopics(topics)">
+            <div class="modal-body clearfix" ng-if="allTopics[0].topic_name">
+                <ul>
+                    <li ng-repeat="topic in allTopics track by $index">
+                        <label class="checkbox" for="{{$index}}2">
+                        <input type="checkbox" id="{{$index}}2" ng-if="topicInfo"
+                            ng-model="topics[topic.id_topic]"
+                            ng-true-value="1"
+                            ng-false-value="0"
+                            name="inline-checkbox1">
+                            <span  ng-if="!topicInfo">{{$index+1}}. </span>{{topic.topic_name}}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="!allTopics[0].topic_name">
+                <div class="text-sm-center text-center pb-1 pt-1">{{'general.no_data'|translate}}</div>
+            </div>
+            <div class="modal-footer" ng-if="topicInfo">
+                <button  ng-if="allTopics[0].topic_name" type="submit"
+                    class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+        </form>
+    </script>
+    <script type="text/ng-template" id="templates-question-modal.html">
+        <div class="modal-header" >
+            <h6 class="modal-title">
+            <span ng-if="questionInfo">{{title | translate}} {{'questions.question' | translate}}</span>
+            <span ng-if="!questionInfo">{{'templates.available' | translate}} {{'templates.questions' | translate}}</span>
+            <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+            </h6>
+        </div>
+        <form novalidate name="topicForm" ng-submit="addQuestions(questions)">
+            <div class="modal-body clearfix" ng-if="allQuestions[0].question_text">
+                <ul>
+                    <li ng-repeat="question in allQuestions track by $index">
+                        <label class="checkbox" for="{{$index}}1">
+                            <input type="checkbox" id="{{$index}}1"
+                                ng-model="questions[question.id_question]"  ng-if="questionInfo"
+                                ng-true-value="1"
+                                ng-false-value="0"
+                                name="inline-checkbox1">
+                                <span  ng-if="!questionInfo">{{$index+1}}. </span><span ng-class="{'relation-active':question.relation_question==1}">{{question.question_text}}</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="!allQuestions[0].question_text">
+                <div class="text-sm-center text-center pb-1 pt-1 ">{{'general.no_data'|translate}}</div>
+            </div>
+            <div class="modal-footer" ng-if="questionInfo">
+                <button  ng-if="allQuestions[0].question_text" style="min-width:80px; height:30px" type="submit" class="btn btn-sm btn-primary" ng-if="allQuestions[0].question_text">
+                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                <button type="reset" class="btn btn-sm btn-danger" style="min-width:80px; height:30px" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+            </div>
+        </form>
+    </script>
+    <style>
+    .listOption {
+    list-style: none;
+    }
+    
+    .deleteButton {
+    z-index: 9999;
+    }
+    
+    .accordian-questions .panel-body {
+    padding: 0px 15px;
+    }
+    .relation-active{
+    background-color: #a9d18e !important;
+    }
+    </style>

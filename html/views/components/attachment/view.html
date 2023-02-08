@@ -1,0 +1,170 @@
+<div class="pl10 pr10 tp-wrap">
+    <h3 class="darkcolor clearfix pt5 pb5 mb15 border-bottom2x">
+        <span class="display-inline-block f14 bold pt5">{{title}}
+            <span class="sky-blue bold"></span>
+        </span>
+        <a  href="javascript:;" class="pull-right add-button" ng-click="showAttachmentDiv =! showAttachmentDiv" uib-tooltip="Add">
+            <i class="fa fa-plus"></i> {{'general.upload_documents' | translate}}
+        </a>
+        <input ng-show="uploadedDocuments.length > 5" class="f12 pull-right p2 mr8" type="text" ng-model="document_search" placeholder="{{'general.search' | translate}}"/>
+
+    </h3>
+    <div ng-form="a_form" class="form-horizontal form-bordered" novalidate>
+        <div class="clearfix">
+
+            <div class="col-sm-12 p0 bg-box" ng-if="showAttachmentDiv">
+                <!--ng-if="permission.attachements_add"-->
+                <div class="dropzone plr15">
+                    <div ngf-select="uploadFiles($files)" ngf-drop="uploadFiles($files)" class="drop-box"
+                         ngf-drag-over-class="'dragover'" ngf-multiple="true"
+                         ngf-pattern="'.png,.jpg,.jpeg,.xl,.xls,.xlsx,.doc,.docx,.pdf,.rtf,.txt,.gif,.bmp,.ppt,.pptx..zip,.rar'">
+                        {{'attachment.select_file' | translate}}<span> {{'general.or' | translate}} {{'attachment.drop_here' | translate}}</span>
+                    </div>
+                </div>
+                <div class="attached-list mt20" ng-if="uploadImage.length">
+                    <!-- <img  ngf-thumbnail="f" class="image-view" alt="Image"/>-->
+                    <ul class="files-list mb10">
+                        <li ng-repeat="f in uploadImage" class="clearfix">
+                            <div class="col-sm-12 p-l-0 p-r-0">
+                                <div class="col-sm-9">
+                                    <label class="sky-blue f14">{{ f.name }}</label>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <p class="sky-blue f14">{{f.progress}}%</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 p-l-0 p-r-0">
+                                <div class="col-sm-4 f-list-wrap" ng-if="hideSelectType">
+                                    <select ng-model="f.document_type" name="{{f.documentTypeName}}" required>
+                                        <option value="">{{'general.select_type' | translate}}</option>
+                                        <option ng-repeat="documentsType in documentsTypes"
+                                                value="{{documentsType.id_crm_document_type}}">{{
+                                            documentsType.document_type_name }}
+                                        </option>
+                                    </select>
+                                    <div ng-show="a_form.{{f.documentTypeName}}.$error.required && submitStatus"
+                                         class="error-message">{{'general.select_type' | translate}}.
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="f-list-wrap">
+                                        <input type="text" ng-model="f.description" placeholder="{{'providers.description' | translate}}"
+                                               name="{{f.descriptionName}}"/>
+                                        <div ng-show="a_form.{{f.descriptionName}}.$error.required && submitStatus"
+                                             class="error-message">{{'general.add_descreption' | translate}}.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 p-l-0 text-center">
+                                    <span ng-click="removeImage(f,$index)" uib-tooltip="Delete" class="close-btn"><i
+                                            class="fa fa-trash-o"></i></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="clearfix col-sm-12 text-center border-bottom pb20 mt0 pt5">
+                        <button class="btn btn-primary border-none btn-dark f12 mr8" type="button"
+                                ng-click="save(upload,a_form)">{{'general.save' | translate}}
+                        </button>
+                        <button type="button" class="btn btn-primary f12 border-none lt-bg"
+                                data-ng-click="clear()">{{'general.cancel' |
+                            translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="nodata" class="text-center"><p class="f12">{{'attachment.no_attachment' | translate}}</p> </div>
+            <div class="col-sm-12 attachment-list p0" ng-show="!nodata && uploadedDocuments.length > 0">
+                <!--<div class="list-header clearfix mt5 mb10 ">
+                    <h4 class="f14 col-sm-6 pl0 darkcolor mt20">{{'Documents' | translate}}</h4>
+                    <div class="pull-right col-sm-6 pr0">
+                        <div class="mapping-search">
+                            <input type="text" class="form-control" style="padding: 7px;"
+                                   ng-model="document_search">
+                            <i class="fa fa-search icon-search f16 pt2 darkblue"></i>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="text-center display-block" ng-show="isLoading">
+                    <img src="images/loader2.gif" width="25" height="25" alt="LOADING...">
+                </div>
+                <div class="list-table">
+                    <ul class="list-items" >
+                        <li class="clearfix border-bottom" uploadedDocuments
+                            ng-repeat=" uploadedDocument in uploadedDocuments | filter:document_search">
+                            <div class="touch-attacment-box clearfix">
+                                <div class="touch-attacment-box-icon" upload-file
+                                     data-fileType="{{ uploadedDocument.document_mime_type }}"><i class=""></i>
+                                </div>
+                                <a href="" class="col-sm-6 p0 lh12" ng-click="getDownloadUrl(uploadedDocument)">
+                                    <p class="f14 text-line m0"
+                                       title="{{uploadedDocument.document_name | getFileName:uploadedDocument.document_name}}">{{
+                                        uploadedDocument.document_name | getFileName:uploadedDocument.document_name }}
+                                    </p>
+                                    <span class="ash f11">{{uploadedDocument.document_type_name }}</span>
+                                    <span class="ash f11">{{uploadedDocument.username}},</span>
+                                    <span class="ash f11">{{uploadedDocument.date | date:'mediumDate'}}</span>
+                                </a>
+                                <div class="col-sm-6 text-right p0">
+                                    <ul>
+                                        <li class="custom-list attached-list-btn-group">
+                                            <a ng-show="uploadedDocument.versions.length>0" uib-tooltip="Uploaded Revisions"
+                                               ng-click="viewAttachedRevisons = !viewAttachedRevisons">
+                                                <span class="icon-actions f21"></span>
+                                                <span class="circle-count sky-blue-bg">{{uploadedDocument.versions.length}}</span>
+                                            </a>
+                                            <a ng-show="showAddBtn"
+                                               ng-click="versionShow =! versionShow" class="darkcolor" uib-tooltip="Upload New Revision">
+                                                <span class="icon-plus-circle"></span> </a>
+                                            <a href="javascript:;" uib-tooltip="Delete" ng-if="uploadedDocument.uploaded_by==userId"
+                                               ng-click="deleteFile('document',uploadedDocument)"
+                                               class="darkcolor"><span class="icon-trash"></span> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-12 p0">
+                                    <p class="f12 pr5">{{ uploadedDocument.document_description }}</p>
+                                </div>
+                            </div>
+
+                            <div ng-show="versionShow" class="col-lg-12">
+                                <div ngf-select="subUploadFile($file,uploadedDocument.id_crm_document)"
+                                     ngf-drop="subUploadFile($file,uploadedDocument.id_crm_document)" class="drop-box"
+                                     ngf-drag-over-class="'dragover'" ngf-multiple="false"
+                                     ngf-pattern="'.png,.jpg,.jpeg,.xl,.xls,.xlsx,.doc,.docx,.pdf,.rtf,.txt,.gif,.bmp,.ppt,.pptx,.zip,rar'">
+                                    {{'general.select_file' |
+                                    translate}}<span> {{'general.OR' | translate}} {{'general.drop_file' | translate}}</span>
+                                </div>
+                            </div>
+                            <ul class="list-group clearfix" ng-show="viewAttachedRevisons">
+                                <li class="list-group-item col-lg-11 col-sm-11 pull-right p0 clearfix lh12"
+                                    ng-repeat="v in uploadedDocument.versions">
+                                    <a href="" class="col-sm-6 p0 lh12" ng-click="getDownloadUrl(v)">
+                                        <p class="f11 text-line mb0" title="{{v.document_name}}">
+                                            (Rev {{(uploadedDocument.versions.length)-($index)}})
+                                            {{ v.document_name | getFileName:v.document_name }}
+                                            <span class="ash f11">{{v.document_type_name }}</span>
+                                        </p>
+                                        <span class="ash f11">{{v.username}},</span>
+                                        <span class="ash f11">{{v.date | date:'mediumDate'}}</span>
+                                    </a>
+                                    <div class="col-sm-2">
+                                        <ul>
+                                            <li class="custom-list mt5 text-right">
+                                                <a href="javascript:;" uib-tooltip="Delete" ng-if="v.uploaded_by==userId"
+                                                   ng-click="deleteFile('version',v)"
+                                                   class="link-icon-blue"><i class="icon-trash f13"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

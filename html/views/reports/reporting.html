@@ -1,0 +1,200 @@
+<div class="animated fade in">
+    <div class="row" ng-show="permission['view']">
+        <table class="table table-custom table-striped table-hover" st-pipe="reportsListServer" st-table="reportsList">
+            <thead>
+                <tr>
+                    <td colspan="9">
+                        <div class="col-sm-12 clearfix p0">
+                            <div class="action-head mb0">
+                                <span class="pull-right">
+                                    <button class="btn btn-sm btn-primary" type="button" ng-click="goToCreateReport()">
+                                        <i class="icon-plus"></i>&nbsp; {{'reports.create_btn'| translate}}</button>
+                                </span>
+                                <div class="col-sm-3 p0 table-search pull-right pr4">
+                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                            st-search="search_key" st-input-event ="change">
+                                    <i class="fa icon-search  pr4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="max-width:25px;" class="hand-symbol"></th>
+                    <th st-sort="name">{{'reports.report_name'| translate}}</th>
+                    <!--<th class="w90" st-sort="no_of_contracts">#{{'reports.contracts'| translate}}</th>-->
+                    <th class="w170" st-sort="business_units">{{'reports.bu'| translate}} </th>
+                    <th class="w192" st-sort="classifications">{{'reports.classification'| translate}}</th>
+                    <th class="w170" st-sort="review_statuses">{{'reports.status'| translate}}</th>
+                    <th class="w115" st-sort="created_on">{{'reports.report_created'| translate}}</th>
+                    <th class="w210" ng-if="user.access=='ca'" st-sort="report_user_name">{{'reports.created_by'| translate}}</th>
+                    <th style="max-width:25px;" class="hand-symbol"></th>
+                </tr>
+            </thead>
+            <tbody ng-if="!emptyTable">
+                <tr ng-repeat="row in reportsList">
+                    <td style="max-width:25px;">
+                        <span ng-if="row.no_of_contracts>0" tooltip-placement="right"
+                                title="{{'reports.contracts' | translate}}" tooltip-append-to-body="true" class="report_tag">{{row.no_of_contracts}}</span>
+                    </td>
+                    <td class="w320">
+                        <span class="ellipis w320 display-block">
+                            <a href="javascript:;" ng-if="row.eaae == 'itako'" ng-click="goToEditReport(row)"
+                                class="" title="{{row.name}}" tooltip-placement="top" tooltip-append-to-body="true">{{row.name}}</a>
+                        </span>
+                        <span ng-if="row.eaae != 'itako'" class="ellipis w320 display-block" uib-tooltip="{{row.name}}">{{row.name}}</span>
+                    </td>
+                    <td>
+                        <span>
+                            <span ng-if="!row.business_units[1]"> {{row.business_units[0] | checkEmpty}}</span>
+                            <span ng-if="row.business_units[1]"> {{'general.multi_selected' | translate}}</span>
+                            <a ng-if="row.business_units[1]"  href="javascript:;" class="icon-plus-circle gray ml-h"  uib-popover-template="dynamicPopover.butemplateUrl"
+                                popover-append-to-body=true popover-placement = "right" popover-trigger="'outsideClick'"  class="icon-plus-circle gray ml-h "></a>
+                        </span>
+                    </td>
+                    
+                    <!--<td>
+                        <span>
+                            <span>{{row.classifications[0] | checkEmpty}}</span>
+                            <a ng-if="row.classifications[1]" href="javascript:;" class="skyblue "  uib-popover-template="dynamicPopover.cltemplateUrl"
+                                popover-append-to-body=true popover-placement = "right" popover-trigger="'outsideClick'" class="btn btn-default">+{{row.classifications.length -1}}</a>
+                        </span>
+                    </td>-->
+
+                    <td>
+                        <span>
+                        <span ng-if="!row.classifications[1]"> {{row.classifications[0] | checkEmpty}}</span>
+                        <span ng-if="row.classifications[1]"> {{'general.multi_selected' | translate}}</span>
+                        <a ng-if="row.classifications[1]"  href="javascript:;" class="icon-plus-circle gray ml-h"  uib-popover-template="dynamicPopover.cltemplateUrl"
+                            popover-append-to-body=true popover-placement = "right" popover-trigger="'outsideClick'"  class="icon-plus-circle gray ml-h "></a>
+                        </span>
+                    </td>
+                    <!--<td>
+                        <span>
+                            <span>{{row.review_statuses[0] | capitalize | checkEmpty}}</span>
+                        <a ng-if="row.review_statuses[1]" href="javascript:;" class="skyblue "  uib-popover-template="dynamicPopover.sttemplateUrl"
+                            popover-append-to-body=true popover-placement = "right" popover-trigger="'outsideClick'" class="btn btn-default">+{{row.review_statuses.length -1}}</a>
+                        </span>
+                    </td> -->
+
+                    <td>
+                        <span>
+                        <span ng-if="!row.review_statuses[1]"> {{row.review_statuses[0] | checkEmpty}}</span>
+                        <span ng-if="row.review_statuses[1]"> {{'general.multi_selected' | translate}}</span>
+                        <a ng-if="row.review_statuses[1]"  href="javascript:;" class="icon-plus-circle gray ml-h"  uib-popover-template="dynamicPopover.sttemplateUrl"
+                            popover-append-to-body=true popover-placement = "right" popover-trigger="'outsideClick'"  class="icon-plus-circle gray ml-h "></a>
+                        </span>
+                    </td>
+                    <td>{{row.created_on | utcToLocal:'toLocalDate'}}</td>
+                    <td ng-if="user.access=='ca'">
+                        <span  class="display-inline-block ellipis w150">{{row.report_user_name}}</span></td>
+                    <td style="max-width:25px;">
+                        <span uib-dropdown="" on-toggle="toggled(open)" class="c-dropdown w25 dropdown display-block ">
+                            <a href="javascript:;" uib-dropdown-toggle="" class=" dropdown-toggle p0 w25" style="padding: 0px;" dropdown-append-to-body="true">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu="" aria-labelledby="simple-dropdown">
+                                <li ng-if="row.vaav == 'itako'">
+                                    <a href="javascript:;" ng-click="goToViewReport(row)"  class="">{{'general.view' | translate}}</a>
+                                </li>
+                                <li ng-if="row.eaae == 'itako'">
+                                    <a href="javascript:;" ng-click="goToEditReport(row)"  class="">{{'general.edit' | translate}}</a>
+                                </li>
+                                <li ng-if="row.exaaxe == 'itako'">
+                                    <a href="javascript:;" class="" ng-click="exportReport(row)">{{'reports.export' | translate}}</a>
+                                </li>
+                                <li ng-if="row.daad == 'itako'">
+                                    <a href="javascript:;" ng-click="deleteReport(row,$event)">{{'general.delete' | translate}}</a>
+                                </li>
+                            </ul>
+                        </span>
+                    </td>
+                    <!--<td>
+                        <span uib-dropdown="" on-toggle="toggled(open)" class="c-dropdown width-20 dropdown">
+                            <a href="javascript:;" uib-dropdown-toggle="" class=" dropdown-toggle">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu="" aria-labelledby="simple-dropdown">
+                                <li>
+                                    <a href="javascript:;" ng-click="goToEditReport(row)"  class="">Edit</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" class="">Send</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="deleteReport(row,$event)">Delete</a>
+                                </li>
+                            </ul>
+                        </span>
+                    </td>-->
+                </tr>
+            </tbody>
+            <tbody ng-show="emptyTable">
+            <tr><td colspan="8" class="text-sm-center">{{'general.no_data' | translate}} </td></tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td class="text-center" colspan="8">
+                    <!-- <div st-pagination="" st-template="pagination.html" class="text-sm-center"></div>  -->
+                    <div class="paginator">
+                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                ng-options="item for item in pagesNumber" selected>
+                            </select>
+                        </span>
+                    </div>
+                </td>                    
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<script type="text/ng-template" id="businessTemplate.html">
+    <div class="" ng-repeat="item in row.business_units">
+        <span>{{item}}</span>
+    </div>
+</script>
+<!--old scenerio
+    <script type="text/ng-template" id="businessTemplate.html">
+    <div class="" ng-repeat="item in row.business_units" ng-if="item!=row.business_units[0]">
+        <span>{{item}}</span>
+    </div>
+</script>
+-->
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<script type="text/ng-template" id="classificationTemplate.html">
+    <div class="" ng-repeat="item in row.classifications" >
+        <span>{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="statusTemplate.html">
+    <div class="" ng-repeat="item in row.review_statuses" >
+        <span>{{item | capitalize}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="pagination.html">
+    <div class="pagination" ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li ng-if="currentPage > 1">
+                <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+            </li>
+            <li ng-if="currentPage > 1">
+                <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+            </li>
+            <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+            </li>
+            <li ng-if="currentPage < numPages">
+                <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+            </li>
+            <li ng-if="currentPage < numPages">
+                <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+            </li>
+        </ul>         
+    </div>
+</script>

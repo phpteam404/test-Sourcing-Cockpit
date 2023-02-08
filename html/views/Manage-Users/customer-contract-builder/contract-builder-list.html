@@ -1,0 +1,221 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                
+                <div class="card" st-pipe="builderList" st-table="customerBuilderData">
+                    <div class="col-sm-12 tableSelect-header">
+                        <div class="form-group  col-sm-2 pl0 pt10  wid-55 r-padding">
+                                <select class="form-control" id="select1" name="select2" size="1" ng-model="templateName" ng-class="(templateName)?'active-filter':''"
+                                    st-input-event="change" st-search="templateName" ng-change="templateChange(templateName)"
+                                    ng-options="item.id as item.name for item in builderData">
+                                    <option value="" class="font-italic">-{{'normal.templt_name' | translate}}-</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group   col-sm-2 pl0 pt10  wid-54 r-padding">
+                                <select class="form-control" id="select13" name="select24" size="1" ng-model="status" ng-class="(status)?'active-filter':''"
+                                    st-input-event="change" st-search="status" ng-change="contractStatus(status)">
+                                    <option value="" class="font-italic">-{{'contract.status' |translate}}-</option>
+                                    <option value="in_progress">{{'normal.in_progress' | translate}}</option>
+                                    <option value="final">{{'normal.final' | translate}}</option>
+                                </select>
+                            </div> 
+                            <div class="form-group  col-sm-2  pl0 pt10  wid-55 r-padding">
+                            <select class="form-control" id="select14" name="select23" size="1" ng-model="contractOwnerId" ng-class="(contractOwnerId)?'active-filter':''"
+                                st-input-event="change" st-search="contractOwnerId" ng-change="contractChange(contractOwnerId)"
+                                ng-options="item.id_user as item.name for item in ownerList">
+                                <option value="" class="font-italic">-{{'normal.contract_owner' | translate}}-</option>
+                            </select>
+                        </div>
+                        <div class="form-group  col-sm-2 pl0 pt10  wid-54 r-padding">
+                        <select class="form-control" id="select1" name="select2" size="1" ng-model="id_provider" ng-class="(id_provider)?'active-filter':''"
+                                st-input-event="change" st-search="id_provider" ng-change="relationChange(id_provider)"
+                                ng-options="item.id_provider as item.provider_name for item in providerList | orderBy:'provider_name'">
+                                <option value="" class="font-italic">-{{'contract.provider' | translate}}-</option>
+                            </select>
+                        </div> 
+
+                        <div class="col-sm-3 p0 table-search pull-right  p-r-3  " 
+                            style="display:flex;padding-top: 13px;padding-right: 4px;align-items: center;justify-content: end;">
+                           <div class="w200" style="position: relative; margin-right: 5px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" 
+                                    st-search="search_key" id="search_key" st-input-event="change">
+                                <!-- <input type="text" class="form-control" name="search" placeholder="{{'general.search' | translate}}" 
+                                       ng-model="searchText" ng-keyup="search($event,searchText)" 
+                                       style="display:flex;padding-top: 13px;padding-right: 4px;align-items: center;
+                                       justify-content: end;"> -->
+                            <i class="fa icon-search"></i>
+                        </div>
+                            <span class="m-0">
+                                <button class="btn btn-sm btn-primary btn-radius" type="button" ng-click="createContractBuilder()">
+                                    <i class="icon-plus"></i>&nbsp;
+                                    {{'general.ADD' | translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>    
+                                <th st-sort="field_name" class="customer_builder_contract">{{'normal.contract_name' | translate}}</th>
+                                <th st-sort="field_name" class="customer_builder_temlate">{{'normal.templt_name' | translate}}</th>
+                                <th st-sort="field_type" class="customer_builder_language">{{'customer.language' | translate}}</th>
+                                <th class="customer_builder_status">{{'user.profile.status'|translate}}</th>
+                                <th st-sort="question" class="customer_builder_version">{{'normal.version' | translate}}</th>
+                                <th class="customer_builder_owner">{{'normal.contract_owner'|translate}}</th>
+                                <th class="customer_builder_relation">{{'user.breadcrumb.relation'|translate}}</th>
+                                <th class="customer_builder_action" style="text-align: end;">{{'user.breadcrumb.actions'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!builderLoading">
+                            <tr ng-repeat="row in customerBuilderData | filter:searchText"> 
+                                <td class="customer_builder_contract custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.name}}">{{row.name}}</span>
+                                </td>
+                            
+                                <td class="customer_builder_temlate custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.masterStructureName}}">{{row.masterStructureName}}</span>
+                                </td>
+
+                                <td class="customer_builder_language custom-ellipsis">
+                                    <span  class="ellipsis-block"  title="{{row.language}}">{{row.language}}</span>
+                                </td>                               
+
+                                <td class="customer_builder_status custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.status}}">{{row.status}}</span>
+                                </td>                               
+
+                                <td class="customer_builder_version custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.version}}">{{row.lastStructureVersion}}</span>
+                                </td>
+                                <td class="customer_builder_owner custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.contractOwnerName}}">{{row.contractOwnerName}}</span>
+                                </td>
+                                <td  class="customer_builder_relation custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.relationName}}">{{row.relationName}}</span>
+                                </td>
+                                <td class="customer_builder_action">
+                                    <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                                        <a href uib-dropdown-toggle class="font-sm">
+                                            <span class="fa fa-ellipsis-v" ></span>
+                                        </a>
+                                         <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                            uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                            <li>
+                                                <a href="javascript:;" ng-click="editContractBuilder(row)">{{'general.edit' | translate}}</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" ng-click="templatePage(row)">{{'normal.build_contract' | translate}}</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="javascript:;" ng-click="versionShow(row)">{{'normal.versions' | translate}}</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="javascript:;" ng-click="addContract(row)">{{'normal.add_to_contracts' | translate}}</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="javascript:;" ng-click="deleteStructure(row)">{{'contract.delete' | translate}}</a>
+                                            </li>                                       
+                                         </ul> 
+                                    </span>            
+                                </td>
+                            </tr>
+                           
+                        </tbody>
+                        <tbody ng-show="builderLoading">
+                            <tr>
+                                <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="builderTable">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+    
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="CustomerBuilderDefaultPages(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tfoot>
+    
+    
+                       
+                    </table>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<!-- <script
+data-require="angular.js@1.1.5" data-semver="1.1.5" src=
+"https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/pagination"></script> -->
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+
+<style>
+
+    .wid-54 {
+    width: 155px;
+    padding-right: 5px;
+}
+.wid-55{
+    width: 140px;
+}
+
+select.form-control {
+    padding: 0.2rem 0rem;
+}
+.customer_builder_contract{
+    width: 15%;
+
+}
+.customer_builder_temlate{
+    width: 15%;
+
+}
+.customer_builder_language{
+    width: 10%;
+
+}
+.customer_builder_status{
+    width: 10%;
+
+}
+.customer_builder_version{
+    width: 10%;
+}
+.customer_builder_owner{
+    width: 15%;
+
+}
+.customer_builder_relation{
+    width: 15%;
+
+}
+.customer_builder_action{
+    width: 10%;
+}
+</style>

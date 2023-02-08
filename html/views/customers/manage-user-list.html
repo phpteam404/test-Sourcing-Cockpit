@@ -1,0 +1,116 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="usersList">
+                <thead>
+                    <tr>
+                        <td colspan="10">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                        <span class="pull-right ml-h">
+                                            <button class="btn btn-sm btn-primary btn-radius" ng-click="showForm()" type="button"><i class="icon-plus"></i>&nbsp;
+                                                {{'general.ADD' | translate}}
+                                            </button>
+                                        </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="name">{{'customer.admin.name' | translate}}</th>
+                        <th st-sort="gender">{{'user.profile.gender' | translate}}</th>
+                        <th st-sort="email">{{'user.profile.email' | translate}}</th>
+                        <th st-sort="bu_name">{{'customer.admin.business_unit' | translate}} </th>
+                        <th st-sort="provider_name">{{'contract.company' | translate}}</th>
+                        <th st-sort="user_role_name">{{'customer.admin.role' | translate}}</th>
+                        <th st-sort="user_status">{{'general.status' | translate}}</th>
+                        <!-- <th st-sort="user_type">user type</th> -->
+                        <th st-sort="last_logged_on">{{'customer.admin.last_active' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody  ng-show="!isLoading">
+                    <tr ng-repeat="row in usersList">
+                        <td style="max-width: 290px;min-width: 50px;width: 290px;">
+                            <span title="{{row.name}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:240px;">{{row.name}}</span>
+                        </td>
+                        <td>{{row.gender}}</td>
+                        <td style="max-width: 290px;min-width: 50px;width: 290px;">
+                            <span title="{{row.email}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;width:240px;">{{row.email}}</span>
+                        </td>
+                        <td style="width: 170px;">
+                                <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                                <span>
+                                    <a class="ellipis" style="width: 120px;" title="{{row.bu_name[0]}}" ng-if="!row.bu_name[1]">{{row.bu_name[0]}}</a>
+                                    <a class="ellipis" style="width: 120px;" ng-if="row.bu_name[1]">{{'general.multi_selected' | translate}}</a>
+                                    <a ng-if="row.bu_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h"
+                                            uib-popover-template="dynamicPopover.templateUrl"
+                                            popover-placement="right" popover-trigger="'outsideClick'"
+                                            class="btn btn-default"></a>
+                                </span>
+                            </td> 
+                        <td>{{row.provider_name | checkEmpty}}</td>
+                        <td>{{row.user_role_name | checkEmpty}}</td>
+                        <td>
+                            <span  ng-if="row.user_status == 1 && row.contribution_type!=='2' " class="green">{{'general.active' | translate}}</span>
+                            <span  ng-if="row.user_status == 0 && row.contribution_type!=='2'" class="red">{{'general.inactive' | translate}}</span>
+                            <span  ng-if="row.contribution_type=='2'">---</span>
+                        </td>
+                        <!-- <td>{{row.user_type}}</td> -->
+                        <td style="width:100px;">{{row.last_logged_on | utcToLocal:'date'  | checkEmpty}}</td>
+                        <td>
+                            <a href="javascript:;" class="icon-edit gray" ng-click="showForm(row)" title="Edit" style="margin-right: 5px;"></a>
+                                
+                             <a ng-if="row.user_status == 1 && row.contribution_type!=='2'" href="javascript:;"  
+                                ng-click="loginAsAdmin(row)" style="margin-right: 5px;"
+                                n-t='{"valid":"true","m_t":"login","a_n":"Login As","a_d":"Login$$as$${{row.name}}"}'
+                                class="icon-users4 gray" title="{{'customer.admin.login_as' | translate}} {{row.name}}">
+                            </a>
+                               
+                             <a ng-if="row.is_blocked == 1" href="javascript:;" ng-click="unblock(row)"
+                                n-t='{"valid":"true","m_t":"login","a_n":"Unblock user","a_d":"Login$$as$${{row.name}}"}'
+                                class="icon-ban red" title="Unblock User">
+                            </a>
+                               
+                            <a href="javascript:;" class="fa fa-trash gray pointer" ng-click="deleteUser(row)" 
+                               ng-if="row.user_status == 0 || row.contribution_type=='2'" title="{{'general.delete' |translate}}">
+                            </a>
+                               
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="11" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr><td colspan="11" class="text-sm-center">{{'general.no_data' | translate}} </td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="11">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <div class="" ng-repeat="item in row.bu_name" >
+        <span>{{item}}</span>
+    </div>
+</script>

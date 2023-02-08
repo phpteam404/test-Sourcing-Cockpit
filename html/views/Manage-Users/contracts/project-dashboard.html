@@ -1,0 +1,860 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <div ng-if="dashboardData.contract_review_id == 0" class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+                {{'dashboard.no_reviews' | translate}}
+            </div>
+            <div class="col-lg-8 pl0 large-widget" ng-if="((isNaN(dashboardData.data.contract_review_id)===false && dashboardData.data.contract_review_id != 0) || (isNaN(dashboardData.data.contract_review_id)===true && dashboardData.data.contract_review_id.length > 0))">
+                <div class="card col-lg-12 p0" style="margin-bottom: 5px;">
+                    <h5>{{contractInfo.contract_name}} </h5>
+                    <div class="card-block border-left-none">
+                        <div class="h4 m-b-0">{{'contract.status' | translate}}</div>
+                        <span class="widget-span orange">{{dashboardData.data.review_status |replaceWorflowToTask | capitalize}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'contract.review_date' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'contract.execute_date' | translate}}</div>
+                        <span class="widget-span">{{dashboardData.data.review_date | utcToLocal: 'toLocalDate' | checkEmpty}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0">{{'contract.current_status' | translate}}</div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.data.review_score == 'Red'">
+                            <span class="red-active"></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.data.review_score == 'Amber'">
+                            <span class=""></span>
+                            <span class="amber-active"></span>
+                            <span class=""></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="dashboardData.data.review_score == 'Green'">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class="green-active"></span>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="!dashboardData.data.review_score">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                        </div>
+                        <span class="" ng-if="dashboardData.data.review_score=='N/A'">{{dashboardData.data.review_score}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='0'">{{'templates.template_name' | translate}}</div>
+                        <div class="h4 m-b-0" ng-if="isWorkflow=='1'">{{'workflows.workflow_name' | translate}}</div>
+                        <span class="widget-span">{{dashboardData.data.template_name | checkEmpty}}</span>
+                    </div>
+                   
+                </div>
+              
+            </div>
+            <div class="col-lg-4 icons-widget pr0" 
+            ng-if="((isNaN(dashboardData.data.contract_review_id)===false && dashboardData.data.contract_review_id != 0) || 
+            (isNaN(dashboardData.data.contract_review_id)===true && dashboardData.data.contract_review_id.length > 0) && dashboardData.data.is_subtask==0)">
+                <div class="card-group contract-card-group">
+                    <div class="card card contract-main-card"  ng-if=" (access!='eu')" >
+                        <div class="card-block" ng-click="goToDetails1()">
+                            <div class="h2 text-xs-center">
+                                <i class="tss-project-setting"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'events.project' | translate}}</small>
+                        </div>
+                    </div>
+                    <div class="contract-card-group-list">
+                        <div class="text-center">
+                            <h5 class="contract-card-group-list-heading">
+                                <label style="color: #5bb166;"> {{'calender.workflow' | translate}} </label>
+                                <span title="{{contractInfo.acitvity_name}}">&nbsp;-&nbsp;{{workflowInfo | checkEmpty}}</span>
+                            </h5> 
+                            </div>
+                            <div class="contract-group-icons">
+                    <div class="card dashboard-block" ng-if="dashboardData.data.is_subtask==0" ng-click="exportDashboardData()">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-export2"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.export_data' | translate}}</small>
+                        </div>
+                    </div>
+                    <div class="card dashboard-block" ng-click="goToChangeLog()"  ng-if="dashboardData.data.is_subtask==0">
+                        <div class="card-block">
+                            <div class="h2 text-xs-center">
+                                <i class="icon-template-manage"></i>
+                            </div>
+                            <small class="text-center font-weight-bold">{{'contract.change_log' | translate}}</small>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 p0 mb-h scp-custom-scroll">
+                
+                    
+                <div class="text-xs-center" ng-if="dashboardData.modules.length==0" style="padding: 40px;
+                                                                                    background: #fff;
+                                                                                    border: 1px solid #ccc;
+                                                                                    margin-top: 15px;">
+                    <span class="f14">{{'templates.no_modules' | translate}}</span>
+                </div>
+                <div class="contract-list-view" style="display: flex;" ng-if="dashboardData.modules">                                
+                        <div class="report-contract-cls1" style="width: 244px;min-width: 244px;">&nbsp;</div>
+                        <div class="custom-header"> 
+                        <div style="display: flex; padding: 0 5px;width: 130px;min-width: 130px;
+                        align-items: center;
+                        justify-content: center;" 
+                            ng-repeat="row in dashboardData.subtask_lists">
+                            <a href="javascript:;" ng-click="getDataByReviewDate(row)" title="{{row.provider_name}}">{{row.provider_name | checkEmpty}}</a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <uib-accordion close-others="oneAtATime" ng-repeat="module in dashboardData.modules">
+                    <div uib-accordion-group class="panel-default mb-h "
+                         template-url="group-template.html" ng-init="module.open=false;
+                         showData[module.id_module]['open']=showData[module.id_module]['open'] ? showData[module.id_module]['open'] : false;"
+                         is-open="showData[module.id_module]['open']">
+                        <uib-accordion-heading ng-click="showData[module.id_module]['open'] = !showData[module.id_module]['open']">
+                           <div class="custom-border" style="width: 238px;min-width:238px;display: flex;padding-left: 5px;" ng-class="((module.static=='1') ? ((module.is_workflow=='1') ? 'bg-color-green':'bg-light-orange'): 'bg-color-white')">
+                            <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.id_module]['open'],
+                                                            'fa fa-plus-square-o': !showData[module.id_module]['open']}"></i>
+                            <div style="text-align: left; width:100%;">
+                                <span style="display: inline-block;
+                                            width: 80%;
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            font-size: 13px;
+                                            font-weight: 500;
+                                            padding-top: 4px;
+                                            z-index: 1;
+                                            padding-left: 10px;
+                                            position: relative;
+                                            white-space: nowrap;" title="{{module.module_name}}">
+                                    {{module.module_name}}
+                                </span>
+                            </div>
+                          </div>
+                            <div class="pull-right custom-child custom-parent" ng-class="((module.static=='1') ? ((module.is_workflow=='1') ? 'bg-color-green':'bg-light-orange'): 'bg-color-white')" style=" width: calc(100% - 238px);min-width: calc(100% - 238px);
+                                                            text-align: right;
+                                                            float: none;
+                                                            display: flex;
+                                                            align-items: center;">
+                                <div class="custom-border-topbottom" ng-class="((module.static=='1') ? ((module.is_workflow=='1') ? 'bg-color-green':'bg-light-orange'): 'bg-color-white')" style="width: 130px;min-width: 130px;text-align: center;" ng-repeat="mscore in module.module_scores track by $index">
+                                    <div class="status-widget font-weight-bold" style="margin-right: 0px !important;" ng-if="mscore == 'Green'">
+                                        <span class="green-active"></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="mscore == 'Amber'">
+                                        <span class="amber-active"></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="mscore == 'Red'">
+                                        <span class="red-active"></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="mscore == 'N/A' || mscore==null || mscore==''">
+                                        <span class=""></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-accordion-heading>
+                        <ul>
+                            <uib-accordion close-others="oneAtATime">
+                                <div uib-accordion-group class="panel-default mb-h"
+                                     ng-repeat="topic in module.topics"  heading="Selection Process"
+                                     ng-init="topic.open=false;
+                                     showData[module.id_module]['topic'][topic.id_topic]['open'] =  showData[module.id_module]['topic'][topic.id_topic]['open'] ?
+                                                                                                    showData[module.id_module]['topic'][topic.id_topic]['open'] : false;"
+                                     is-open="showData[module.id_module]['topic'][topic.id_topic]['open']"
+                                     template-url="topic-template.html">
+                                    <uib-accordion-heading ng-click="showData[module.id_module]['topic'][topic.id_topic]['open'] = !showData[module.id_module]['topic'][topic.id_topic]['open']">
+                                       <div class="custom-border" style="width: 230px;min-width: 230px;padding-left: 5px;display: flex;">
+                                        <i class="glyphicon"                                                
+                                            ng-class="{'fa fa-minus-square-o': showData[module.id_module]['topic'][topic.id_topic]['open'],
+                                                      'fa fa-plus-square-o': !showData[module.id_module]['topic'][topic.id_topic]['open']}"></i>
+                                        <div style="text-align: left;color: #2196f3;padding-top: 5px;">
+                                            <span style="display: inline-block;
+                                                            width: 100%;
+                                                            text-overflow: ellipsis;
+                                                            overflow: hidden;
+                                                            white-space: nowrap;
+                                                            font-weight: normal;
+                                                            font-size: 12px;" title="{{topic.topic_name | capitalize}}">
+                                                <span class="pl3">{{topic.topic_name | capitalize}} </span>
+                                            </span>
+                                        </div>
+                                       </div>
+                                        <div class="custom-child" style="display:flex;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        width: calc(100% - 230px);
+                                                        min-width: calc(100% - 230px);">
+                                            <div class="custom-border-topbottom custom-bg" style="min-width: 130px;width: 130px;text-align: center;background-color: #fff;" ng-repeat="tscore in topic.topic_scores track by $index">
+                                                <div class="status-widget">
+                                                    <span ng-if="tscore == 'Red'" class="score_color red-bg"></span>
+                                                    <spann ng-if="tscore == 'Amber'" class="score_color orange-bg"></spann>
+                                                    <span ng-if="tscore == 'Green'" class="score_color green-bg"></span>
+                                                    <span ng-if="!tscore" class="score_color "></span>
+                                                </div>
+                                            </div>
+                                        </div>                                            
+                                    </uib-accordion-heading>
+                                    <div ng-repeat="row in topic.questions" style="display: flex;" class="color-div"
+                                    ng-class="{'blue-color':row.is_blue_difference==1  ,
+                                    'green-color': row.is_green_diffference==1 ,
+                                        'toggleclass':row.is_validator==1,
+                                    'red-color': row.is_red_difference==1,
+                                    'relation-bg':row.provider_visibility==1}">
+                                        <div class="validator-view bg-gray"   style="width: 225px;min-width: 225px;
+                                        overflow: hidden;
+                                        display: inline-block;
+                                        white-space: nowrap;
+                                        line-height: 30px;
+                                        padding-left: 5px;
+                                        position: relative;
+                                        text-overflow: ellipsis;
+                                        color: black;" title="{{row.question_text}}">
+                                          <div style="display:flex; align-items:center;padding:5px;">
+                                            <div class="tw-toggle" ng-if="row.is_validator==1">
+                                                  <label class="toggle toggle-yes green-dot"  ng-class="{'green-circle':row.is_green_diffference==1}" ></label> 
+                                                   <label class="toggle toggle-yes blue-dot"  ng-class="{'blue-circle':row.is_blue_difference==1}" ></label>
+                                                   <label class="toggle toggle-yes red-dot"   ng-class="{'red-circle':row.is_red_difference==1}"></label> 
+                                           </div> 
+                                        <span  style="padding-left:3px;text-overflow: ellipsis;
+                                        white-space: nowrap;
+                                        width: 95%;
+                                        display: block;
+                                        overflow: hidden;">{{row.question_text | checkEmpty}}</span>
+                                    
+                                    </div>
+                                         </div>
+                                      
+                                        <div style="display: flex;
+                                                    align-items: center;
+                                                    width: calc(100% - 225px);min-width: calc(100% - 225px);">
+                                        <div class="inside-acc-div" ng-if="row.question_type == 'input'" ng-repeat="answer in row.question_answeres track by $index">
+                                           <div class="inside-acc-div-text ellipsis-class" title="{{answer | checkEmpty}}" ng-if="$index < (row.question_answeres.length-1)" >{{answer | checkEmpty}}</div>
+                                           <div class="last-span ellipsis-class" title="{{answer | checkEmpty}}" ng-if="$index == (row.question_answeres.length-1)"  >{{answer | checkEmpty}}</div>
+                                        </div>
+                                        <div class="inside-acc-div" ng-if="row.question_type == 'dropdown'" ng-repeat="answer in row.question_answeres track by $index">
+                                            <div class="inside-acc-div-text ellipsis-class" title="{{answer | checkEmpty}}" ng-if="$index < (row.question_answeres.length-1)" >{{answer | checkEmpty}}</div>
+                                            <div class="last-sapn-drop ellipsis-class" style="padding-left: 3px;" ng-if="$index == (row.question_answeres.length-1)"  title="{{answer | checkEmpty}}" >{{answer | checkEmpty}}</div>
+                                        </div>
+                                        <div class="inside-acc-div" style="" ng-if="row.question_type == 'radio'" ng-repeat="answer in row.question_answeres track by $index">
+                                            <div class="inside-acc-div-text-radio ellipsis-class" title="{{answer | checkEmpty}}"ng-if="$index < (row.question_answeres.length-1)" >{{answer | checkEmpty}}</div>
+                                            <div class="last-span-radio ellipsis-class" ng-if="$index == (row.question_answeres.length-1)"  title="{{answer | checkEmpty}}" >{{answer | checkEmpty}}</div>
+                                        </div>
+                                        <div class="inside-acc-div" style="" ng-if="row.question_type =='date'" ng-repeat="answer in row.question_answeres track by $index">
+                                            <div class="inside-acc-div-date" ng-if="$index < (row.question_answeres.length-1)" title="{{answer | utcToLocal:'date'}}">{{answer | utcToLocal:'date' | checkEmpty}}</div>
+                                            <div class="last-span-date ellipsis-class" ng-if="$index == (row.question_answeres.length-1)" title="{{answer | utcToLocal:'date'}}">{{answer | utcToLocal:'date' | checkEmpty}}</div>
+                                        </div>
+                                        <div class="inside-acc-div" ng-if="row.question_type == 'rag'" ng-repeat="answer in row.question_answeres track by $index">
+                                            <div class="radio_widget inside-acc-div-text-icon" ng-if="$index < (row.question_answeres.length-1)">
+                                                <span ng-if="!answer" class="">{{answer | checkEmpty}}</span>
+                                                <a ng-if="answer == 'G'" class="f18"><i class="fa fa-check-circle green"></i></a>
+                                                <a ng-if="answer == 'A'" class="f18"><i class="fa fa-exclamation-circle orange"></i></a>
+                                                <a ng-if="answer == 'R'" class="f18"><i class="fa fa-times-circle red"></i></a>
+                                                <a ng-if="answer == 'N/A'" class="f18"><i class="fa fa-minus-circle gray"></i></a>
+                                            </div>
+                                            <div class="radio_widget last-span-icon" ng-if="$index == (row.question_answeres.length-1)">
+                                                <span ng-if="!answer" class="">{{answer | checkEmpty}}</span>
+                                                <a ng-if="answer == 'G'" class="f18"><i class="fa fa-check-circle green"></i></a>
+                                                <a ng-if="answer == 'A'" class="f18"><i class="fa fa-exclamation-circle orange"></i></a>
+                                                <a ng-if="answer == 'R'" class="f18"><i class="fa fa-times-circle red"></i></a>
+                                                <a ng-if="answer == 'N/A'" class="f18"><i class="fa fa-minus-circle gray"></i></a>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                            </uib-accordion>
+                        </ul>
+                    </div>
+                </uib-accordion>
+            
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer"  
+                ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="topic-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer;font-weight: 400;">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.show, 'fa fa-plus-square-o': !status.show}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="discussion-view.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title"> {{'normal.discussion_detail' |translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f16"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix"> 
+        <i class="glyphicon"></i>
+        <div class="col-sm-12 p0 form-group discussionAnswerParent">
+            <div class="col-sm-12 p0 discussionAnswer" style="padding-left: 18px;">
+                <div class="col-sm-6 p0" style="margin-bottom: 10px;color: #080808;">
+                    <label class="hand-symbol">{{'contract.current_value' | translate}} :</label>
+                    <span ng-if="question.question_type == 'input'">
+                        <input type="text" class="form-control" readonly placeholder="{{'contract.module_questions.answer' | translate}}" ng-model="question.question_answer">
+                    </span>
+                    <span ng-if="question.question_type == 'date'">
+                        <div class="input-group clearfix form-group-custom">
+                            <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" style="padding:8px 5px !important"
+                                data-ng-model="question.question_answer" name="question_answer" is-open="false" readonly/>
+                            <span class="input-group-btn ">
+                                <button type="button" class="btn btn-default border">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </span> 
+                    <span ng-if="question.question_type == 'dropdown' || question.question_type == 'radio'">
+                        <select class="form-control" ng-disabled="true">
+                                <option value="">{{question.question_answer}}</option>
+                        </select>
+                    </span>
+                    <span ng-if="question.question_type == 'rag'">
+                        <div class="radio_widget">
+                            <span>
+                                <input type="radio" id="radio1_{{$index}}_{{question.id_question}}" name="same_{{question.id_question}}" value="{{question.question_option_answer}}"
+                                    checked ng-model="question.question_answer" disabled>
+                                <label disabled ng-if="question.question_answer == 'G'" for="radio1_{{$index}}_{{question.id_question}}" class="first_label" uib-tooltip="Green"></label>
+                                <label disabled ng-if="question.question_answer == 'A'" for="radio1_{{$index}}_{{question.id_question}}" class="sec_label" uib-tooltip="Amber"></label>
+                                <label disabled ng-if="question.question_answer == 'R'" for="radio1_{{$index}}_{{question.id_question}}" class="third_label" uib-tooltip="Red"></label>
+                                <label disabled ng-if="question.question_answer == 'N/A'" for="radio1_{{$index}}_{{question.id_question}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                            </span>
+                        </div>
+                    </span>
+                </div>
+                <div class="col-sm-6" style="margin-bottom: 10px;">
+                    <label class="hand-symbol" style="padding-left: 10px;color: #080808;">{{'contract.second_opinion' | translate}} :</label>
+                    <span ng-if="question.question_type == 'input'">
+                            <input type="text" class="form-control" readonly placeholder="{{'contract.module_questions.answer' | translate}}" ng-model="question.second_opinion">
+                    </span>
+                    <span ng-if="question.question_type === 'dropdown' || question.question_type === 'radio'">
+                        <select class="form-control" ng-disabled="true">
+                            <option value="">{{question.second_opinion}}</option>
+                        </select>
+                    </span>
+                    <span ng-if="question.question_type == 'date'">
+                        <div class="input-group clearfix form-group-custom">
+                            <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" style="padding:8px 5px !important"
+                                data-ng-model="question.second_opinion" name="date_question" is-open="false" readonly/>
+                            <span class="input-group-btn ">
+                                <button type="button" class="btn btn-default border">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </span> 
+                    <span ng-if="question.question_type === 'rag'">
+                        <div class="radio_widget">
+                            <span>
+                                <input type="radio" id="radio2_{{$index}}_{{question.id_question}}" name="same1_{{question.id_question}}"
+                                    value="{{question.second_opinion}}" checked ng-model="question.second_opinion" disabled>
+                                <label disabled ng-if="question.second_opinion == 'G'" for="radio2_{{$index}}_{{question.id_question}}" class="first_label" uib-tooltip="Green"></label>
+                                <label disabled ng-if="question.second_opinion == 'A'" for="radio2_{{$index}}_{{question.id_question}}" class="sec_label" uib-tooltip="Amber"></label>
+                                <label disabled ng-if="question.second_opinion == 'R'" for="radio2_{{$index}}_{{question.id_question}}" class="third_label" uib-tooltip="Red"></label>
+                                <label disabled ng-if="question.second_opinion == 'N/A'" for="radio2_{{$index}}_{{question.id_question}}" class="fourth_label" uib-tooltip="Not Applicable"></label>
+                            </span>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"> </div>        
+        <div class="col-sm-12 form-group">
+            <label>Comments:</label>
+            <div class="black pl-1 f14 discussion_by" ng-if="question.discussion.log" ng-repeat="log in question.discussion.log">
+                <div class="black font-italic" ng-if="log.comments">{{log.comments}}</div>
+                <span style="font-size: 11px;" class="font-italic gray" ng-if="log.created_by">
+                    <span style="color:black" class="">{{'general.by' | translate}}</span>&nbsp; {{log.created_by}}
+                </span>
+                <span style="font-size: 11px;" class="font-italic gray" ng-if="log.created_by">
+                    <span style="color:black" class="">{{'discussion.date' | translate}}</span>&nbsp;
+                        {{log.created_on | utcToLocal:'toLocalDate'|checkEmpty}}
+                </span>
+            </div>
+        </div>
+    </div> 
+</script>
+<style>
+    .accordion-default .panel-title .static{
+    color: #000 !important;
+    background-color: #da4421d6!important;
+    }
+    .accordion-default .panel-title {
+    color: #000 !important;
+    padding: 10px 0 10px 0 !important ;
+    /* background-color: #fff !important; */
+    }
+    .count-small{
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        background: #5bb166;
+        display: block;
+        color: #fff;
+        line-height: 14px;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 10px;
+        top: -9px;
+        right: -8px;
+    }    
+    .outer {
+        position: relative;
+    }
+    tr.border-list-child td:first-child{
+        padding-left: 6px;
+    }
+    .contract-list-view table {
+        width: 100%;
+    }
+    .contract-list-view thead tr th {
+        color: #2196f3;
+        border-bottom: 0px solid #cfd8dc;
+    }
+    .table th, .table td{
+        padding: 0.45rem;
+        vertical-align: top;
+        border-top: 0px solid #cfd8dc;
+    }
+    .contract-list-view table tbody .border-list {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .contract-list-view table tr:last-child {
+        border-bottom: 0px solid #cfd8dc;
+    }
+    .contract-list-view thead tr th:last-child {
+        color: #464646;
+    }
+    .contract-list-view tbody tr td {
+        background-color: #fff;
+    }
+    .contract-list-view tbody tr td:first-child {
+        border-left: 1px solid #cfd8dc;
+        border-right: 0px solid #cfd8dc;
+    }
+    .contract-list-view tr td:last-child {
+        border-right: 1px solid #cfd8dc;
+    }
+    .contract-list-view .td-view-heading span {
+        padding: 0px 5px 0px 0px;
+    }
+    .contract-list-view .td-view-heading {
+        font-weight: 600;
+    }
+    .contract-list-view .td-view-sub-heading {
+        padding: 3px 0px 3px 5px;
+        color: #2196f3;
+    }
+    .contract-list-view tbody tr:last-child .td-view-sub-heading {
+        padding-bottom: 3px;
+    }
+    .child-topics{
+        border-bottom: 10px solid #efefef;
+
+    }
+    .child-topics:after{
+        content: '';
+    display: block;
+    height: 10px;
+    position: relative;
+    background-color: #efefef;
+    width: 100%;  
+    }
+    .child-topics tbody tr td{
+        text-align: center;
+    }
+    .child-topics tbody tr td:first-child {
+        border-left: none;
+    }
+    .child-topics tbody tr{
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .child-topics tbody tr:last-child{
+        border-bottom: none;
+    }
+    .child-topics tbody tr td:last-child {
+        border-right: none;
+    }
+    .contract-list-view tr td div {
+        border-right: 0px solid #ccc;
+        border-left: 0px solid #ccc;
+    }
+    .inside-table-body::after {
+        content: '';
+        display: block;
+        height: 10px;
+        background-color: #efefef;
+    }
+    .contract-list-view tbody tr td {
+        padding: 3px 0px 0px;
+        text-align: center;
+    }
+    .contract-list-view tbody tr:first-child td:last-child {
+        padding-right: 1px;
+    }
+  
+    .fixed-layout-cls1 {
+        table-layout: fixed;
+        width: 100%;
+        margin-bottom: 0px;
+    }
+    .contract-list-view thead tr th {
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        padding-bottom: 4px !important;
+        text-align: center !important;
+    }
+    .contract-list-view tbody {
+        background-color: #fff;
+    }
+    .border-list tr td {
+        padding: 0.45rem;
+    }
+    .border-list tr td:first-child {
+        padding-left: 0.45rem;
+    }
+    .border-list tr td:last-child {
+        padding-right: 0.45rem;
+    }
+    .border-list td:first-child {
+        padding-left: 0.45rem !important;
+    }
+    .border-list td:first-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .border-list td:last-child {
+        border-bottom: 1px solid #cfd8dc;
+    }
+    .border-list td {
+        border-top: 1px solid #efefef;
+    }
+    .tr-inside-table tr:last-child td {
+        border-bottom: 1px solid #efefef !important;
+    }
+    .child-topics table{
+        border-bottom: 1px solid #cfd8dc !important;
+    }
+    tr.contract-list-view-border td:first-child{
+        padding-bottom: 4px !important;
+        padding-top: 8px !important;
+    }
+    .border-list td{
+        padding: 0px;
+    }
+    .border-list td div{
+        padding: 6px !important;
+        border-top:  1px solid #cfd8dc !important;
+    }
+    .contract-list-view table tbody .border-list td{
+        padding: 0px !important
+    }
+    .contract-list-view table tbody .border-list .td-view-heading span{
+        padding: 6px 0px 4px 5px!important;
+        border-top:  1px solid #cfd8dc !important;
+        font-size: 12px;
+    }
+    th.report-contract-cls1{
+        width: 240px;
+    }
+    .contract-list-view tr th,
+    .panel-heading .status-widget {
+    min-width: 98px;
+    padding: 4px 3px;
+    text-align: center;
+    }
+    .panel-heading .status-widget {
+        padding: 0px 3px 5px !important;
+    }
+    .accordion-default .panel-title {
+        padding: 0px;
+        line-height: 19px;
+    }
+    .accordion-default .panel-title a.accordion-toggle span i.glyphicon{
+        margin-top: 8px;
+        color: #8a8686;
+    }
+    .custom-header{
+        width: calc(100% - 250px);
+        display: flex;
+        text-align: center;
+        padding: 10px 0px 5px;
+        align-items: center;
+        /* justify-content: flex-end; */
+        font-size: 13px;
+    }
+    .scp-custom-scroll{
+        overflow-x: auto;
+        width: 100%;
+    }
+    .custom-header a{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+    .status-widget span{
+        border: 1px solid #a7a2a2;
+    }
+    .status-widget .score_color{
+        border: 1px solid #a7a2a2;
+    }
+    .accordion-default{
+        font-size: 11px;
+    }
+ 
+    .inside-acc-div-text{
+        /* overflow: hidden; */
+        display: inline-block;
+        text-align: center;
+        /* white-space: nowrap; */
+        /* text-overflow: ellipsis; */
+        width: 110px;
+        padding: 5px;
+    }
+    .last-span{
+        /* overflow: hidden; */
+        display: inline-block;
+        text-align: center;
+        /* white-space: nowrap; */
+        /* text-overflow: ellipsis; */
+        width: 110px;
+        padding:5px ;
+        margin-right: 0px;
+    }
+    .last-sapn-drop{
+        /* overflow: hidden; */
+        display: inline-block;
+        text-align: center;
+        /* white-space: nowrap; */
+        /* text-overflow: ellipsis; */
+        width: 110px;
+        padding: 5px 0px 5px 5px;
+        margin-right: -2px;
+    }
+    .inside-acc-div{
+        width: 130.5px;
+        min-width: 130.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        min-height: 100%;
+        position: relative;
+    }
+    .inside-acc-div:after {
+        content: '';
+    position: absolute;
+    background: #fff;
+    width: 130px;
+    min-width: 130px;
+    height: 6px;
+    display: block;
+    bottom: -6px;
+    z-index: -1;
+    right: 0px;
+}
+/* .inside-acc-div:last-child:before {
+    content: '';
+    position: absolute;
+    background: #fff;
+    width: 6px;
+    height: 100%;
+    display: block;
+    bottom: 0;
+    right: 0px;
+} */
+    
+    .mr-h1{
+        margin-right: 6px;
+    }
+    .color-div:nth-child(even) {
+        background: #fff;
+    }
+    .color-div:nth-child(even) .bg-gray{
+        background: #f1f1f6;
+    }
+    .bg-color-white{
+        background: #fff !important;
+    }
+   
+    .accordion-default .panel-body {
+        padding: 6px 6px 1px;
+        border-top: none;
+    }
+    .panel-body ul{
+        margin-bottom: 6px;
+    }
+    .panel-body ul .panel-heading h4{
+        font-size: 12px !important;
+    }
+    .panel-body .panel-default{
+        margin-bottom: 6px !important;
+    }
+    .panel-body .panel-default .panel-body{
+        padding-bottom: 6px;
+    /* background: rgba(219, 68, 29, 0.1); */
+
+    }
+    .header-fixed .contract-list-view {
+    background-color: transparent;
+    position: relative;
+    /* min-height: 130px; */
+    top: 0;
+    left: 0;
+    float: left;
+    width: 100%;
+    margin: 0;
+    z-index: 1;
+}
+    .custom-border{
+        border: 1px solid #ccc;
+        border-right: none;
+    }
+    .custom-border-topbottom{
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        padding: 3px 0;
+        position: relative;
+    }
+    .status-widget .score_color {
+       height: 14px !important;
+    }
+    .custom-child .custom-border-topbottom:last-child{
+        border-right: 1px solid #ccc;
+    }
+    .custom-border-topbottom.custom-bg:before {
+        content: '';
+        position: absolute;
+        top: -7px;
+        background: #fff;
+        display: block;
+        width: 100%;
+        z-index: -1;
+        height: 46px;
+        bottom: -8px;
+        right: -6px;
+    }
+    .color-div:nth-child(even) .inside-acc-div{
+         background-color: #f1f1f6;
+    }
+    .custom-parent .custom-border-topbottom:last-child.bg-color-green:after {
+        background: #a0dea0;
+        content: '';
+        position: absolute;
+        right: -4px;
+        display: block;
+        width: 5px;
+        height: 32px;
+        top: -1px;
+        border: 1px solid #ccc;
+        border-left: none;
+    }
+    .custom-parent .custom-border-topbottom:last-child.bg-color-white:after {
+        background: #ffffff;
+        content: '';
+        position: absolute;
+        right: -4px;
+        display: block;
+        width: 5px;
+        height: 32px;
+        top: -1px;
+        border: 1px solid #ccc;
+        border-left: none;
+    }
+    .custom-parent .custom-border-topbottom:last-child.bg-light-orange:after {
+        background: #f8cbad;
+        content: '';
+        position: absolute;
+        right: -4px;
+        display: block;
+        width: 5px;
+        height: 32px;
+        top: -1px;
+        border: 1px solid #ccc;
+        border-left: none;
+    }
+    
+    .custom-border-topbottom.custom-bg:after {
+        content: '';
+        position: absolute;
+        top: auto;
+        background: #fff;
+        display: block;
+        width: 100%;
+        z-index: -1;
+        height: 6px;
+        bottom: -8px;
+        right: -6px;
+    }
+    .custom-border-right{
+        border-right: 1px solid #ccc;
+    }
+    .scp-custom-scroll::-webkit-scrollbar-track {
+    background: #fff;
+    }
+    .scp-custom-scroll::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+    }
+    .scp-custom-scroll::-webkit-scrollbar {
+        height: 5px;
+    }
+    .ellipsis-class{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        /* width: 95%; */
+        white-space: nowrap;
+    }
+
+    .relation-active{
+        background-color: #a9d18e !important;
+    }
+    .relation-bg .inside-acc-div,
+    .relation-bg .validator-view{
+        background-color: #a9d18e !important;
+        border-bottom: 1px solid #fff;
+}
+</style>
+<script>
+    // $(window).scroll(function () {
+    // if ($(window).scrollTop() >= 150) {
+    //     $('body').addClass('header-fixed');
+    // } else {
+    //     $('body').removeClass('header-fixed');
+    // }
+    // });
+</script>

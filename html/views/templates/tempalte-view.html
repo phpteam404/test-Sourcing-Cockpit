@@ -1,0 +1,77 @@
+<div class="animated fadeIn">
+    <div class="col-md-12 p0">
+        <div class="col-md-3 pl0">
+            <div class=" vertical-tabs-widget">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li class=" nav-item active" ui-sref-active="active">
+                        <a class="nav-link"
+                           ui-sref="app.templates.templates-view.module({name:template_name,id:(template_id | encode)})">
+                            {{'templates.modules' |translate}} ({{counts.module_count}})
+                        </a>
+                    </li>
+                    <li class="nav-item" ui-sref-active="active">
+                        <a href="javascript:;" class="nav-link"
+                           ui-sref="app.templates.templates-view.topic({name:template_name,id:(template_id | encode)})">
+                            {{'templates.topics' |translate}}  ({{counts.topic_count}})</a>
+                    </li>
+                    <li class="nav-item" ui-sref-active="active">
+                        <a href="javascript:;" class="nav-link"
+                           ui-sref="app.templates.templates-view.questions({name:template_name,id:(template_id | encode)})">{{'templates.questions' |translate}} ({{counts.question_count}})</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 tabs-data" style="background: #fff;">
+            <ui-view></ui-view>
+        </div>
+    </div>
+</div>
+<!--<div class="animated fadeIn">
+    <div class="col-md-12">
+        <div class="row vertical-tabs-widget">
+            <uib-tabset active="" vertical="true" type="">
+                <uib-tab index="0" heading="Modules" ui-sref="app.templates.templates-view.templates-view-module">
+                </uib-tab>
+                <uib-tab index="1" heading="Topics">
+                </uib-tab>
+                <uib-tab index="2" heading="Questions">
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+        <div class="col-md-9" style="background: #fff;">
+
+        </div>
+    </div>
+</div>-->
+<!--<script type="text/ng-template" id="templates-modal.html">
+    <div class="modal-header" >
+        <h6 class="modal-title">{{title | translate}} {{title_type}}
+            <a  ng-click="cancel()" uib-tooltip="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <ul>
+            <li>
+                <label class="checkbox" for="inline-checkbox1">
+                    <input type="checkbox" id="inline-checkbox1" name="inline-checkbox1" value="option1">Topic-1
+                </label>
+            </li>
+            <li>
+                <label class="checkbox" for="inline-checkbox2">
+                    <input type="checkbox" id="inline-checkbox2" name="inline-checkbox1" value="option1">Topic-2
+                </label>
+            </li>
+            <li>
+                <label class="checkbox" for="inline-checkbox3">
+                    <input type="checkbox" id="inline-checkbox3" name="inline-checkbox1" value="option1">Topic-3
+                </label>
+            </li>
+        </ul>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</script>-->

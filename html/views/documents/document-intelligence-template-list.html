@@ -1,0 +1,188 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <div class="col-lg-12 p0">
+                
+                <div class="card" st-pipe="getTemplateQuestionList" st-table="templateQuestionInfo">
+                    <div class="col-sm-12 tableSelect-header">
+                        <div class="form-group col-sm-2 pl0 custom-field pt10 wid-55 r-padding">
+                            <select class="form-control" id="select"
+                                name="select1" size="1"
+                                ng-model="filter_field_type" 
+                                ng-class="(filter_field_type)?'active-filter':''"
+                                st-input-event="change" st-search="field_type" >
+                                <option value="" class="font-italic">-{{'documents.field_type'| translate}}-</option>
+                                <option value="Contract Information">{{'contract.contract_info'|translate}}</option>
+                                <option value="Contract Tag">{{'documents.contract_tag'|translate}}</option>
+                                <option value="Contract Value">{{'contract.contracts_value'|translate}}</option>
+                                <option value="Right">{{'relationship-classification.position.right'|translate}}</option>
+                                <option value="Obligation">{{'documents.obligation'|translate}}</option>
+                            </select>
+                        </div>
+                    
+                      
+                        <span class="pull-right">                                                   
+                            <button  class="btn btn-sm btn-primary btn-radius"
+                                type="button" style="margin-top: -9px" ng-click="documentIntelligenceQuestion()" title="{{'Create Template Question' | translate}}">
+                                <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}
+                                </button>
+                            
+                        </span>
+                        <div class="col-sm-3 p0 table-search pull-right  p-r-3 wid-55 wid-95 w200" style="padding-top: 10px; padding-right: 4px;">
+                            <input type="text" class="form-control" placeholder="{{'general.search' | translate}}" st-search="search_key" id="search_key" st-input-event="change">
+                            <i class="fa icon-search" style="padding-top: 10px;"></i>
+                        </div>
+                    </div>
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <tr>    
+                                <th st-sort="field_name" class="document_field_name" >{{'documents.field_name' | translate}}</th>
+                                <th st-sort="field_type" class="document_field_type" >{{'documents.field_type' | translate}}</th>
+                                <th st-sort="question" class="document_question">{{'questions.questions' | translate}}</th>
+                                <th class="hand-symbol document_actions">{{'general.actions'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="templateQuestionInfo.length>0">
+                            <tr ng-repeat="row in templateQuestionInfo">
+                                
+                                <td class="document_field_name">
+                                    <span title="{{row.field_name}}">{{row.field_name | checkEmpty}}</span>
+                                </td>                               
+                                <td class="document_field_type">
+                                    <span>{{row.field_type | checkEmpty}}</span>
+                                </td>
+                                <td  class="document_question custom-ellipsis">
+                                    <span class="ellipsis-block" title="{{row.question}}">{{row.question  | checkEmpty}}</span>
+                                </td>
+                                <td class="document_actions">
+                                    <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}" ng-click="documentIntelligenceQuestion(row)">
+                                        <i class="icon-edit" ></i>
+                                    </a>
+                                    <a  href="javascript:;" class="mr-1 gray" ng-click="deleteTemplateQuestion(row)">
+                                        <i class="fa fa-trash" title="{{'general.delete' | translate}}"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                        <tbody ng-show="templateQuestionLoading">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="emptyTemplateQuestionTable">
+                            <tr>
+                                <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-sm-center" colspan="15">
+                                    <div class="paginator">
+                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                        <span class="paginator-dropdown" ng-if="templateQuestionCount>10">
+                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                            <select ng-model="displayCount" ng-change="defaultPagesTemplate(displayCount)"
+                                                ng-options="item for item in pagesNumber" selected>
+                                            </select>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="pagination.html">
+<div class="pagination" ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+        </li>
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+        </li>
+    </ul>
+</div>
+</script>
+
+
+<script type="text/ng-template" id="templateQuestionForm.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{'documents.document_intelligence_question' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix">
+        <div class="card-block p-0">
+            <form novalidate name="templateQuestionform" style="padding: 0px;" ng-submit="templateQuestionform.$valid && addTemplateQuestion(templateQuestion)">
+                <div class="form-group col-sm-12 p-0">
+
+                    <div class="form-group col-sm-12">
+                        <label>{{'documents.field_name' | translate}} * </label>
+                        <input type="text" class="form-control" name="field_name" ng-model="templateQuestion.field_name"  required>
+                        <span class="error-message" ng-if="templateQuestionform.field_name.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>{{'documents.field_type' | translate}}* </label>
+                        <select class="form-control" name="field_type" ng-model="templateQuestion.field_type" required>
+                            <option value="" class="font-italic">-{{'documents.field_type'| translate}}-</option>
+                                <option value="Contract Information">{{'contract.contract_info'|translate}}</option>
+                                <option value="Contract Tag">{{'documents.contract_tag'|translate}}</option>
+                                <option value="Contract Value">{{'contract.contracts_value'|translate}}</option>
+                                <option value="Right">{{'relationship-classification.position.right'|translate}}</option>
+                                <option value="Obligation">{{'documents.obligation'|translate}}</option>
+                            </select>
+                        <span class="error-message" ng-if="templateQuestionform.field_type.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+
+                    </div>
+                    <div class="clearfix"> </div>
+                    <div class="form-group col-sm-12">
+                        <label>{{'questions.question' | translate}}*</label>
+                        <textarea type="text" class="form-control" name="question" ng-model="templateQuestion.question"  required></textarea>
+                        <span class="error-message" ng-if="templateQuestionform.question.$error.required && templateQuestionform.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+                  
+
+                <div class="modal-footer form-group col-sm-12 text-right m-t-3">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</script>
+<style>
+    .document_field_name{
+          width:20%
+    }
+   .document_field_type{
+        width:20%;
+   }
+  .document_question{
+       width:50%;                           
+  }
+  .document_actions{
+       width:10%;
+  }
+    .w155 {
+        width: 155px;
+        padding-right: 5px !important;
+    }
+</style>

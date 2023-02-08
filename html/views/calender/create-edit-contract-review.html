@@ -1,0 +1,105 @@
+<div class="modal-header">
+    <h6 class="modal-title lh14" id="modal-title">
+        <span ng-if="data.action_item">{{data.action_item}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f14"></a>
+        </span>
+        <span ng-if="!data.action_item">{{'contract.action_item' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f14"></a>
+        </span>
+        <span class="display-block pt4 mb4 pb-0" ng-if="data.created_by_name">
+            <span class="f11 gray">{{'contract.created_by' | translate}}:</span>
+            <span class="f11">{{data.created_by_name}}</span>
+            <span class="f11 gray">{{'general.on' | translate}}:</span>
+            <span class="f11">{{data.created_on | utcToLocal:'date'}}</span>
+        </span>
+    </h6>
+</div>
+<form novalidate name="actionItemForm">
+    <div class="modal-body clearfix">    
+    <div class="col-sm-12 p0">
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.provider_name' | translate}}</label>
+            <label class="gray">{{data.provider_name | checkEmpty}}</label>
+        </div>
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5" ng-if="data.type == 'contract' || data.type=='provider'">{{'contract.contract_name' | translate}}</label>                    
+                    <label class="col-sm-12 p0 mb5" ng-if="data.type == 'project'">{{'project.project_name' | translate}}</label>                    
+                    <label class="gray" ng-if="data.type == 'project'">{{data.contract_name | checkEmpty}}</label>
+                    <label class="gray" ng-if="data.type == 'contract' || data.type=='provider'">{{data.contract_name | checkEmpty}}</label>
+        </div>
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'module.module' | translate}}</label>
+            <label class="gray">{{data.module_name | checkEmpty}}</label>
+        </div>
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.topic' | translate}}</label>
+            <label class="gray">{{data.topic_name  | checkEmpty}}</label>
+        </div>
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.responsible_user_id' | translate}}</label>
+            <label class="gray">{{data.user_name}}</label>
+        </div>
+        <div class="form-group col-sm-12 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.external_notification' | translate}}</label>
+            <label class="gray">{{data.external_users}}</label>
+        </div>
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.due_date' | translate}}</label>
+            <label class="gray">{{data.due_date | utcToLocal:'date' | checkEmpty}}</label>
+        </div>
+        
+        <div class="form-group col-sm-6 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.original_date' | translate}}</label>
+            <label class="gray">{{data.original_date | utcToLocal:'date' | checkEmpty}}</label>
+        </div>
+
+        <div class="form-group col-sm-12 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.priority' | translate}}</label>
+            <label class="gray">{{data.priority | checkEmpty}}</label>
+        </div>
+        <div class="form-group col-sm-12 p0">
+            <label class="col-sm-12 p0 mb5">{{'contract.description' | translate}}</label>
+            <label class="gray">{{data.description | checkEmpty}}</label>
+        </div>
+        <div class="clearfix"></div>
+        <label class=" form-control-label" for="textarea-responsibility1">{{'contract.comment' | translate}} *</label>
+        <div class="form-group col-sm-12 p0 mh-200 overflow-y-auto">
+            <div ng-show="data.comments_log.length>0">
+                <table class="table table-custom table-striped table-hover">
+                    <tbody>
+                        <tr ng-repeat="val in data.comments_log">
+                            <td>
+                                <span class="clearfix">{{val.comments}}</span>
+                                <span style="display: block;font-size: 10px" class="pull-right">
+                                    <span class="font-italic gray">
+                                        <span style="color:black">{{'general.by'| translate}}</span> {{val.user_name}}</span>
+                                    <span class="font-italic gray">
+                                        <span style="color:black">{{'general.on' | translate}}</span>
+                                        {{val.updated_on | utcToLocal:'date' | checkEmpty}}</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span ng-show="data.comments_log.length==0">{{data.comments_log | checkEmpty}}</span>
+        </div>                
+    </div>
+    </div>
+    <div class="modal-footer">               
+        <button type="button" class="btn btn-sm btn-danger pull-left" ng-click="cancel()"><i class="fa fa-ban"></i>
+            {{'general.cancel' | translate}}
+        </button>
+    </div>
+</form>
+<style>
+    .chosen-single {
+        height: 28px !important;
+        border-radius: 0px !important;
+    }
+</style>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>

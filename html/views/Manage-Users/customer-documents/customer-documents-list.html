@@ -1,0 +1,517 @@
+<div class="animated fadeIn">
+    <div class="contract-overview">
+        <div class="row relative">
+            <table class="table table-custom table-striped table-hover" st-pipe="getDocumentIntelligenceList" st-table="documentInfo">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+
+                            <div class="col-lg-12 p0">
+                                <div class="card">
+                                    <div class="col-sm-12 tableSelect-header">
+                                        <div class="form-group col-sm-2 pl0 custom-field pt10 wid-55 r-padding">
+                                            <select class="form-control" id="select" name="select1" size="1"
+                                                ng-model="ocr_status"
+                                                ng-class="(ocr_status)?'active-filter':''" st-input-event="change"
+                                                st-search="ocr_status">
+                                                <option value="" class="font-italic">-{{'documents.document_ocr'|translate}}-</option>
+                                                <option value="not_started">{{'documents.not_started'|translate}}</option>
+                                                <option value="P">{{'documents.processing'|translate}}</option>
+                                                <option value="R">{{'documents.ready'|translate}}</option>
+                                                <option value="C">{{'contract.completed'|translate}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2 pl0 custom-field pt10 pr5 r-padding"
+                                            style="width: 110px;">
+                                            <select class="form-control" id="select0" name="select0" size="1"
+                                                ng-model="analysis_status"
+                                                ng-class="(analysis_status)?'active-filter':''"  st-input-event="change"
+                                                st-search="analysis_status">
+                                                <option value="" class="font-italic">- {{'documents.document_analysis'|translate}} -</option>
+                                                <option value="not_started">{{'documents.not_started'|translate}}</option>
+                                                <option value="P">{{'documents.processing'|translate}}</option>
+                                                <option value="R">{{'documents.ready'|translate}}</option>
+                                                <option value="C">{{'contract.completed'|translate}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2 custom-field pl0 pt10  wid-55 r-padding">
+                                            <select class="form-control" id="select1" name="select2" size="1"
+                                                ng-model="validate_status" ng-class="(validate_status)?'active-filter':''"
+                                                st-input-event="change" st-search="validate_status">
+                                                <option value="" class="font-italic">-{{'documents.document_validation'| translate}}-</option>
+                                                <option value="not_started">{{'documents.not_started'|translate}}</option>
+                                                <option value="P">{{'documents.processing'|translate}}</option>
+                                                <option value="R">{{'documents.ready'|translate}}</option>
+                                                <option value="C">{{'contract.completed'|translate}}</option>
+                                            </select>
+                                        </div>
+
+
+                                        <span class="pull-right">
+                                            <button class="btn btn-sm btn-primary btn-radius" type="button"
+                                                ng-click="createDocumentUploadPdf()"
+                                                title="{{'UploadPdf' | translate}}">
+                                                <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}
+                                            </button>
+
+
+                                        </span>
+                                        <div class="col-sm-3 p0 table-search pull-right  p-r-3  w220"
+                                            style="padding-top: 16px; padding-right: 4px;">
+                                            <input type="text" class="form-control"
+                                                placeholder="{{'general.search' | translate}}" st-search="search_key"
+                                                id="search_key" st-input-event="change">
+                                            <i class="fa icon-search" style="padding-top: 16px;"></i>
+                                        </div>
+                                    </div>
+                                </td>    
+                                </tr>
+                                    <tr>
+
+                                                <th st-sort="original_document_name" class="document-type-file">{{'documents.document_file_name' | translate}}</th>
+                                                <th st-sort="created_on" class="time-stamp">{{'documents.time_stamp' | translate}}</th>
+                                                <th st-sort="owner_name" class="document-type-owner">{{'contract.responsible' | translate}}</th>
+                                                <th st-sort="delegate_name" class="document-type-delegate">{{'contract.delegate' | translate}}</th>
+                                                <th st-sort="template_name" class="document-type-template">{{'Template' | translate}}</th>
+                                                <th class="document-type-actions">{{'general.actions' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-show="!documentLoading">
+                                            <tr ng-repeat="row in documentInfo">
+                                                <td class="category-name document-type-file">
+                                                    <div class="category-doc">
+                                                        <span class="category-document-type">{{'documents.original' | translate}}</span>
+                                                        <span class="custom-ellipsis" style="width: calc(100% - 60px);">
+                                                        <span class="skyblue pointer category-doc-text" style="text-decoration: underline;" title="{{row.original_document_name}}"
+                                                            ng-click="downloadPdf(row,'original')">{{row.original_document_name |checkEmpty}}</span>
+                                                        </span>
+                                                        </div>
+                                                    <div class="category-doc">
+                                                        <span class="category-document-type">{{'documents.ocr' | translate}}</span>
+                                                        
+                                                        <span class="custom-ellipsis" style="width: calc(100% - 60px);" ng-if="row.ocr_document_path.length>0" 
+                                                             ng-click="downloadPdf(row,'ocr')"> 
+                                                        <span class="skyblue pointer category-doc-text"
+                                                         style="text-decoration: underline;" title="{{row.ocr_display_name}}">{{row.ocr_display_name|checkEmpty}}</span>
+                                                        </span>
+                                                        <span class="custom-ellipsis" style="width: calc(100% - 60px);"  
+                                                        ng-if="row.ocr_document_path.length==0 || row.ocr_document_path.length==null"><span class="category-doc-text">{{row.ocr_display_name|checkEmpty}}</span></span>  
+
+                                                    </div>
+                                                </td>
+                                                <td class="time-stamp custom-ellipsis">
+                                                    <span class="ellipsis-block" title="{{row.created_on | utcToLocal: 'date'  | checkEmpty}}">{{row.created_on | utcToLocal: 'toLocalDate'  | checkEmpty}}</span>
+                                                </td>
+                                                <td class="start-date document-type-owner custom-ellipsis">
+                                                    <span class="ellipsis-block" title="{{row.owner_name}}">{{row.owner_name}}</span>
+                                                </td>
+                                                <td class="end-date document-type-delegate custom-ellipsis">
+                                                    <span class="ellipsis-block" title="{{row.delegate_name}}">{{row.delegate_name}}</span>
+                                                </td>
+                                                <td class="end-date document-type-template custom-ellipsis">
+                                                    <span class="ellipsis-block" title="{{row.template_name}}">{{row.template_name}}</span>
+                                                </td>
+                                                <td class="business-unit document-type-actions">
+                                                    <button class="btn btn-sm btn-primary btn-radius" style="display:none;" type="button" ng-click="createDocumentUploadPdf()">
+                                                        <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' |translate}}
+                                                    </button>
+                                                    <div class="intelligence-button-group">
+                                                        <div class="intelligence-button-list">
+                                                            <button type="button" class="btn-block" ng-class="{'btn btn-success pointer':(row.ocr_status=='C'),
+                                                                                                'btn btn-warning pointer':(row.ocr_status =='P'),
+                                                                                                'btn btn-primary pointer':(row.ocr_status =='R'),
+                                                                                                'btn btn-danger pointer':(row.ocr_status =='F'),
+                                                                                                'btn btn-default hand-symbol':(row.ocr_status == null ||  row.ocr_status == '')}"
+                                                                                                uib-tooltip="{{row.failurereasonTooltip}}" tooltip-class="tooltip-class" tooltip-placement="top"  tooltip-append-to-body="true">{{'documents.ocr' | translate}}</button>
+                                                            <div class="intelligence-status" ng-if="row.ocr_status =='C'">{{'contract.completed' | translate}}</div>
+                                                            <div class="intelligence-status" ng-if="row.ocr_status =='P'">{{'documents.processing' | translate}} </div>
+                                                        </div>
+                                                        <div class="intelligence-button-list">
+                                                            <button type="button" class="btn-block" ng-class="{'btn btn-success pointer':(row.analysis_status=='C'),
+                                                                                                  'btn btn-warning pointer':(row.analysis_status=='P' || row.analysis_status=='P1' || row.analysis_status=='P2' || row.analysis_status=='P3' || row.analysis_status=='P4'),
+                                                                                                  'btn btn-primary pointer':(row.analysis_status =='R'),
+                                                                                                  'btn btn-danger pointer':(row.analysis_status =='F'),
+                                                                                                 'btn btn-default hand-symbol':(row.analysis_status == null ||  row.analysis_status == '')}">{{'documents.document_analysis' | translate}}</button>
+                                                            <div class="intelligence-status" ng-if="row.analysis_status =='C'">{{'contract.completed' | translate}}</div>
+                                                            <div class="intelligence-status" ng-if="(row.analysis_status=='P' || row.analysis_status=='P1' || row.analysis_status=='P2' || row.analysis_status=='P3' || row.analysis_status=='P4')">{{'documents.processing' | translate}} </div>                                     
+                                                        </div>
+                                                        <div class="intelligence-button-list">
+                                                            <button type="button" class="btn-block" ng-class="{'btn btn-success pointer':(row.validate_status=='C'),
+                                                                                                'btn btn-warning pointer':(row.validate_status=='P'),
+                                                                                                'btn btn-primary pointer':(row.validate_status =='R'),
+                                                                                                'btn btn-danger pointer':(row.validate_status =='F'),
+                                                                                                'btn btn-default hand-symbol':(row.validate_status == null || row.validate_status == '')}"
+                                                                ng-click="(row.validate_status =='R' || row.validate_status=='P' ||  row.validate_status=='C') ? validate(row,'ocr') : false;">{{'contract.validate' | translate}}</button>
+                                                            <div class="intelligence-status" ng-if="row.validate_status =='C'">{{'contract.completed' | translate}}</div>
+                                                            <div class="intelligence-status" ng-if="row.validate_status =='P'">{{'documents.processing' | translate}} {{row.validation_percentage}} </div>
+                                                        </div>
+                                                      
+                                                        <div class="intelligence-button-list intelligence-button-list-last">
+                                                        <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right create-cust-list">
+                                                            <a href uib-dropdown-toggle class="font-sm" >                                                                
+                                                                <button ng-class="{'btn btn-block btn-success pointer':(row.create_status=='C'),
+                                                                'btn btn-block btn-warning pointer':(row.create_status=='P'),
+                                                                'btn  btn-block btn-primary pointer':(row.create_status =='R'),
+                                                                'btn  btn-block btn-danger pointer':(row.create_status =='F'),
+                                                                'btn  btn-block btn-default hand-symbol':(row.create_status == null || row.create_status == '')}" 
+                                                                            title="{{'contract.create_contract' | translate}}" style="border-top-left-radius: 4px;border-bottom-left-radius: 4px; border-radius: 5px; line-height: 15px;">
+                                                                            <span style="padding-left: 5px;">{{'general.create'| translate}}</span>
+                                                                            <i id="documentPdf" class="fa fa-angle-double-down"></i>
+                                                                </button>
+                                                                <div class="intelligence-status" ng-if="row.create_status =='C'">{{'contract.completed'|translate}}</div>
+                                                                <div class="intelligence-status" ng-if="row.create_status =='P'">{{'documents.processing' | translate}} </div>
+                                                            </a> 
+                                                            
+                                                             <ul ng-if="(row.create_status =='R' || row.create_status=='P')" class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true" 
+                                                                uib-dropdown-menu aria-labelledby="simple-dropdown"  style="min-width:7.9rem;">
+                                                                <div ng-class="{'tasks-list-process':(row.create_status == 'P'),'tasks-list-ready':(row.create_status == 'R')}" 
+                                                                             style="overflow-y: auto;max-height: 160px;">                                                                  
+                                                                        <li>
+                                                                            <a href="javascript:;" style="padding: 4px 6px;" ng-if="row.contract_id==null"   ng-click="newContract(row)">
+                                                                                <span class="f12 dark"> {{'contract.new_contract'|translate}}</span> 
+                                                                             </a>
+                                                                             
+                                                                             <a href="javascript:;" style="padding: 4px 6px;" ng-if="row.contract_id==null" ng-click="updateContractFromDocument(row)">
+                                                                                <span class="f12 dark"> {{'documents.update_contract'|translate}}</span> 
+                                                                             </a>
+
+                                                                             <a href="javascript:;" style="padding: 4px 6px;" ng-if="row.contract_id!=null"  ng-click="updateSelectedContract(row)">
+                                                                                <span class="f12 dark"> {{'documents.update_contract'|translate}}</span> 
+                                                                             </a>
+                                                                             <a href="javascript:;" style="padding: 4px 6px;" ng-if="row.contract_id!=null"  ng-click="completeProcess(row)">
+                                                                                <span class="f12 dark"> {{'documents.complete_process'|translate}}</span> 
+                                                                             </a>
+                                                                            
+                                                                        </li>
+                                                                </div>
+                                                                
+                                                                   
+                                                            </ul> 
+                                                        </span>
+                                                        </div>
+
+                                                        <div class="intelligence-button-actions">
+                                                            <span ng-click="editDocumentUpload(row)">
+                                                                <i class="fa fa-pencil pointer"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div  class="intelligence-button-actions">
+                                                            <!-- <span class="pointer" ng-click="deleteDocument(row)" 
+                                                            ng-if="(row.ocr_status=='C'  && row.analysis_status=='C'  && row.ocr_status !='R') || (row.ocr_status=='F') || (row.md5_file_text==0 && row.ocr_status =='R')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </span> -->
+
+                                                            <span class="pointer" ng-click="deleteDocument(row)">
+                                                                <i class="fa fa-trash"></i>
+                                                            </span>
+
+                                                        
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tbody ng-show="documentLoading">
+                                            <tr>
+                                                <td colspan="15" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="emptyDocumentTable">
+                                            <tr>
+                                                <td colspan="15" class="text-sm-center">{{'general.no_data' |translate}} </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-sm-center" colspan="15">
+                                                    <!-- <div st-pagination="" st-items-by-page="displayCount" st-template="pagination.html" class="text-sm-center"></div> -->
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="documentCount>10">
+                                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPagesDocument(displayCount)"
+                                                                ng-options="item for item in pagesNumber" selected>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="pagination.html">
+<div class="pagination" ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(1)" href="javascript:;">&lt;&lt;</a>
+        </li>
+        <li ng-if="currentPage > 1">
+            <a ng-click="selectPage(currentPage-1)" href="javascript:;">&lt;</a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a ng-click="selectPage(page)" href="javascript:;">{{page}}</a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(currentPage+1)" href="javascript:;">></a>
+        </li>
+        <li ng-if="currentPage < numPages">
+            <a ng-click="selectPage(numPages)" href="javascript:;">>></a>
+        </li>
+    </ul>
+</div>
+</script>
+
+
+
+
+<style>
+
+
+.tasks-list-process {
+    background-color: #ed7d31;
+    /* background-color: #4472c4; */
+}
+
+.tasks-list-ready {
+    background-color: #4472c4;
+}
+
+.c-dropdown .dropdown-menu li a {
+    border-bottom: none !important;
+}
+
+.c-dropdown .dropdown-menu li a .dark{
+    color: #fff !important;
+}
+
+.c-dropdown .dropdown-menu li a:hover {
+    background: transparent;
+    text-decoration: none;
+}
+
+
+    .create-cust-list .dropdown-toggle {
+    padding: 0px !important;
+
+}
+    .intelligence-button-group {
+        display: flex;
+    }
+
+    .intelligence-button-group .intelligence-button-list {
+        /* width: 18%; */
+        min-width: 63px;
+        margin-right: 8px;
+    }
+
+    .intelligence-button-group div button {
+        border-radius: 4px;
+        font-size: 12px;
+        padding: 5px 7px;
+    }
+
+    .intelligence-button-group div .intelligence-status {
+        font-size: 8px;
+        text-align: center;
+        color: #464646;
+    }
+
+    .document-type-file {
+        width: 32%;
+    }
+    .time-stamp{
+        width: 10%;
+    }
+
+    .document-type-actions {
+        width: 26%;
+    }
+
+    .document-type-owner,
+    .document-type-delegate,
+    .document-type-template {
+        width: 14%;
+    }
+
+    .category-document-type {
+        display: block;
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .intelligence-button-list .btn-success {
+        background-color: #70ad47;
+        border-color: #70ad47;
+        color: #fff;
+    }
+
+    .intelligence-button-list .btn-primary {
+        background-color: #4472c4;
+        border-color: #4472c4;
+        color: #fff;
+    }
+
+    .intelligence-button-list .btn-warning {
+        background-color: #ed7d31;
+        border-color: #ed7d31;
+        color: #fff;
+    }
+
+    .intelligence-button-list .btn-default {
+        background-color: #a5a5a5;
+        border-color: #a5a5a5;
+        color: #fff;
+    }
+
+    .intelligence-button-actions {
+        padding: 5px 0 0 10px;
+    }
+
+    .intelligence-button-group div button {
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 3px 5px;
+}
+
+    .intelligence-button-actions span i {
+        margin-right: 5px;
+        font-size: 13px;
+    }
+
+    .intelligence-button-actions span .fa.fa-trash {
+        font-size: 16px;
+    }
+
+    /* .intelligence-button-list .btn-block:active:hover, 
+    .intelligence-button-list .btn-block:active:focus, 
+    .intelligence-button-list .open > .btn-block.dropdown-toggle:hover, 
+    .intelligence-button-list .open > .btn-block.dropdown-toggle.focus {
+        background-color: #a5a5a5 !important;
+        border-color: #a5a5a5 !important;
+        color: #fff;
+    } */
+    #single-button.document-custom-drop{
+    background: #4d97f2;
+    padding: 5px 10px;
+    }
+    #single-button.document-custom-drop:hover{
+    background: #0a68b4;
+    }
+    #single-button.document-custom-drop i{
+    font-size: 16px;
+    color: #fff;
+    }
+
+    .document-drop-menu.document-acceletor {
+        padding: 10px;
+    }
+    
+    .document-drop-menu.document-acceletor span {
+        display: inline-block;
+        margin-top: 0;
+    }
+
+    .intelligence-button-group {
+    display: flex;
+    height: 30px;
+}
+
+
+
+    .showMenu {
+    padding: 10px 15px;
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+    background: #FFF;
+    display: none;
+    top: 85px;
+    box-shadow: 1px 5px 8px #b7b5b5;
+}
+
+.showMenu.showDivMenu {
+    display: block;
+}
+
+.showMenu.document-drop-menu {
+    top: 31px;
+    left: 0px;
+    width: 125px;
+}
+
+.input-group {
+    position: relative;
+
+}
+
+
+
+.create-button .btn  {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-radius: 0px;
+    font-size: 12px;
+    padding: 5px 25px;
+}
+.intelligence-button-group .intelligence-button-list{
+    width: 17%;
+    margin-right: 8px;
+}
+
+.intelligence-button-group .intelligence-button-list.intelligence-button-list-last{
+     width: inherit !important;
+}
+
+
+.intelligence-button-group .input-group {
+    width: 30%;
+
+}
+.intelligence-button-list .btn:focus-visible,.intelligence-button-list .btn:focus {
+  outline: none;
+}
+.category-doc{
+    display: flex;
+}
+.category-doc-text{
+        position: absolute;
+        left: 7px;
+        right: 0;
+        top: 0;
+        display: block;
+        width: 99%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+}
+.intelligence-button-list-last ul{
+        border: none;
+        top: 22px;
+}
+.tooltip-class .tooltip-inner {
+        background-color: #f63c3a;
+}
+.tooltip-class.tooltip.top .tooltip-inner::before,
+.tooltip-class.tooltip.bs-tether-element-attached-bottom .tooltip-inner::before{
+    border-top-color: #f63c3a !important;
+}
+@media(max-width:1400px){
+    .document-type-actions {
+        width: 27.5%;
+    }
+
+    .document-type-owner,
+    .document-type-delegate,
+    .document-type-template {
+        width: 13.5%;
+    }
+}
+
+
+</style>
+

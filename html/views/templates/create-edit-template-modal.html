@@ -1,0 +1,76 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'templates.template' | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+    </h6>
+</div>
+<form novalidate name="templateForm" ng-submit="templateForm.$valid && saveTemplate(template)">
+    <div class="modal-body clearfix" id="modal-body">       
+        <div class="col-md-12 form-group" style="margin-bottom: 0px; padding: 0px;" ng-if="(!template.id_template && forImport )">
+            <table class="table table-custom table-striped table-hover" st-pipe="getTemplatesToImport" st-table="templates" >
+                <thead>
+                    <th>{{'templates.template_name' | translate}} </th>
+                    <th style="text-align: right;"># {{'templates.modules' | translate}} </th>
+                    <th style="text-align: right;"># {{'templates.topics' | translate}}</th>
+                    <th style="text-align: right;"># {{'templates.questions' | translate}}</th>
+                    <th style="text-align: center;"> {{'contract.action' | translate}}</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in templates">
+                        <td>{{item.template_name}}</td>
+                        <td class="" style="text-align: right;">{{item.module_count}}</td>
+                        <td class="" style="text-align: right;">{{item.topics_count}}</td>
+                        <td class="" style="text-align: right;">{{item.topics_questions_count}}</td>
+                        <td style="text-align: center;">
+                            <a href="javascript:;" ng-click="importTemplate(item);" class="green mr-1" title="Import">
+                                    <i class="fa fa-download"></i>
+                            </a>
+                             <a href="javascript:;" ng-click="preview(item);" class="gray mr-1" title="Preview"> 
+                                    <i class="fa fa-eye"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="6">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords1>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages1(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="col-md-12 form-group"  ng-if="!forImport">
+            <label>{{'templates.template_name' | translate}} *</label>
+            <input type="text" ng-model="template.template_name" class="form-control" 
+                    name="template_name" required/>
+            <span class="error-message" ng-if="templateForm.template_name.$error.required && templateForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="form-group col-sm-4" ng-if="template.id_template">
+            <label>{{'general.status' | translate}} *</label>
+            <select class="form-control" ng-model="template.template_status" ng-disabled="user.access!='wa'" name="template_status" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="1">{{'general.active' | translate}}</option>
+                <option value="0">{{'general.inactive' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="templateForm.template_status.$error.required && templateForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+    </div>
+    <div class="modal-footer" ng-if="!forImport">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+        </button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+            {{'general.cancel' | translate}}
+        </button>
+    </div>
+</form>
+
+

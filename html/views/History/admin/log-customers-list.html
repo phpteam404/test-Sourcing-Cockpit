@@ -1,0 +1,80 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['view']">
+            <table class="table table-custom table-striped table-hover" st-pipe="getCustomersHistoryList" st-table="customersList">
+                <thead>
+                <tr>
+                    <td colspan="12">
+                        <div class="col-sm-12 clearfix p0">
+                            <div class="action-head mb0">
+                                <div class="col-sm-3 p0 table-search pull-right">
+                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                           st-search="search_key" st-input-event="change">
+                                    <i class="fa icon-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="logo-th hand-symbol"></th>
+                    <th st-sort="company_name">{{'customer.company_name' | translate}}</th>
+                    <th st-sort="contracts_count"># {{'customer.contracts' | translate}}</th>
+                    <th class="hand-symbol"># {{'access_log.bu' | translate}}</th>
+                    <th class="hand-symbol"># {{'access_log.bu_owners' | translate}}</th>
+                    <th class="hand-symbol"># {{'access_log.bu_delegates' | translate}}</th>
+                    <th class="hand-symbol"># {{'access_log.contributors' | translate}}</th>
+                    <th class="hand-symbol"># {{'access_log.reporting_owner' | translate}}</th>
+                    <th class="hand-symbol">{{'access_log.storage' | translate}}</th>
+                    <th st-sort="company_status">{{'customer.status' | translate}}</th>
+                    <th class="hand-symbol"#> {{'access_log.users' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                <tr ng-repeat="row in customersList">
+                    <td style="width: 50px;">
+                        <span class="country-logo"><img src="{{row.company_logo}}"/></span>
+                    </td>
+                    <td>{{row.company_name}}</td>
+                    <td>{{row.contracts_count}}</td>
+                    <td>{{row.business_unit_count}}</td>
+                    <td>{{row.bu_owners_count.count}}</td>
+                    <td>{{row.bu_delegates_count.count}}</td>
+                    <td>{{row.contributors_count.count}}</td>
+                    <td>{{row.reporting_owners_count.count}}</td>
+                    <td>{{row.storage.size}}</td>
+                    <td>
+                        <span ng-if="row.company_status == 1" class="green">{{'general.active' | translate}}</span>
+                        <span ng-if="row.company_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                    </td>
+                    <td>
+                        <a ng-if="row.users_count.count > 0" href="javascript:;" ng-click="goToCustomerUsers(row)">{{row.users_count.count}}</a>
+                        <span ng-if="row.users_count.count == 0">{{row.users_count.count}}</span>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                <tr><td colspan="12" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                <tr><td colspan="12" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="12">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

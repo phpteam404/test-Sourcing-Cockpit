@@ -1,0 +1,254 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12 p0 card">
+            <form novalidate name="createReportForm">
+                <div class="outer">
+                    <div class="inner">
+                        <table class="table table-custom table-striped table-hover reports-table fixed-layout-cls">
+                            <thead>
+                                <tr>
+                                    <th class="report-checkbox-cls" style="max-width: 30px !important;height: 42px;">
+                                    </th>
+                                    <th class="w240 report-contract-cls">
+                                        <span>{{'reports.supplier_contract' | translate}}</span>
+                                    </th>
+                                    <th class="w100 report-classification-cls">
+                                        <div><span>{{'reports.classification' | translate}}</span></div>
+                                    </th>
+                                    <th class="w102 report-latest-review-cls">
+                                        <div><span>{{'reports.latest_review' | translate}}</span></div>
+                                    </th>
+                                    <th class="" ng-repeat="module in searchModules">
+                                        <span uib-tooltip="{{module.module_name}}">{{module.module_short_name}}</span>
+                                    </th>
+                                    <th class="w25"><span class="red-bg w20 h10 display-block"></span></th>
+                                    <th class="w25"><span class="amber-bg w20 h10 display-block"></span></th>
+                                    <th class="w25"><span class="bg-green w20 h10 display-block"></span></th>
+                                    <th class="w25"></th>
+                                    <th class=""></th>
+                                    <th class=""><span>{{'reports.comments' | translate}}</span></th>
+                                </tr>
+                            </thead>
+                            <tbody ui-sortable="sortableOptions" ng-model="reportsData">
+                                <tr ng-repeat="row in reportsData">
+                                    <td class="w20 report-checkbox-cls"
+                                        ng-init="row.is_checked = (row.is_checked==undefined || row.is_checked==1)?1:row.is_checked">
+                                        <label class="checkbox" for="row.id_contract">
+                                            <input type="checkbox" name="inline-checkbox1" ng-model="row.is_checked"
+                                                id="row.id_contract" ng-true-value="1" ng-false-value="0"
+                                                ng-checked="row.is_checked">
+                                        </label>
+                                    </td>
+                                    <td class="report-contract-cls">
+                                        <span class="orange display-block ellipis w240">{{row.contract_name}}</span>
+                                        <span class="ellipis w240 gray f11"
+                                            uib-tooltip="{{row.provider_name}}/{{row.bu_name}}/{{row.contract_status}}">
+                                            {{row.provider_name}} / {{row.bu_name}} / {{row.contract_status}}</span>
+                                    </td>
+                                    <td class="report-classification-cls"><span
+                                            uib-tooltip="{{row.relationship_category_name}}">{{row.relationship_category_short_name}}</span>
+                                    </td>
+                                    <td class="report-latest-review-cls">
+                                        {{row.latest_review_date | utcToLocal: 'date' | checkEmpty}}</td>
+                                    <td ng-repeat="module in searchModules" style="position: relative">
+                                        <span ng-repeat="mod in row.modules"
+                                            ng-if="mod.parent_module_id == module.parent_module_id">
+                                            <span id="id1_+{{row.$index}}_+{{mod.module_id}}">
+                                                <span ng-if="mod.org_score == 'Green'" class="span-green-small"></span>
+                                                <span ng-if="mod.org_score == 'Red'" class="span-red-small"></span>
+                                                <span ng-if="mod.org_score == 'Amber'" class="span-amber-small"></span>
+                                                <span ng-if="mod.org_score == 'N/A'" class="span-na-small"></span>
+                                                <span ng-if="(mod.org_score == '') || (!mod.org_score)"
+                                                    class="span-null-small"></span>
+                                            </span>
+                                            <a href="javascript:;"
+                                                ng-init="row.module_score[row.id_contract][mod.module_id] = mod.score;"
+                                                uib-popover-template="'myModuleScoreTemplate.html'"
+                                                popover-placement="bottom" popover-append-to-body=true
+                                                popover-trigger="'outsideClick'" class="btn btn-default widget-span p0">
+                                                <span ng-model="row.module_score[row.id_contract][mod.module_id]"
+                                                    id="id_+{{row.$index}}_+{{mod.module_id}}">
+                                                    <span
+                                                        ng-if="row.module_score[row.id_contract][mod.module_id] == 'Green'"
+                                                        class="span-green"></span>
+                                                    <span
+                                                        ng-if="row.module_score[row.id_contract][mod.module_id] == 'Red'"
+                                                        class="span-red"></span>
+                                                    <span
+                                                        ng-if="row.module_score[row.id_contract][mod.module_id] == 'Amber'"
+                                                        class="span-amber"></span>
+                                                    <span
+                                                        ng-if="row.module_score[row.id_contract][mod.module_id] == 'N/A'"
+                                                        class="span-na"></span>
+                                                    <span
+                                                        ng-if="(row.module_score[row.id_contract][mod.module_id] == '') || (!row.module_score[row.id_contract][mod.module_id])"
+                                                        class="span-null"></span>
+                                                </span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td class="text-sm-center">{{row.topic_red_count}}</td>
+                                    <td class="text-sm-center">{{row.topic_amber_count}}</td>
+                                    <td class="text-sm-center">{{row.topic_green_count}}</td>
+                                    <td class="text-sm-center">
+                                        <span title="Decision Required" ng-hide="(enable || row.decision_required==1)"
+                                            ng-model="row.decision_required"><i class="fa fa-flag-o gray"
+                                                ng-click="enable = !enable;changeDescision(enable,row)"></i></span>
+                                        <span title="Decision Required" ng-show="(enable || row.decision_required==1)"
+                                            ng-model="row.decision_required"><i class="fa fa-flag-o red"
+                                                ng-click="enable = !enable;changeDescision(enable,row)"></i></span>
+                                    </td>
+                                    <td class="text-sm-center" ng-init="encodedVal=(row.id_contract | encode)">
+                                        <span ng-if="row.action_items_count == 0"
+                                            uib-tooltip="{{'reports.action_items' | translate}}">{{row.action_items_count}}</span>
+                                        <a title="{{'reports.action_items' | translate}}"
+                                            ng-if="row.action_items_count != 0" href="javascript:;" target="_blank"
+                                            ui-sref="app.actionItems({cId:encodedVal})">{{row.action_items_count}}</a>
+                                    </td>
+                                    <td>
+                                        <textarea type="text" class="form-control" ng-model="row.comments"
+                                            rows="2"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="emptyTable">
+                                <tr>
+                                    <td colspan="15" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-12 mb-1" ng-if="!emptyTable">
+                    <button ng-if="report_id" class="btn btn-sm btn-danger" type="button"
+                        ng-click="changeCrietia($event,report_name)">
+                        <i class="icon-edit"></i>&nbsp; {{'reports.change_criteria' | translate}}</button>
+                    <button class="btn btn-sm btn-warning" type="button" ng-click="getContractsToReport()">
+                        <i class="icon-plus"></i>&nbsp; {{'reports.add_ind_contracts' | translate}}</button>
+                </div>
+                <div class="col-sm-12 mb-1" ng-if="!emptyTable">
+                    <button class="btn btn-sm btn-primary" type="button" ng-click="saveReport(reportsData,'save')">
+                        <i class="fa fa-save"></i>&nbsp; {{'general.save' | translate}}</button>
+                    <button ng-if="report_id" class="btn btn-sm btn-primary" type="button"
+                        ng-click="saveReport(reportsData,'save as')">
+                        <i class="fa fa-dot-circle-o"></i>&nbsp; {{'reports.save_as' | translate}}</button>
+                    <button ng-if="report_id" class="btn btn-sm btn-success" type="button"
+                        ng-click="loadExportModal(reportsData)">
+                        <i class="icon-export2"></i>&nbsp; {{'reports.export' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myModuleScoreTemplate.html">
+    <div class="radio_widget">
+        <span>
+            <input type="radio" id="radio3" name="same_{{scr.module_id}}" value="Red" checked  ng-model="row.module_score[row.id_contract][mod.module_id]">
+            <label for="radio3" class="third_label" title="Red"></label>
+        </span>
+        <span>
+            <input type="radio" id="radio2" name="same_{{scr.module_id}}" value="Amber" checked  ng-model="row.module_score[row.id_contract][mod.module_id]">
+            <label for="radio2" class="sec_label" title="Amber"></label>
+        </span>
+        <span>
+            <input type="radio" id="radio1" name="same_{{scr.module_id}}" value="Green" checked  ng-model="row.module_score[row.id_contract][mod.module_id]">
+            <label for="radio1" class="first_label" title="Green"></label>
+        </span>
+        <span>
+            <input type="radio" id="radio4" name="same_{{scr.module_id}}" value="N/A" checked  ng-model="row.module_score[row.id_contract][mod.module_id]">
+            <label for="radio4" class="fourth_label" title="Not Applicable"></label>
+        </span>
+    </div>
+</script>
+<script type="text/ng-template" id="report-name.html">
+    <div class="modal-header">
+        <h6>{{'general.save' | translate}} {{'reports.report' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate ng-submit="reportNameForm.$valid && save(report_name1)" name="reportNameForm">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>{{'reports.report_name' | translate}} *</label>
+                <input type="text" class="form-control" ng-model="report_name1" alpha-numeric name="name" required/>
+                <span ng-if="reportNameForm.name.$error.required && reportNameForm.$submitted" class="error-message">{{'general.required_field' | translate}}</span>
+                <div class="error-message gray pull-right">
+                    <span class="clearfix"><i class="fa fa-info-circle"></i> {{'reports.report_warn' | translate}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit"> {{'general.save' | translate}}</button>
+            <button class="btn btn-danger" type="button" ng-click="cancel()"> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="add-individual-contracts.html">
+    <div class="modal-header">
+        <h6>{{'reports.add_contracts' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate ng-submit="addContracts(selectedContracts)">
+        <div class="modal-body" style="max-height: 500px;overflow-y:auto;">
+            <table class="table table-custom table-striped table-hover modal-table" st-table="contractReports">
+                <thead>
+                    <tr>
+                        <th class="hand-symbol"></th>
+                        <th st-sort="provider_name" style="width:20%;">{{'contract.provider_name' | translate}}</th>
+                        <th st-sort="bu_name" style="width:15%;">{{'reports.bu_unit' | translate}}</th>
+                        <th st-sort="contract_name" style="width:21%;">{{'contract.contract_name' | translate}}</th>
+                        <th st-sort="latest_review_date" style="width:20%;">{{'reports.latest_fm_date' | translate}}</th>
+                        <th st-sort="contract_status" style="width:19%;">{{'reports.status' | translate}}</th>
+                        <th st-sort="contract_progress" style="width:5%;">{{'contract.module_questions.progress' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="contractReports.length>0">
+                    <tr ng-repeat="contract in contractReports">
+                        <!--<td>
+                            <label class="checkbox display-block" for="id1_+{{contract.id_contract}}">
+                                <input type="checkbox" id="id1_+{{contract.id_contract}}" class="pl-1" ng-false-value="0"
+                                       ng-true-value="{{contract.id_contract}}" ng-model="selectedContracts[$index]">
+                            </label>
+                        </td>-->
+                        <td ng-init="encodedVal1='id1_'+contract.id_contract">
+                            <label class="checkbox display-block" for="{{encodedVal1}}">
+                                <input type="checkbox" id="{{encodedVal1}}" class="pl-1" ng-false-value="0"
+                                       ng-true-value="'{{contract.id_contract}}'" ng-model="selectedContracts[$index]">
+                            </label>
+                        </td>
+                        <td>
+                            {{contract.provider_name}}
+                        </td>
+                        <td>
+                            {{contract.bu_name}}
+                        </td>
+                        <td>
+                            {{contract.contract_name}}
+                        </td>
+                        <td>
+                            {{contract.latest_review_date | utcToLocal: 'date' | checkEmpty}}
+                        </td>
+                        <td>
+                            {{contract.contract_status | capitalize}}
+                        </td>
+                        <td style="width:10px;padding-right: 30px" class="pull-rightC">
+                            {{contract.contract_progress == null ? "0%":contract.contract_progress}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="contractReports.length ==0">
+                <tr><td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit"><i class="icon-plus-circle"></i>&nbsp;
+                {{'general.add' | translate}}</button>
+            <button class="btn btn-danger" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+    <div ng-if="noContracts" class="p-t-3 pb-1">
+        <span class="text-sm-center text-center pt-1" style="padding-left: 250px;">No Contracts</span>
+    </div>
+</script>

@@ -1,0 +1,126 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                <thead>
+                    <tr>
+                        <td colspan="5">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="onlyactive1">
+                                        <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                                    ng-true-value="1" ng-false-value="0"
+                                                    ng-model="req.status"
+                                                    ng-checked="req.status == 1"
+                                                    ng-change="getTopicsByStatus(req.status)"
+                                                    id="status">
+                                            <label class="onoffswitch-label assessment-switch mb-0"
+                                                    for="status">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary btn-radius" ng-click="updateTopic()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="topic_name" class="st-sort-ascent st-sort-descent">{{'topic.topic_name' | translate}}</th>
+                        <th st-sort="question_count" class="st-sort-ascent st-sort-descent">{{'module.question_count' | translate}}</th>
+                        <th st-sort="relation_question_count" class="st-sort-ascent st-sort-descent">{{'normal.no_of_relation_questions' | translate}}</th>
+                        <th st-sort="topic_status">{{'general.status' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-show="displayed.length>0" ng-repeat="row in displayed">
+                        <td>{{row.topic_name}}</td>
+                        <td>{{row.question_count}}</td>
+                        <td>{{row.relation_question_count}}</td>
+                        <td>
+                            <span  ng-if="row.topic_status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span  ng-if="row.topic_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td>
+                            <a href="javascript:;" title="{{'general.edit' | translate}}" class="icon-edit gray mr-h" ng-click="updateTopic(row)"></a>
+                            <a href="javascript:;" ng-click="gotoQuestions(row)" title="{{'topic.manage_question' | translate}}"
+                               class="mr-1 gray icon-gear mr-h"></a>
+                        </td>
+                    </tr>
+                    <tr ng-show="displayed.length<=0"><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="create-workflow-topics.html">
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'topic.topic' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="topicForm" ng-submit="topicForm.$valid && save(topic)">
+    <div class="modal-body clearfix" id="modal-body">
+        <div class="col-md-12 form-group">
+            <label>{{'topic.topic_name' | translate}} *</label>
+            <input type="text" ng-model="topic.topic_name" class="form-control" name="topic_name" required/>
+            <span class="error-message" ng-if="topicForm.topic_name.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="col-md-12 form-group">
+            <label>{{'topic.topic_type' | translate}} *</label>
+            <select  ng-model="topic.topic_type" class="form-control" name="topic_type" required
+                     ng-options="item.key as item.value for item in topicTypes">
+                <option value=""> -- {{'general.select' | translate}} -- </option>
+            </select>
+            <span class="error-message" ng-if="topicForm.topic_type.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <div class="form-group col-sm-4" ng-if="isEdit">
+            <label >{{'general.status' | translate}} *</label>
+            <select class="form-control"  ng-model="topic.topic_status" name="topic_status" required>
+                <option value="">-- {{'general.select' | translate}} --</option>
+                <option value="1">{{'general.active' | translate}}</option>
+                <option value="0">{{'general.inactive' | translate}}</option>
+            </select>
+            <span class="error-message" ng-if="topicForm.topic_status.$error.required && topicForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary"
+        ><i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</form>
+</script>

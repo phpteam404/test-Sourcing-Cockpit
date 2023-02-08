@@ -1,0 +1,92 @@
+<header class="navbar">
+
+    <div class="container-fluid">
+        <ul class="nav navbar-nav hidden-md-down">
+            <li class="nav-item">
+                <a class="nav-link navbar-toggler layout-toggler" href="#"><img src="img/menu-bar.png"/> </a>
+            </li>
+        </ul>
+
+        <button class="navbar-toggler hidden-lg-up" type="button">&#9776;</button>
+        <a class="navbar-brand" ng-if="user.access == 'wa'" ui-sref="app.customer.customer-list"><img src="img/logo.png" alt="logo"/></a>
+        <a class="navbar-brand" ng-if="user.access == 'ca'" ui-sref="app.dashboard"><img ngf-thumbnail="customer.company_logo_small" alt="logo"/></a>
+        <a class="navbar-brand" ng-if="user.access != 'ca' && user.access !='wa'" ui-sref="app.dashboard">
+            <img ngf-thumbnail="customer.company_logo_small" alt="logo"/>
+        </a>
+        <ul class="nav navbar-nav float-xs-right hidden-md-down">
+            <div class="logged-warning" ng-if="parent_user">
+                {{'user.login.login_as' | translate}} <b>{{user1.first_name}} {{user1.last_name}}</b> {{'discussion.click' | translate}}
+                <a style="text-decoration: underline;cursor: pointer;"
+                   n-t='{"valid":"true","m_t":"logout","a_n":"Logout As","a_d":"Logout$$as$${{user.first_name}}$${{user.last_name}}"}'
+                   ng-click="goToParent()">{{'user.login.here' | translate}}</a>  {{'user.login.to_logout' | translate}} 
+
+                 
+            </div>
+
+            <div class="logged-warning read-only" ng-if="user.access=='ro'">
+                {{'Read Only' |translate}}
+            </div>
+
+          
+            <li class="nav-item dropdown pr-1">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                    role="button" aria-haspopup="true" aria-expanded="false">
+                    <img ngf-thumbnail="user.profile_image || 'img/default-img.png'" class="img-avatar">
+                    <div class="header-dp">
+                        <span class="hidden-md-down"><b>{{user.first_name}} {{user.last_name}}</b></span>
+                        <span class="" ng-if="!(user.access=='eu')">{{user.user_role_name}}</span>
+                        <span class="" ng-if="(user.access=='eu')">Relation</span>
+                        <span class="" ng-if="(user.access=='eu')">{{user.provider_name}}</span>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" ui-sref="app.myProfile"><i class="fa fa-user"></i>{{'general.profile' | translate}}</a>
+                    <a ng-if="!parent_user && !saml" class="dropdown-item" ui-sref="app.changePassword"><i class="fa fa-key"></i>{{'user.cpassword.change_password' | translate}}</a>
+                    <a ng-if="user.access == 'ca'" class="dropdown-item" ui-sref="app.companySetup({id:(user1.customer_id | encode)})">
+                        <i class="fa fa-gear"></i>{{'customer-login.profile.company_setup' | translate}}</a>
+                    <!--<a class="dropdown-item" href="#"><i class="fa fa-wrench"></i>{{'general.setting' |translate}}</a>-->
+                    <a  ng-if="!parent_user" class="dropdown-item" href="#" ng-click="logout()"><i class="fa fa-lock"></i>{{'general.logout' |translate}}</a>
+                </div>
+            </li>
+            <div class="dropdown businesUnitCls">
+                <span class="dropdown-toggle" style="cursor: pointer;margin-right: 13px;" data-toggle="dropdown">{{user.business_unit[0].bu_name}}
+                <span ng-if="user.business_unit[1].bu_name">..</span>
+                <span class="icon-plus-circle" ng-if="user.business_unit[1].bu_name"></span></span>
+                <ul class="dropdown-menu pull-left" ng-if="user.business_unit[1].bu_name">
+                    <li ng-repeat="bu in user.business_unit track by $index" ng-if="$index!=0"><a href="javascript:;">{{bu.bu_name}}</a></li>
+                </ul>
+            </div>
+        </ul>
+        
+        <a href="javascript:;" class="pull-right ml-1 gray relative" ng-if="user.access =='ca'" ng-click="goToNotifications()">
+            <i class="fa fa-bell-o p-1 font-2xl mr-h float-xs-left"></i>
+            <span class="count-notify" >{{notificationsCount}}</span>
+        </a>
+    </div>
+</header>
+
+<style>
+    .businesUnitCls{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        min-width: 150px;
+        text-align: right;
+        height: 35px;
+    }
+    .businesUnitCls .dropdown-toggle::after{
+        display: none;
+    }
+    .businesUnitCls a.ng-binding {
+        color: #464646;
+        font-size: 12px;
+        padding: 5px;
+    }
+    .logged-warning.read-only{
+        top: 60px !important;
+        margin-left: -50px !important;
+        background: #f9653f !important;
+        height: 35px;
+        line-height: 26px;
+    }
+</style>

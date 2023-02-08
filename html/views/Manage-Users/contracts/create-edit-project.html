@@ -1,0 +1,328 @@
+<style>
+    .chosen-single {
+        height: 34px !important;
+        border-radius: 0px !important;
+    }
+
+    .chosen-single span {
+        padding: 3px !important;
+    }
+</style>
+<div class="edit-customer">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{'dashboard.Project'|translate}} {{title | translate}} </strong>
+                    <!-- <a ng-click="cancelProject()" title="{{'general.close' | translate}}" class=" pull-right icon-times pointer" ng-if="!showFiled"></a> -->
+                </div>
+                <div class="card-block">
+                    <form novalidate name="contractForm" ng-submit="contractForm.$valid && addContract(contract)">
+                        <h6 class="form-group border-b">
+                            <label class="f16">{{'contract.basic_info' | translate}} :</label>
+                        </h6>
+
+                        <!-- Contract Id div open  -->
+                        <div class="form-group col-sm-5">
+                            <label>{{'contract.Id' | translate}} *</label>
+                            <div class="input-group clearfix form-group-custom">
+                                <input type="text" class="form-control white-bg bg-white"  data-ng-model="contract.project_unique_id"
+                                     name="project_unique_id" ng-disabled="!disabled" required/>
+                            </div>
+                             <span class="error-message" ng-if="contractForm.project_unique_id.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+
+                        <!-- Contract Id div close-->
+                        
+                        <div class="form-group col-sm-5">
+                                <label>{{'project.project_name' | translate}} *</label>
+                                <input type="text" class="form-control" maxlength="100" name="contract_name" ng-model="contract.contract_name" required>
+                            <span class="error-message" ng-if="contractForm.contract_name.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                     
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'project.project_start_date' | translate}} *</label>
+                            <div class="input-group clearfix form-group-custom">
+                                <input type="text" class="form-control white-bg bg-white" min-date="toggleMin()" uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                                    data-ng-model="contract.project_start_date"  name="start_date" is-open="openCal"
+                                    datepicker-options="{showWeeks:false}" show-button-bar="false" readonly required/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <span class="error-message" ng-if="contractForm.start_date.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'project.project_end_date' | translate}}</label>
+                            <div class="input-group clearfix form-group-custom">
+                                <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="contract.project_end_date"
+                                     name="end_date" is-open="openCal1" datepicker-options="{showWeeks:false}" show-button-bar="false" readonly />
+                                <span class="input-group-btn ">
+                                    <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <span class="error-message" ng-if="contractForm.end_date.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                            <span class="error-message" ng-if="contractForm.end_date.$error.date && contractForm.$submitted">{{'general.invalid_input' |translate}}</span>
+                        </div>
+                        <!-- <div class="clearfix"></div> -->
+                       
+                        <div class="form-group col-sm-4">
+                            <label>{{'project.budgeted_spend' | translate}} *</label>
+                            <input type="text" class="form-control" maxlength="30" name="contract_value" ng-model="contract.contract_value" required
+                                ui-number-mask="0">
+                            <span class="error-message" ng-if="contractForm.contract_value.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                       
+                        <div class="form-group col-sm-4">
+                            <label>{{'contract.currency' | translate}} *</label>
+                            <select name="contract_curency" ng-model="contract.currency_id" class="form-control" ng-options="item.id_currency as item.currency_name for item in currencyList" required>
+                                <option value="">-- {{'general.select' |translate}} --</option>
+                            </select>
+                            <span class="error-message" ng-if="contractForm.contract_curency.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <!-- <div class="clearfix"></div> -->
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.status' | translate}} *</label>
+                            <select class="form-control" ng-model="contract.status" name="contract_status" required>
+                                <option value="">-- {{'general.select' | translate}} --</option>
+                                <option value="1">{{'general.active' | translate}}</option>
+                                <option value="0">{{'general.closed' | translate}}</option>
+                            </select>
+                            <span class="error-message" ng-if="contractForm.contract_status.$error.required && contractForm.$submitted">{{'general.required_field' | translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'bussiness.bussiness_unit' | translate}} *</label>
+                            <select class="form-control" ng-model="contract.business_unit_id" name="business_unit"
+                                    ng-change="getContractDelegates(contract.business_unit_id,contract.id_contract)"
+                                    ng-options="item.id_business_unit as item.bu_name disable when item.iobuuboi=='itako' for item in bussinessUnit"
+                                    ng-disabled="user.access == 'eu'" required>
+                                <option value="">-- {{'general.select' | translate}} --</option>
+                            </select>
+                            <span class="error-message" ng-if="contractForm.business_unit.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <!-- <div class="clearfix"></div> -->
+                        <div ng-if="user.access != 'bd'">
+                            <div class="form-group col-sm-4" ng-if="user.access != 'bo' && user.access !='bm'">
+                                <label>{{'contract.bu_owner' | translate}}  *</label>
+                                <select chosen class="form-control chosen-choices"
+                                id="add-chosen"
+                                onchange="chosen()"
+                                allow-single-deselect="true"
+                                placeholder-text-single="'{{'normal.placeholder_business_owner_role' | translate}}'"
+                                name="owner_id" ng-model="contract.contract_owner_id" 
+                                ng-options="item.id_user as item.name for item in buOwnerUsers"
+                                required>
+                                <option value=""></option>
+                            </select>
+                                <span class="error-message" ng-if="contractForm.owner_id.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+                           
+                            <div class="form-group col-sm-4" ng-show="user.access == 'bo' || user.access =='bm'" ng-if="(user.access == 'bo' || user.access=='bm')? (contract.contract_owner_id = user.id_user):(contract.contract_owner_id = contract.contract_owner_id)">
+                                <label>{{'contract.bu_owner' | translate}}  *</label>
+                                <select class="form-control" ng-model="contract.contract_owner_id" name="owner_id" ng-disabled="user.access == 'bo' || user.access=='bm'" ng-options="item.id_user as item.name for item in buOwnerUsers">
+                                    <option value="">-- {{'general.select' | translate}} --</option>
+                                </select>
+                                <span class="error-message" ng-if="contractForm.owner_id.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+                        </div>
+                        <div ng-if="user.access == 'bd'">
+                            <div class="form-group col-sm-4" ng-if="contractId==0">
+                                <label>{{'contract.bu_owner' | translate}} *</label>
+                                <select chosen class="form-control chosen-choices"
+                                    id="add-chosen"
+                                    onchange="chosen()" 
+                                    placeholder-text-single="'{{'normal.placeholder_business_owner_role' | translate}}'"
+                                    name="owner_id" ng-model="contract.contract_owner_id" ng-options="item.id_user as item.name for item in buOwnerUsers"
+                                    required>
+                                    <!-- <option value="">-- {{'general.select' |translate}} --</option> -->
+                                </select>
+                                <span class="error-message" ng-if="contractForm.owner_id.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                            </div>
+
+                            <div class="form-group col-sm-4" ng-show="contractId!=0">
+                                <label>{{'contract.bu_owner' | translate}} *</label>
+                                <select class="form-control" 
+                                    ng-model="contract.contract_owner_id" name="owner_id" ng-disabled="user.access == 'eu'" 
+                                    ng-options="item.id_user as item.name for item in buOwnerUsers">
+                                    <option value="">-- {{'general.select' | translate}} --</option>
+                                </select>
+                                <span class="error-message" ng-if="contractForm.owner_id.$error.required && contractForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                            </div>
+                        </div>
+                       
+                        <!-- <div class="form-group col-sm-4"></div> -->
+                        <div class="form-group col-sm-4" ng-if="user.access != 'bd'">
+                            <label>{{'contract.delegates' | translate}} </label>
+                            <select chosen class="form-control chosen-choices" allow-single-deselect="true" style="height: 40px;" placeholder-text-single="'{{'normal.placeholder_delegate_Search' | translate}}'"
+                                ng-model="contract.delegate_id" name="delegate" ng-options="item.id_user as item.user_name for item in delegates">
+                                <option value=""></option>
+                            </select>
+                            <span class="error-message" ng-if="contractForm.delegate.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4" ng-show="user.access == 'bd'" ng-if="(user.access == 'bd')? (contract.delegate_id = user.id_user):(contract.delegate_id = contract.delegate_id)">
+                            <label>{{'contract.delegates' | translate}} </label>
+                            <select class="form-control" ng-model="contract.delegate_id" name="delegate" allow-single-deselect="true" ng-disabled="user.access == 'bd'" ng-options="item.id_user as item.user_name for item in delegates">
+                                <option value="">-- {{'general.select' | translate}} --</option>
+                            </select>
+                            <span class="error-message" ng-if="contractForm.delegate.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                       
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-12">
+                            <label>{{'project.project_description' | translate}} *</label>
+                            <textarea class="form-control" ng-model="contract.description" name="desc" required style="height: 80px;"></textarea>
+                            <span class="error-message" ng-if="contractForm.desc.$error.required && contractForm.$submitted">{{'general.required_field' |translate}}</span>
+                        </div>
+                      
+        
+                       
+                        <div class="clearfix"></div>
+                        <h6 class="form-group border-b">
+                            <label class="f16"> {{'links.attachments_links' | translate}} {{'general.add' | translate}}:</label>
+                        </h6>
+                     
+                        <uib-tabset active="active" class="clearfix" style="padding: 10px;">
+                            <uib-tab index="0" heading="{{'links.ad_attachment' | translate}}">
+                                <div class="col-sm-12 m-t-3 form-group p0">
+                                    <attachment-files ng-model="file.attachment"></attachment-files>
+                                    <attachment-list-template get-data="contract.attachment.documents" ng-model="file.delete"></attachment-list-template>
+                                </div>
+                            </uib-tab>
+                            <uib-tab index="1"  class="clearfix" heading="{{'links.ad_link' | translate}}">
+                                <div class="clearfix" style="background: #EEEDF5; padding: 10px;" ng-init="contractLink.url='';contractLink.title='';">
+                                    <ng-form name="linkForm" class="modalUniqCls">
+                                        <div class="col-md-5 pl-0">
+                                            <input type="text" class="form-control" name="title" placeholder="{{'normal.placeholder_title' | translate}}" ng-model="contractLink.title" >
+                                        </div>
+                                        <div class="col-md-7 pl-0" style="display:-webkit-inline-box; padding-right: 5px;">
+                                            <div class="input-group" style="display:flex;">
+                                            <input type="text" class="form-control" name="url"
+                                             ng-model="contractLink.url"  placeholder="{{'normal.placeholder_add_link_url' | translate}}">                                             
+                                             <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                <button type="button" style="padding: 0.03rem 0.5rem;" title="{{'contract.verify_link' | translate}}" 
+                                                    ng-disabled="(contractLink.url.length && contractLink.title.length)==0" class="btn btn-success" ng-click="verifyLink(contractLink)">
+                                                    <span class="fa fa-plus"></span><p style="font-size:12px;margin-bottom:0px;">{{'links.ad_link' | translate}}</p>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                        </div>
+                                    </ng-form>
+                                    <div class="col-sm-12 p0 mt-1" ng-if="contractLinks.length" style="overflow-y: scroll;">
+                                        <div class="list-header clearfix">
+                                            <label class="text-capitalize f14">{{'links.attached_links' | translate}}</label>
+                                        </div>
+                                        <div class="list-table mt5 mb5" style="max-height:250px;" ng-scrollbars="">
+                                            <ul class="list-items files-list">
+                                                <li class="clearfix" ng-repeat="link in contractLinks track by $index">        
+                                                    <div class="col-sm-11 p0">
+                                                        <p class="f12 text-line m-0 p-h" title="{{link.url}}">{{link.title}}
+                                                        <span class="pl-h skyblue">( {{link.url}} )</span></p>
+                                                    </div>
+                                                    <div class="col-sm-1 pull-right">
+                                                        <a href="javascript:;" class="display-inline-block p-h" title="Remove" ng-click="removeLink($index)"> <i class="icon-trash gray"></i> </a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-12 attachment-list p0 mt-h" ng-show="contract.attachment.links.length">
+                                    <div class="list-header clearfix ">
+                                        <label class="col-sm-6 pl0 p-t-3 f16 m-0 ng-binding">{{'links.added_links' | translate}}</label>
+                                    </div>
+                                    <div class="list-table">
+                                        <ul class="list-items">
+                                            <li class="clearfix border-b ng-scope" ng-repeat="row in contract.attachment.links">
+                                                <div class="touch-attacment-box p-h clearfix">                                                    
+                                                    <a href="javascript:;" ng-click="redirectUrl(row.document_source)" class="col-sm-6 p0 f14  m-0"
+                                                        title="{{row.document_source}}" ><span class="fa fa-link"></span> {{row.document_name}}
+                                                    </a>
+                                                    <div class="">
+                                                        <a href="javascript:;" uib-tooltip="Delete" ng-click="deleteFile($index,row)" class="link-icon-blue"><i class="icon-trash f13"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div ng-hide="contract.attachment.links.length  > 0" class="text-center ng-hide"><p class="f12">{{'links.no_link' | translate}}</p> </div>
+                                    </div>
+                                </div>  
+                            </uib-tab>
+                        </uib-tabset> 
+                        <!-- End -->
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-12 text-center m-t-3">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<style>
+    .nav-tabs .nav-item{
+        margin-bottom: 0px;
+        padding: 0;
+    }
+    .tab-content .tab-pane{
+        padding: 10px;
+    }
+    .nav-tabs{
+        background: #FFF !important;
+    }
+    .nav.nav-tabs li:last-child{
+        padding-right: 0px;
+        margin: 0;
+    }
+    .nav.nav-tabs li:last-child {
+        padding-right: 0px;
+        margin: 0;
+        margin-left: 0.2rem;
+    }
+    .nav-tabs .nav-item .nav-link {
+        background: #FFF;
+        color: #464646;
+        text-align: center;
+        min-width: 165px;
+        border: 1px solid #ccc;
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-item.active .nav-link {
+        background: #efefef5e;
+        border-bottom-color: #FFF;
+        border: 1px solid #ccc;
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: -1px;
+    }
+    .tab-content::after, .tab-content::before{
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .tab-content{
+        border: 1px solid #ccc !important;
+    }
+    .card-block .tab-content{
+        background-color: #f9f9f9;
+    }
+    
+</style>

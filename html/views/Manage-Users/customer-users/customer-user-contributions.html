@@ -1,0 +1,81 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="col-lg-12 p0">
+                <!-- <div class="p10">
+                    <span class="bold f14">{{userName}} :</span>
+                </div> -->
+                <div class="card">
+                    <form name="outerForm" class="tab-form-demo">
+                        <uib-tabset active="active">                            
+                            <uib-tab index="0" ng-if="(user.access=='ca' || user.access=='wa') && showContracts">
+                                <uib-tab-heading>
+                                    {{'user.breadcrumb.contracts' | translate}}
+                                    <span class="badge-num">{{contractsCount}}</span>
+                                </uib-tab-heading>
+                                <table class="table table-custom table-striped table-hover">
+                                    <thead>                                        
+                                        <tr>
+                                            <th >{{'contract.provider' | translate}}</th>
+                                            <th >{{'contract.contract_name' | translate}}</th>
+                                            <th >{{'contract.category' | translate}}</th>
+                                            <th >{{'bussiness.bussiness_unit' | translate}}</th>
+                                            <th class="hand-symbol">{{'contract.contract_start_date' | translate}}</th>
+                                            <th class="hand-symbol">{{'contract.contract_end_date' | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in contractsList">
+                                            <td>{{row.provider_name}}</td>
+                                            <td>
+                                               <a ui-sref="app.contract.view({name:row.contract_name,id:(row.id_contract | encode)})" href="javascript:;"
+                                                    n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'>{{row.contract_name}}
+                                                </a> 
+                                            </td>
+                                            <td><span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name}}</span></td>
+                                            <td>{{row.bu_name}}</td>
+                                            <td >{{row.contract_start_date  | utcToLocal: 'date' | checkEmpty}}</td>
+                                            <td >{{row.contract_end_date | utcToLocal: 'date' | checkEmpty}}</td>
+                                        </tr>
+                                    </tbody>                                   
+                                </table>
+                            </uib-tab>
+                            <uib-tab index="1" ng-if="(user.access=='ca' || user.access=='wa')">
+                                <uib-tab-heading>
+                                    {{'user.breadcrumb.contributions' | translate}}
+                                    <span class="badge-num">{{contributionsCount}}</span>
+                                </uib-tab-heading>
+                                <table class="table table-custom table-striped table-hover" >
+                                    <thead>                                        
+                                        <tr>
+                                            <th >{{'contract.provider' | translate}}</th>
+                                            <th >{{'contract.contract_name' | translate}}</th>
+                                            <th >{{'contract.category' | translate}}</th>
+                                            <th >{{'bussiness.bussiness_unit' | translate}}</th>
+                                            <th class="hand-symbol">{{'contract.contract_start_date' | translate}}</th>
+                                            <th class="hand-symbol">{{'contract.contract_end_date' | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in contributionsList">
+                                            <td>{{row.provider_name}}</td>
+                                            <td>
+                                                <a ui-sref="app.contract.view({name:row.contract_name,id:(row.id_contract | encode)})" href="javascript:;"
+                                                    n-t='{"valid":"true","m_t":"Contract","a_n":"view","a_d":"Contract($${{row.contract_name}})"}'>{{row.contract_name}}
+                                                </a>
+                                            </td>
+                                            <td><span title="{{row.relationship_category_name}}">{{row.relationship_category_short_name}}</span></td>
+                                            <td>{{row.bu_name}}</td>
+                                            <td >{{row.contract_start_date  | utcToLocal: 'date' | checkEmpty}}</td>
+                                            <td >{{row.contract_end_date | utcToLocal: 'date' | checkEmpty}}</td>
+                                        </tr>
+                                    </tbody>                                    
+                                </table>
+                            </uib-tab>
+                        </uib-tabset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

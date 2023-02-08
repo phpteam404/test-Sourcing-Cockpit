@@ -1,0 +1,58 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="getActionsList" st-table="actionsList">
+                <thead>
+                    <tr>
+                        <td colspan="12">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="action_name">{{'access_log.action_name' | translate}}</th>
+                        <th st-sort="action_description">{{'access_log.action_desc' | translate}}</th>
+                        <th st-sort="action_url">{{'access_log.action_url' | translate}}</th>
+                        <th st-sort="created_on">{{'access_log.action_time' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in actionsList">
+                        <td>{{row.action_name}}</td>
+                        <td><span class="w200 ellipis display-block" title="{{row.action_description | replaceChar}}">{{row.action_description | replaceChar | checkEmpty}}</span></td>
+                        <td><a target="_blank" href="{{row.action_url}}" class="w400 ellipis display-block" title="{{row.action_url | replaceUrl}}">{{row.action_url | replaceUrl | checkEmpty}}</a></td>
+                        <td>{{row.created_on | utcToLocal:'datetime' | checkEmpty}}</td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr><td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1419 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 col-md-12 p0">
+        <div class="row">
+            <div ng-if="no_modules" class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+               <span ng-if="isWorkflow=='0'">{{'dashboard.no_reviews' | translate}}</span>
+                <span ng-if="isWorkflow=='1'">{{'dashboard.no_workflows' | translate}}</span>
+            </div>
+            <div class="col-lg-8 col-md-8 pl0 large-widget" ng-if="!no_modules">
+                <div class="card col-lg-12 p0">
+                    <h5>{{contractData.contract_name}}</h5>
+                    <div class="card-block border-left-none">
+                        <div class="h4 m-b-0">{{'contract.status' | translate}}</div>
+                        <span class="widget-span orange">{{contractData.contract_status | checkEmpty | replaceWorflowToTask | replaceWorflowToTask | capitalize}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0" >{{'contract.last_completed' | translate}}</div>
+                        <span class="widget-span">{{contractData.contract_last_reviewed_on | utcToLocal:'toLocalDate' | isUndefinedOrNull}}</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="h4 m-b-0">{{'contract.current_status' | translate}}</div>
+                        <div class="status-widget font-weight-bold" ng-if="contractData.score == 'Red'">
+                            <span class="red-active"></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                            <small class="f12 pull-right">{{contractData.contract_progress}}</small>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="contractData.score == 'Amber'">
+                            <span class=""></span>
+                            <span class="amber-active"></span>
+                            <span class=""></span>
+                            <small class="f12 pull-right">{{contractData.contract_progress}}</small>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="contractData.score == 'Green'">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class="green-active"></span>
+                            <small class="f12 pull-right">{{contractData.contract_progress}}</small>
+                        </div>
+                        <div class="status-widget font-weight-bold" ng-if="!contractData.score">
+                            <span class=""></span>
+                            <span class=""></span>
+                            <span class=""></span>
+                            <small class="f12 pull-right">{{contractData.contract_progress}}</small>
+                        </div>
+                        <span ng-if="contractData.score == 'N/A'">{{contractData.score}}<span class="f12 pull-right">{{contractData.contract_progress}}</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 p0" ng-if="!no_modules">
+                <div class="icons-widget pr0">
+                    <div class="card-group contract-card-group">
+                        <div class="card card contract-main-card"  ng-if=" (access!='eu')" >
+                            <div class="card-block" ng-click="goToDetails()">
+                                <div class="h2 text-xs-center">
+                                    <i class="tss-project-setting"></i>
+                                </div>
+                                <small class="text-center font-weight-bold">{{'contract.project' | translate}}</small>
+                            </div>
+                        </div>
+                        <div class="contract-card-group-list">
+                            <div class="text-center">
+                                <h5 class="contract-card-group-list-heading">
+                                    <label style="color: #5bb166;" ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask==0">{{'calender.workflow' | translate}}</label>
+                                    <label style="color: #5bb166;" ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask!=0"> {{'calender.sub_task' | translate}} </label>
+                                    <span title="{{reviewWorkflowInfo[0].activity_name}}">&nbsp;-&nbsp;{{reviewWorkflowInfo[0].activity_name | checkEmpty}}</span>
+                                </h5>
+                            </div>
+                            <div style="display:flex;" class="contract-group-icons">
+                        <div class="card dashboard-block"  ng-if="validation_status!=2  || ( validation_status==2 && contractData.validation_contributor) || (contractData.contract_user_access=='ca') ">
+                            <div class="card-block" ng-click="goToDashboard(contractData)">
+                                <div class="h2 text-xs-center">
+                                    <i class="icon-dashboard5"></i>
+                                </div>
+                                <small class="text-center font-weight-bold">{{'contract.dashboard' | translate}}</small>
+                            </div>
+                        </div>
+
+                        <!-- For dashboard icon disable open-->
+                        <div class="card dashboard-block"  ng-class="{'hand-symbol':validation_status==2}" 
+                        ng-if="(validation_status==2 && !contractData.validation_contributor) && (contractData.contract_user_access!='ca')">
+                            <div class="card-block">
+                                 <div class="h2 text-xs-center finalize">
+                                      <i class="icon-dashboard5 finalize"></i>
+                                 </div>
+                                 <small class="text-center font-weight-bold finalize">{{'contract.dashboard' | translate}}</small>
+                            </div>
+                        </div>
+                        <!-- For dashboard icon disable close-->
+                        <!-- <div  ng-if="contractData.is_subtask==0"> -->
+                            <div  class="card dashboard-block" ng-click="goToChangeLog()" 
+                            ng-if="(contractData.is_subtask==0 && user.access!='eu'  &&  validation_status!=2) || ( validation_status==2 && contractData.validation_contributor)  || (contractData.contract_user_access=='ca' && contractData.is_subtask==0)">
+                                <div class="card-block">
+                                    <div class="h2 text-xs-center">
+                                        <i class="icon-template-manage"></i>
+                                    </div>
+                                    <small class="text-center font-weight-bold">{{'contract.change_log' | translate}}</small>
+                                </div>
+                            </div>
+                        <!-- </div> -->
+                       
+                        <!-- For change log icon disable open-->
+                      
+                            <div class="card" ng-class="{'hand-symbol':validation_status==2}" ng-if="(validation_status==2 && !contractData.validation_contributor) && contractData.contract_user_access!='ca' && contractData.is_subtask==0">
+                                <div class="card-block">
+                                     <div class="h2 text-xs-center finalize">
+                                          <i class="icon-template-manage finalize"></i>
+                                     </div>
+                                     <small class="text-center font-weight-bold finalize">{{'contract.change_log' | translate}}</small>
+                                </div>
+                           </div>
+                        
+                      
+                        <!-- For change log icon disable close-->
+                        <!--For Validate icon open --> 
+                        <div class="card" ng-click="inviteValidatorModel()" 
+                             ng-if="(user.access!='eu')  && (contractData.ideedi!='itako') && (ready_for_validation) &&
+                                    (contractData.contract_user_access=='bo'|| contractData.contract_user_access == 'bd' || contractData.contract_user_access == 'ca' ||contractData.contract_user_access=='bm') 
+                                    && (validation_status!=2) || (validation_status==2 && contractData.validation_contributor) && !contractData.validation_contributor">
+                            <div class="card-block">
+                                 <div class="h2 text-xs-center">
+                                      <i class="icon tss-user-check"></i>
+                                 </div>
+                                 <small class="text-center font-weight-bold">{{'contract.validate'|translate}}</small>
+                            </div>
+                        </div>
+                        <!-- For validate icon close-->
+                        <!-- For validate icon disable open-->
+                        <div class="card" ng-class="{'hand-symbol':validation_status==2}" ng-if="(validation_status==2 && !contractData.validation_contributor) && contractData.contract_user_access!='ca'">
+                             <div class="card-block">
+                                  <div class="h2 text-xs-center finalize">
+                                       <i class="icon-user icons finalize"></i>
+                                  </div>
+                                  <small class="text-center font-weight-bold finalize">{{'contract.validate'|translate}}</small>
+                             </div>
+                        </div>
+                        <!-- For validator icon disable close-->
+
+                        <!-- For validate submit icon open-->
+
+                        <div class="card" ng-if="(contractData.validation_contributor && modulesValidated)" ng-click="inviteValidatorModel()">
+                            <div class="card-block">
+                                <div class="h2 text-xs-center">
+                                    <!-- <i class="fa-arrow-up"></i> -->
+                                    <i class="icon tss-submit"></i>
+                                </div>
+                                <small class="text-center font-weight-bold"> {{'contract.submit'|translate}}</small>
+                            </div>
+                        </div>
+                        <!-- For validator submit icon close-->
+                        <div class="card active" ng-click="finalizeReviewList()" 
+                            ng-if="(contractData.contract_user_access == 'ca' ||
+                                    contractData.contract_user_access == 'bm' ||
+                                     contractData.contract_user_access == 'bo' || 
+                                     contractData.contract_user_access == 'bd') &&
+                                     (contractData.contract_progress != '100%' || contractData.contract_progress == '100%' ) &&
+                                     (contractData.reaaer =='itako') && validation_status!=2 &&
+                                     (all_modules_validated) && contractData.is_subtask==0"
+                            ng-click="finalizeReviewList()">
+                            <div class="card-block">
+                                <div class="h2 text-xs-center">
+                                    <i class="icon-finalize"></i>
+                                </div>
+                                <small class="text-center font-weight-bold">{{'contract.finalize' | translate}}</small>
+                            </div>
+                        </div>
+                        <!-- <div class="card" ng-if="(contractData.contract_user_access == 'ca' || contractData.contract_user_access == 'bo' || contractData.contract_user_access == 'bd' || contractData.contract_user_access=='bm') && (contractData.contract_progress != '100%') && contractData.is_subtask==0">
+                            <div class="card-block">
+                                <div class="h2 text-xs-center finalize">
+                                    <i class="icon-finalize finalize" uib-tooltip="{{'contract.module_questions.please_answer_questions' | translate}}" tooltip-placement="left"></i>
+                                </div>
+                                <small class="text-center font-weight-bold finalize">{{'contract.finalize' |
+                                    translate}}</small>
+                            </div>
+                        </div> -->
+                       
+                    </div>
+                </div>
+                </div>
+                </div>
+             </div>
+            <div class="col-sm-8 col-md-8 contract-review pl0" ng-if="!no_modules">
+                <div class="cursor-pointer">
+                    <div class="review-widget" ng-repeat="module in contractModules" 
+                         ng-if="(module.question_count!='0/0')"  style="vertical-align: top;" >
+                        <div class="card">
+                            <div class="card-block text-xs-center border-left-none"  
+                            ng-click="(module.imreermi=='itako')?goToModuleQuestions(module):NULL">
+                                <div ng-if="module.validator_exists" class="review-head review-head-vicon w-100"
+                                    ng-class="(module.static=='1') ?((module.is_workflow=='1')?'bg-color-green':('bg-color-orange')): ('bg-color-blue') ">
+                                    <span class="review-head-ellipsis">
+                                        {{module.module_name | splitText:'40'}}</span>
+                                    <span class="v-menu project-icons-validation">
+                                        <span ng-if="module.validation_info==4" class="exclamatory-circle" uib-tooltip="{{'contract.validation_preparation' | translate}}">  <i class="fa fa-exclamation-circle"style="font-size: 20px;"></i></span>
+                                        <span ng-if="module.validation_info==3" uib-tooltip="{{'normal.validation_finalized' | translate}}" class="provider-status-active"><i class="fa fa-check-circle" style="font-size: 20px;"></i></span>
+                                        <span ng-if="module.validation_info==2" uib-tooltip="{{'normal.validation_ongoing' | translate}}" class="refresh-icon module-validation"><i class="fa fa-refresh" style="font-size: 12px;"></i></span>
+                                        <span ng-if="module.validation_info==1" uib-tooltip="{{'contract.validation_preparation' | translate}}"><i class="tss-validation" style="font-size: 17px;color: #000;background: #fff;border-radius: 50%;display: flex;"></i></span>
+                                        <!-- <span class="vicon"><b style="color: {{module.validation_color}}">V</b></span> -->
+                                        <!-- <span class="vicon"><b style="color: #14ad00">V</b></span> -->
+                                    </span>
+                                </div>
+                                <div ng-if="!module.validator_exists" class="review-head review-head-vicon w-100" 
+                                    ng-class="(module.static=='1') ?((module.is_workflow=='1')?'bg-color-green':('bg-color-orange')): ('bg-color-blue') ">
+                                    <span class="review-head-ellipsis">
+                                        {{module.module_name | splitText:'40'}}</span>
+                                </div>
+                                <span class="v-menu">
+                                     <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right"
+                                        ng-click="$event.stopPropagation();" ng-if="(validation_status!=2 && !contractData.validation_contributor || contractData.validation_contributor ||contractData.contract_user_access=='ca')">
+                                        <a href uib-dropdown-toggle class="font-sm">
+                                            <span class="fa fa-ellipsis-v"></span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                            <li>
+                                                <a ng-if="module.is_workflow=='0' && !contractData.validation_contributor" href="javascript:;" ng-click="(module.imreermi=='itako')?goToModuleQuestions(module):''">{{'contract.review'
+                                                    | translate}}</a>
+                                                <a ng-if="module.is_workflow=='1' && !contractData.validation_contributor" href="javascript:;" ng-click="(module.imreermi=='itako')?goToModuleQuestions(module):''">{{'workflows.workflow'
+                                                    | translate}}</a>
+                                            </li>
+                                            <li ng-if="module.progress!=100">
+                                                <a href="javascript:;" ng-click="openUnAnswered(module,false)">{{'contract.unanswered'
+                                                    | translate}}</a>
+                                            </li>
+                                            <li ng-if="(module.validation_contributor)">
+                                                <!-- "(module.ready_for_validation &&  module.validation_contributor)" -->
+                                                <a href="javascript:;" ng-click="(module.imreermi=='itako')?goToModuleQuestions(module):''">{{'contract.validate'
+                                                    | translate}}</a> 
+                                            </li>
+                                        </ul>
+                                    </span> 
+                                </span>
+                                <div class="text by-name">
+                                    <span class="latest_review">{{'contract.last_changed_by' | translate}}  : </span>
+                                    <span class="orange ellipis w_95">{{module.review_user_name | checkEmpty}}</span>
+                                    <p class="mb-0">{{module.last_review | utcToLocal:'toLocalDate' | checkEmpty}}</p>
+                                </div>
+                                <div class="">
+                                    <span class="">{{'contract.module_questions.progress' | translate}} : {{module.progress}} %</span>
+                                </div>
+                                <div class="">
+                                    <span class="">{{'contract.completion' | translate}} : {{module.question_count}}
+                                    </span>
+                                </div>
+                                <div class="review-status">
+                                    <div class="status-widget font-weight-bold" ng-if="module.score == 'Red'">
+                                        <span class="red-active"></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="module.score == 'Amber'">
+                                        <span class=""></span>
+                                        <span class="amber-active"></span>
+                                        <span class=""></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="module.score == 'Green'">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class="green-active"></span>
+                                    </div>
+                                    <div class="status-widget font-weight-bold" ng-if="!module.score">
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                        <span class=""></span>
+                                    </div>
+                                    <span class="" ng-if="module.score == 'N/A'">{{module.score}}</span>
+                                </div>
+                                <div class="col-sm-12 action-item-data">
+                                    <div style="padding:5px 5px 5px 10px;">
+                                       
+                                        <!-- Table Removed due to Ui alinment-->
+                                        <div class="clearfix">
+                                            <div class="col-sm-8" style="padding:0;"><span class="gray pull-left">{{'contract.action_items'
+                                                    | translate}}:</span></div>
+                                            <div class="col-sm-4" style="padding:0 5px 0 0;text-align: right;"><span
+                                                    class=" bold">{{module.action_item_count}}</span></div>
+                                        </div>
+                                        <div class="clearfix">
+                                            <div class="col-sm-8" style="padding:0;"><span class="gray pull-left">{{'contract.changes'
+                                                    | translate}}:</span></div>
+                                            <div class="col-sm-4" style="padding:0 5px 0 0;text-align: right;"><span
+                                                    class=" bold">{{module.changes_count | isUndefinedOrNull}}</span></div>
+                                        </div>
+                                      
+                                    </div>
+                                  
+                                </div>
+                            </div>
+
+                            <div class="card-block contributorCLs" ng-if="contractData.is_subtask==0">
+                                <div class="h4 mb-0">
+                                  
+                                    <uib-accordion class="card widget2" style="margin-bottom:0px !important;position: relative;padding: 0; border-top: 1px solid #ccc !important; border: none;" close-others="oneAtATime">
+                                        <div uib-accordion-group class="panel-default" heading="Stakeholders" ng-init="open1=false;" is-open="open1">
+                                            <uib-accordion-heading ng-click="open1= !open1">
+                                                {{'contract.module_questions.contributor' | translate}} ({{module.total_contributors_count}})
+                                                <span uib-dropdown on-toggle="toggled(open1);" class="c-dropdown width-20 pull-right" 
+                                                ng-if="contractData.contract_user_access !='co' && user.access !='ro' && contractData.is_subtask==0 && (contractData.validation_status!=2 || user.access =='ca')">
+                                                    <a href uib-dropdown-toggle class="font-sm" ng-click="$event.stopPropagation();" style="padding: 0px 10px 0 0">
+                                                        <span class="fa fa-ellipsis-v gray"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right madule-dropdown contributor-manage-project" dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                        <li>
+                                                            <a href="#" style="border-bottom: 0px !important;padding: 10px;" ng-click="$event.stopPropagation();addProjectContributors(module)">{{'general.manage' | translate}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                                <i class="glyphicon" style="margin-right: 10px !important;" ng-class="{'fa fa-chevron-up  pull-right': open1,'fa fa-chevron-down  pull-right': !open1}"></i>
+                                            </uib-accordion-heading>
+                                            <div class="card-block  pt-h pb-h attachments_block">
+                                                <div class="attachment-widget" style="padding-bottom: 0px;">
+                                                    <div class="clearfix">
+                                                        <div class="col-md-4 p0">
+                                                            <p class="ellipis only-name">{{'general.expert' | translate}}</p>
+                                                        </div>
+                                                        <div class="col-md-8 p0">
+                                                            <p ng-repeat="row in module.contributors.expert.data" class="ellipis1">{{row.contributor_user_name}}</p>
+                                                            <p ng-if="module.contributors.expert.data.length==0">---</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix">
+                                                        <div class="col-md-4 p0">
+                                                            <p  class="ellipis only-name">{{'general.validator' | translate}}</p>
+                                                        </div>
+                                                        <div class="col-md-8 p0">
+                                                            <p ng-repeat="row in module.contributors.validator.data" class="ellipis1">{{row.contributor_user_name}}</p>
+                                                            <p ng-if="module.contributors.validator.data.length==0">---</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix">
+                                                        <div class="col-md-4 p0">
+                                                            <p  class="ellipis only-name">{{'contract.providers'|translate}}</p>
+                                                        </div>
+                                                        <div class="col-md-8 p0">
+                                                            <p ng-repeat="row in module.contributors.provider.data" class="ellipis1">{{row.contributor_user_name}}</p>
+                                                            <p ng-if="module.contributors.provider.data.length==0">---</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p ng-if="data.attachment.length<=0" class="text-sm-center">para
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </uib-accordion>
+                                </div>
+                                <span ng-if="contributors[0].contributor_user_name">{{contributors[0].contributor_user_name}}</span>
+                                <a ng-show="contributors[1].contributor_user_name" href="javascript:;" class="widget-span skyblue" uib-popover-template="'myPopoverTemplate.html'"
+                                    popover-placement="right" popover-trigger="'outsideClick'" class="btn btn-default">+{{contributors.length-1}} </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 p0 mb-1">
+                    <div class="">
+                        <table class="table table-custom table-striped table-hover" st-pipe="reviewAction" st-table="contractsList">
+                            <thead>
+                                <tr>
+                                    <td colspan="2">
+                                        <h6 class="">{{'contract.review_action_items' | translate}} ({{reviewListCount>0?reviewListCount:0}})</h6>
+                                    </td>
+                                    <td colspan="8">
+                                        <div class="col-sm-12 clearfix p0">
+                                            <div class="action-head mb0">
+                                                <div class="col-sm-6 p0 table-search pull-right">
+                                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                                        st-search="search_key"  st-input-event="change">
+                                                    <i class="fa icon-search"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th st-sort="module_name">{{'contract.module' | translate}}</th>
+                                    <th st-sort="action_item">{{'contract.action_item' | translate}}</th>
+                                    <th st-sort="user_name">{{'contract.responsible' | translate}}</th>
+                                    <th st-sort="due_date">{{'contract.due_date' | translate}}</th>
+                                    <th st-sort="priority">{{'contract.priority' | translate}}</th>
+                                    <!--<th st-sort="last_review">{{'contract.last_review' | translate}}</th>-->
+                                    <th st-sort="status">{{'contract.status' | translate}}</th>
+                                    <th class="hand-symbol"></th>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="!isLoading">
+                                <tr ng-repeat="row in reviewList">
+                                    <td><span class="ellipis w100" title="{{row.module_name}}">{{row.module_name | checkEmpty}}</span></td>
+                                    <td>
+                                        <a class="ellipis w150" href="javascript:;" ng-click="updateContractAction(row,'view')"
+                                            title="{{row.action_item}}">{{row.action_item | checkEmpty}}</a>
+                                    </td>
+                                    <td><span class="ellipis w100 orange" title="{{row.user_name}}">{{row.user_name | checkEmpty}}</span></td>
+                                    <td ng-class="(row.overdue=='1') ?'overdue-date': ''">{{row.due_date | utcToLocal:'date' | checkEmpty}}</td>
+                                    <td>{{row.priority | checkEmpty}}</td>
+                                    <!--<td>{{row.last_review  | utcToLocal:'date' | checkEmpty}}</td>-->
+                                    <td>
+                                        <span class="green" ng-if="row.status == 'Completed'">{{row.status}}</span>
+                                        <span class="" ng-if="row.status == 'Open'">{{row.status}}</span>
+                                        <span class="red" ng-if="row.status == 'Due'">{{'contract.due' | translate}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="row.daad!='itako'">---</span>
+                                        <a ng-if="row.daad=='itako'" href="#" ng-click="deleteContractActionItem(row)"
+                                            title="{{'general.delete' | translate}}"><i class="icon-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="isLoading">
+                                <tr>
+                                    <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="emptyTable">
+                                <tr>
+                                    <td colspan="8" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-center" colspan="8">
+                                        <div class="paginator">
+                                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                    ng-options="item for item in pagesNumber" selected>
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="col-sm-4 col-lg-4 p0">
+                <uib-accordion class="card widget2" style="margin-bottom:5px !important;" close-others="oneAtATime">
+                    <div uib-accordion-group class="panel-default" heading="Stakeholders" template-url="group-template0.html"
+                       ng-init="open=false;" is-open="open">
+                       <uib-accordion-heading ng-click="open= !open && user.access !='eu' && reviewWorkflowInfo.length>1" >
+                            
+                                <span class="f12" tooltip-placement="left" ng-if="reviewWorkflowInfo[0].is_workflow==0"
+                                    uib-tooltip-html="htmlTooltip"  style="width: 10.3px;" tooltip-class="customClass">
+                                <i class="fa fa-info-circle f12 gray" ng-if="reviewWorkflowInfo[0].recurrenc && reviewWorkflowInfo[0].recurrence_till"></i>
+ 
+                                
+                            </span>
+ 
+                            <span class="f12" tooltip-placement="left" ng-if="reviewWorkflowInfo[0].is_workflow==1"
+                                uib-tooltip=" Execute By :- {{reviewWorkflowInfo[0].recurrence_till | date}}"
+                                tooltip-class="customClass" style="width: 10.3px;">
+                                <i class="fa fa-info-circle f12 gray" ng-if="reviewWorkflowInfo[0].recurrence_till"></i>
+                            </span>
+                       
+                           
+                            <span ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask==0" class="green" style="padding-left: 7px;display: flex;align-items: center;">  <span class="hand-symbol"></span>
+                            <span> {{'calender.workflow' | translate}}</span>  
+                           </span>
+                           
+                           <span ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask!=0" class="green hand-symbol" style="padding-left: 7px;display: flex;align-items: center;"> 
+                           <span> {{'calender.sub_task' | translate}}</span>  </span>
+ 
+                          
+ 
+                          
+                        <span class="hand-symbol" style="font-weight: normal;width: calc(100% - 157px);
+                                                         white-space: nowrap;  text-overflow: ellipsis;
+                                                         overflow: hidden; padding:2px 5px 2px 0px;
+                                                         display: inline-block;" title="{{reviewWorkflowInfo[0].activity_name}}">&nbsp;-&nbsp;
+                            {{reviewWorkflowInfo[0].activity_name | checkEmpty}}</span>    
+ 
+                                
+                          
+                            <div class="score-with-status mr-5">
+                                <span class="f12">{{reviewWorkflowInfo[0].contract_progress == null ? "0%":reviewWorkflowInfo[0].contract_progress}}</span>
+                                <div class="status-widget font-weight-bold" style="line-height: 6px;">
+                                    <span ng-if="reviewWorkflowInfo[0].score == 'Amber'" class="amber-active"></span>
+                                    <span ng-if="reviewWorkflowInfo[0].score == 'Red'" class="red-active"></span>
+                                    <span ng-if="reviewWorkflowInfo[0].score == 'Green'" class="green-active"></span>
+                                    <span ng-if="!reviewWorkflowInfo[0].score" class=""></span>
+                                    <span ng-if="reviewWorkflowInfo.score[0] == 'N/A'" class="">{{reviewWorkflowInfo.score}}</span>
+                                </div> 
+                            </div>
+                            <span style="width:20px;min-width: 20px;" ng-if="reviewWorkflowInfo[0].validation_info==''"></span>
+                            <span style="width:20px;display: flex;margin-top: 4px;" ng-if="reviewWorkflowInfo[0].validation_info==4" class="exclamatory-circle mr-5" uib-tooltip="{{'contract.validation_preparation' | translate}}" tooltip-placement="left">  <i class="fa fa-exclamation-circle"style="font-size: 20px;"></i></span>
+                           <span style="width:20px;display: flex;margin-top: 4px;" ng-if="reviewWorkflowInfo[0].validation_info==2" class="refresh-icon mr-5"><i class="fa fa-refresh" style="font-size: 12px;" tooltip-placement="left" uib-tooltip="{{'normal.validation_ongoing' | translate}}"></i></span>
+                           <span style="width:20px;display: flex;margin-top: 4px;" ng-if="reviewWorkflowInfo[0].validation_info==1" tooltip-placement="left" uib-tooltip="{{'contract.validation_preparation' | translate}}" class="mr-5"><i class="tss-validation" style="font-size: 17px; line-height: 9px;"></i></span>
+                           <span style="display: flex;margin-top: 4px;" ng-if="reviewWorkflowInfo[0].validation_info==3" tooltip-placement="left" uib-tooltip="{{'normal.validation_finalized' | translate}}" class="green mr-5"><i class="fa fa-check-circle" style="font-size: 20px;"></i></span>   
+                           <!-- <i class="glyphicon" ng-if="user.access !='eu' && reviewWorkflowInfo.length>1"
+                           ng-class="{'fa fa-chevron-up  pull-right': open,'fa fa-chevron-down  pull-right': !open}"></i>                 -->
+
+                           <span style="margin-right: 33px !important;width: 24px;">
+                            <i class="glyphicon" ng-if="user.access !='eu' && reviewWorkflowInfo.length>1"
+                                ng-class="{'fa fa-chevron-up  pull-right': open,'fa fa-chevron-down  pull-right': !open}"></i>
+                            </span>
+                           
+                           
+                       </uib-accordion-heading>
+                      
+                        <div class="card-block" style="padding-left: 30px;padding-top: 7px;padding-bottom: 0px;"
+                        ng-if="reviewWorkflowInfo.length>1 && user.access!='eu' || contractData.project_task_count > '1'">
+                           <div class="partners-content review-content" ng-repeat="row in reviewWorkflowInfo track by $index" ng-if="$index>0">  
+                               <div class="d-flex  clearfix f14" ng-click="shiftToNewDetails(row)">
+                                   <div class="col-md-2 pr-0 pl0">
+                                       <span class="f14 orange pointer" ng-if="row.is_workflow==0">{{'calender.review' | translate}}</span>
+                                       <span class="f14 green pointer" ng-if="row.is_workflow==1 && row.is_subtask==0">{{'calender.workflow' | translate}}</span>
+                                       <span class="f14 green pointer" ng-if="row.is_workflow==1 && row.is_subtask!=0">{{'calender.sub_task' | translate}}</span>
+                                   </div>
+                                   <div class="col-md-10 pr0 d-flex">
+                                       <a class="f14 ellipis pointer" href="javascript:;"
+                                            style="width:calc(100% - 55px);
+                                           white-space: nowrap;
+                                           overflow: hidden;
+                                           text-overflow: ellipsis;
+                                           display: inline-block;"  title="{{row.activity_name}}">{{row.activity_name | checkEmpty}}</a>
+                               <div class="score-with-status" style="margin-right: 5px;">
+                                   <span class="f12">{{row.contract_progress == null ? "0%":row.contract_progress}}</span>
+                                   <div class="status-widget font-weight-bold" style="line-height: 6px;">
+                                       <span ng-if="row.score == 'Amber'" class="amber-active"></span>
+                                       <span ng-if="row.score == 'Red'" class="red-active"></span>
+                                       <span ng-if="row.score == 'Green'" class="green-active"></span>
+                                       <span ng-if="!row.score" class=""></span>
+                                       <span ng-if="row.score == 'N/A'" class="">{{row.score}}</span>
+                                   </div> 
+                               </div>
+                               <span style="width:20px;" ng-if="row.validation_info==''"></span>
+                               <span style="width:20px;display: flex;margin-top: 4px;" ng-if="row.validation_info==4" class="exclamatory-circle"tooltip-placement="left"  uib-tooltip="{{'contract.validation_preparation' | translate}}">  <i class="fa fa-exclamation-circle"style="font-size: 20px;"></i></span>
+                               <span style="width:20px;display: flex;margin-top: 4px;" ng-if="row.validation_info==2" class="refresh-icon"><i class="fa fa-refresh" style="font-size: 12px;" tooltip-placement="left" uib-tooltip="{{'normal.validation_ongoing' | translate}}"></i></span>
+                               <span  style="width:20px;display: flex;margin-top: 4px;" ng-if="row.validation_info==1" ><i class="tss-validation" tooltip-placement="left"  uib-tooltip="{{'contract.validation_preparation' | translate}}"style="font-size: 17px; line-height:17px;"></i></span>
+                               <span style="width:20px;display: flex;margin-top: 4px;"  ng-if="row.validation_info==3"  class="green"><i class="fa fa-check-circle" tooltip-placement="left" uib-tooltip="{{'normal.validation_finalized' | translate}}" style="font-size: 20px;"></i></span>      
+                               </div>
+                                                    
+                               </div>
+                           </div>
+                       </div>
+                      
+                   </div> 
+                   
+               </uib-accordion>
+                <!-- <uib-accordion class="card widget2" style="margin-bottom:5px !important;" close-others="oneAtATime">
+                    <div uib-accordion-group class="panel-default" heading="Stakeholders" template-url="group-template0.html"
+                        ng-init="open=false;" is-open="open">
+                        <uib-accordion-heading ng-click="open= !open && user.access !='eu' && reviewWorkflowInfo.length>1">
+                             <span class="f12" tooltip-placement="left" ng-if="reviewWorkflowInfo[0].is_workflow==0"
+                                uib-tooltip-html="htmlTooltip"
+                                tooltip-class="customClass">
+                                <i class="fa fa-info-circle f12 gray" ng-if="reviewWorkflowInfo[0].recurrenc && reviewWorkflowInfo[0].recurrence_till"></i>
+                            </span>
+                            <span class="f12" tooltip-placement="left" ng-if="reviewWorkflowInfo[0].is_workflow==1"
+                                uib-tooltip=" Execute By :- {{reviewWorkflowInfo[0].recurrence_till | date}}"
+                                tooltip-class="customClass">
+                                <i class="fa fa-info-circle f12 gray" ng-if="reviewWorkflowInfo[0].recurrence_till"></i>
+                            </span> 
+                        
+                               
+                         <span ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask==0" class="green" style="padding-left: 7px;display: flex;align-items: center;">  <span class="hand-symbol"></span> 
+                         <span> {{'calender.workflow' | translate}}</span>   
+                        </span> 
+                        
+                        <span ng-if="reviewWorkflowInfo[0].is_workflow==1 && reviewWorkflowInfo[0].is_subtask!=0" class="green hand-symbol" style="padding-left: 7px;display: flex;align-items: center;">  
+                        <span> {{'calender.sub_task' | translate}}</span>  </span> 
+                        <span class="hand-symbol" style="font-weight: normal;width: 100%;
+                                     white-space: nowrap;  text-overflow: ellipsis;overflow: hidden; padding:2px 0px;
+                                    display: inline-block;" title="{{reviewWorkflowInfo[0].activity_name}}">&nbsp;-&nbsp;{{reviewWorkflowInfo[0].activity_name | checkEmpty}}</span>                           
+                        <i class="glyphicon" style="margin-right: 33px !important;" ng-if="user.access !='eu' && reviewWorkflowInfo.length>1"
+                            ng-class="{'fa fa-chevron-up  pull-right': open,'fa fa-chevron-down  pull-right': !open}"></i>  
+                        </uib-accordion-heading>
+                        
+                         <div class="card-block" style="padding-left: 30px;padding-top: 7px;padding-bottom: 0px;"
+                                ng-if="reviewWorkflowInfo.length>1 && user.access!='eu' || contractData.project_task_count > '1'" >
+                            <div class="partners-content review-content" ng-repeat="row in reviewWorkflowInfo track by $index" ng-if="$index>0">  
+                                <div class="clearfix f14" ng-click="shiftToNewDetails(row)">
+                                    <div class="col-md-2 pr-0 pl0"> 
+                                        <span class="f14 orange pointer" ng-if="row.is_workflow==0">{{'calender.review' | translate}}</span>
+                                        <span class="f14 green pointer" ng-if="row.is_workflow==1 && row.is_subtask==0">{{'calender.workflow' | translate}}</span>
+                                        <span class="f14 green pointer" ng-if="row.is_workflow==1 && row.is_subtask!=0">{{'calender.sub_task' | translate}}</span>
+                                    </div>
+                                    <div class="col-md-10 pr5">
+                                        <a class="f14 ellipis pointer" href="javascript:;" 
+                                            style="width: 280px;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                            display: inline-block;"  title="{{row.activity_name}}">{{row.activity_name | checkEmpty}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                    </div>
+                </uib-accordion> -->
+                <uib-accordion class="card widget2" style="margin-bottom:5px !important;" close-others="oneAtATime" ng-if="contractData.is_subtask==0">
+                    <div uib-accordion-group class="panel-default" heading="" template-url="group-template.html"
+                        ng-init="open1=false;" is-open="open1">
+                        <uib-accordion-heading ng-click="open1= !open1">
+                            <i class="glyphicon fa fa-paperclip"></i>
+                            <span ng-if="isWorkflow=='0'">{{'contract.review' | translate}} {{'links.attachments_links' | translate | lowercase}}</span>
+                            <span ng-if="isWorkflow=='1'">{{'workflows.workflow' | translate}} {{'links.attachments_links' | translate | lowercase}}</span>
+                            
+                            <i class="glyphicon" style="margin-right: 33px !important;" ng-if="!(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')"
+                                ng-class="{'fa fa-chevron-up  pull-right': open1,'fa fa-chevron-down  pull-right': !open1}"></i>
+                            <i class="glyphicon" style="margin-right: 33px !important;" ng-if="(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')"
+                                ng-class="{'fa fa-chevron-up  pull-right': open1,'fa fa-chevron-down  pull-right': !open1}"></i>
+                        </uib-accordion-heading>
+                        <div class="card-block  pt-h pb-h attachments_block">
+                                    <div class="attachments-search">
+                                        <select class="form-control" ng-model="moduleFilter" ng-options="item.module_name as item.module_name for item in contractModules">
+                                            <option value="">-- {{'change_logs.all_modules' | translate}} --</option>
+                                        </select>
+                                    </div>
+                                    <div class="card-block pt-h pb-h" style="overflow-y: auto;padding: 0.25rem;">
+                                        <div class="attachment-widget" ng-repeat="a in documentsList |  filter:(!!moduleFilter || undefined) && {module_name: moduleFilter}">
+                                            <p ng-if="documentsList.length>0" class="mb-0">
+                                                <a href="javascript:;" title="Download" ng-click="getDownloadUrl(a)"
+                                                    class="ellipis attachment-fileHead ng-binding" style="cursor: pointer;"
+                                                    text-line ng-if="a.document_type ==0">
+                                                    <!-- <i class="icon-arrow-down-circle f14 display-inline-block pt4 valign-t"></i>
+                                                    {{a.document_name}}</a> -->
+                                                    <i class="fa fa-download" style="vertical-align: middle;"></i>&nbsp;{{a.document_name}}</a>
+                                                    <a ng-click="redirectUrl(a.document_source)" href="javascript:;" title="{{a.document_source}}"
+                                                class="ellipis attachment-fileHead ng-binding" style="cursor: pointer;"
+                                                text-line ng-if="a.document_type==1">
+                                                <i class="fa fa-link f14 display-inline-block pt4 valign-t"></i>
+                                                    {{a.document_name}} </a>
+                                                <a href="#" class="gray">
+                                                    <i ng-if="(a.daad == 'itako') && (contractData.reaaer == 'itako') ||(user.access=='ca')"
+                                                        class="pull-right icon-trash mt3" title="{{'general.delete' | translate}}"
+                                                        ng-click="deleteModuleDocument(a.id_document,a.document_name)"></i>
+                                                </a>
+                                                <span class="f11 display-block"  style="padding-left: 18px;" text-line 
+                                                        title="{{a.module_name}} / {{a.topic_name}} /{{a.question_text}}">{{a.module_name}} /
+                                                    {{a.topic_name}} / {{a.question_text}}</span>
+                                                <span style="display: block;font-size: 10px; padding-left: 18px;" class="mr-h mb-0">
+                                                    <span class="font-italic gray" style="display: block;">
+                                                        <span style="color:black" class="">{{'general.by' | translate}}</span>
+                                                        {{a.uploaded_user_name}}</span>
+                                                    <span class="font-italic gray" style="display: block;">
+                                                        <span style="color:black" class="">{{'general.on' | translate}}</span>
+                                                        {{a.uploaded_on | utcToLocal:'toLocalDate' | checkEmpty}}</span>
+                                                    </span>
+                                            </p>
+                                        </div>
+                                        <p ng-if="attachmentList.length <= 0" class="text-sm-center">
+                                            {{'attachment.no_files' | translate}}
+                                        </p>
+                                        <div ng-show="attachmentList.length > 1">
+                                            <p ng-if="(attachmentList | filter:(!!moduleFilter || undefined) && {module_name: moduleFilter}).length < 1"
+                                                class="text-sm-center">{{'attachment.no_files' | translate}}</p>
+                                        </div>
+                                    </div>
+                                <!-- </uib-tab> -->
+                                <!-- <uib-tab index="1" heading="{{isWorkflow=='0'?'Review links':'Task links'}}">
+                                    <div class="attachments-search">
+                                        <select class="form-control" ng-model="moduleFilter1" ng-options="item.module_name as item.module_name for item in contractModules">
+                                            <option value="">-- {{'change_logs.all_modules' | translate}} --</option>
+                                        </select>
+                                    </div>
+                                    <div class="card-block pt-h pb-h" style="overflow-y: auto;padding: 0.25rem;">
+                                        <div class="attachment-widget" ng-repeat="a in linkList |  filter:(!!moduleFilter1 || undefined) && {module_name: moduleFilter1}">
+                                            <p ng-if="linkList.length>0" class="mb-0">
+                                                <a ng-click="redirectUrl(a.document_source)" href="javascript:;" title="{{a.document_source}}"
+                                                    class="ellipis attachment-fileHead ng-binding" style="cursor: pointer;"
+                                                    text-line>
+                                                    <i class="fa fa-link f14 display-inline-block pt4 valign-t"></i>
+                                                    {{a.document_name}} </a>
+                                                <a href="#" class="gray">
+                                                    <i ng-if="(a.daad == 'itako') && (contractData.reaaer == 'itako')"
+                                                        class="pull-right icon-trash mt3" title="{{'general.delete' | translate}}"
+                                                        ng-click="deleteModuleDocument(a.id_document,a.document_name)"></i>
+                                                </a>
+                                                <span class="f11 display-block" text-line>{{a.module_name}} /
+                                                    {{a.topic_name}} / {{a.question_text}}</span>
+                                                <p style="display: block;font-size: 10px;" class="mr-h mb-0">
+                                                    <span class="font-italic gray" style="display: block;">
+                                                        <span style="color:black" class="">{{'general.by' | translate}}</span>
+                                                        {{a.uploaded_user_name}}</span>
+                                                    <span class="font-italic gray" style="display: block;">
+                                                        <span style="color:black" class="">{{'general.on' | translate}}</span>
+                                                        {{a.uploaded_on | utcToLocal:'date' | checkEmpty}}</span>
+                                                    </p>
+                                            </p>
+                                        </div>
+                                        <p ng-if="linkList.length <= 0" class="text-sm-center">
+                                            {{'links.no_links' | translate}}
+                                        </p>
+                                        <div ng-show="linkList.length > 1">
+                                            <p ng-if="(linkList | filter:(!!moduleFilter1 || undefined) && {module_name: moduleFilter1}).length < 1"
+                                                class="text-sm-center">{{'links.no_links' | translate}}</p>
+                                        </div>
+                                    </div>
+                                </uib-tab> -->
+                            <!-- </uib-tabset> -->
+                        </div>
+                    </div>
+                </uib-accordion>
+               
+            </div>
+        </div>
+    </div>
+    <div class="review-warning" ng-if="discussion_access && loading">
+        <span ng-if="isWorkflow=='0'">{{'discussion.top_msg' | translate}} {{'discussion.click' | translate}}</span>
+        <span ng-if="isWorkflow=='1'">{{'discussion.top_msg_w' | translate}} {{'discussion.click' | translate}}</span>
+        <a style="text-decoration: underline;cursor: pointer;" ng-click="goToDesign()">{{'discussion.here' | translate}}</a> {{'discussion.to_view' | translate}}
+    </div>
+    <div class="review-warning" ng-if="validation_status==2 && loading && !discussion_access">
+        <span ng-if="isWorkflow=='0'">{{'discussion.top_msg_r' | translate}} </span>
+        <span ng-if="isWorkflow=='1'">{{'discussion.top_msg_wv' | translate}} </span>
+    </div>
+</div>
+<script type="text/ng-template" id="group-template0.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display: flex;align-items: center;">
+                            {{heading}}
+                        <i class="glyphicon" ng-class="{'fa fa-chevron-down': open, 'fa fa-chevron-up': !open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor:pointer;">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class=" glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="contract-review-finalize.html">
+    <div class="modal-header">
+        <h6 class="modal-title">
+            <span ng-if="isWorkflow=='0'">{{'discussion.final_review' | translate}}</span>
+            <span ng-if="isWorkflow=='1'">{{'discussion.final_workflow' | translate}}</span>
+             - {{contractData.contract_name}} - {{contractData.provider_name_show}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="finalizeForm" ng-submit="finalizeForm.$valid && finalizeReview(finalize,contractData.ideedi)">
+        <div class="modal-body clearfix" ng-init="finalize.finalize_without_discussion = 0">
+            <div class="form-group col-md-12 clearfix">
+                <label class="checkbox" for="without_discussion"  ng-if="contractData.ideedi != 'annus'">
+                    <input type="checkbox" id="without_discussion" name="discussion"
+                           ng-model="finalize.finalize_without_discussion" ng-true-value="1" ng-false-value="0" required/>
+                   <span ng-if="isWorkflow=='0'">{{'contract.final.discussion_exist' | translate}}</span>
+                   <span ng-if="isWorkflow=='1'">{{'contract.final.discussion_exist_w' | translate}}</span>
+                </label>
+                <span class="error-message col-md-12 p0" ng-if="finalizeForm.discussion.$error.required && finalizeForm.$submitted">{{'please check the checkbox'}}</span>
+            </div>
+            <div class="form-group col-md-12"  ng-if="contractData.ideedi != 'annus'">
+                <label> {{'contract.final.comments' | translate}} *
+                    <textarea class="form-control" name="comments" cols="100" rows="2" ng-model="finalize.finalize_comments" required></textarea>
+                </label>
+                <span class="error-message" ng-if="finalizeForm.comments.$error.required && finalizeForm.$submitted">{{'general.required_field' |translate}}</span>
+            </div>
+            <div class="form-group col-md-12 clearfix">
+                <label class="checkbox"  ng-if="contractData.ideedi == 'annus' && isWorkflow=='0'">
+                    {{'contract.final.confirm_finalize_review' | translate}}
+                </label>
+                <label class="checkbox"  ng-if="contractData.ideedi == 'annus' && isWorkflow=='1'">
+                    {{'contract.final.confirm_finalize_workflow' | translate}}
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" ng-disabled="allowToFinish" class="btn btn-sm btn-primary">
+                <i class="fa fa-dot-circle-o"></i>&nbsp; {{'contract.final.finalize' | translate}}</button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="group-template2.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title" ng-click="toggleOpen()" style="cursor:pointer;">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading" >
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                            {{heading}}
+                        <i class="glyphicon" ng-class="{'fa fa-chevron-down': open, 'fa fa-chevron-up': !open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="open-unanswered-questions.html">
+    <div class="modal-header">
+        <h6 class="modal-title">
+                 {{module.module_name}}
+                 <span class="progress-cls f12" ng-if="!isStored">{{'contract.module_questions.progress' | translate}} : {{module.progress}} %</span>
+                 <span class="completion-cls f12" ng-if="!isStored">{{'contract.completion' | translate}} : {{module.question_count}} </span>
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="form" >
+            <div class="modal-body Contract-modal clearfix">
+                <div class="form-group col-md-12 clearfix" ng-repeat="topic in unAnsweredTopics">
+                    <span class="model-heading-cls">{{topic.topic_name}}</span>
+                    <table class="table table-custom table-striped table-hover">
+                        <thead>
+                            <!-- <tr>
+                                <th style="width:70%">{{'questions.question' | translate}}</th>
+                                <th style="width:30%">{{'contract.module_questions.answer' | translate}}</th>
+                            </tr> -->
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in topic.questions" ng-class="{'relation-active':row.provider_visibility==1}">
+                                <td style="width:70%"><a href="javascript:;" ng-click="goToReview(row,topic)">{{row.question_text}}</a></td>
+                                <td style="width:30%">
+                                       <span>---</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="topic.questions.length == 0">
+                            <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>&nbsp;{{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>
+<!-- parvathi code starts-->
+<script type="text/ng-template" id="invite-validator.html">
+    <div class="modal-header">
+         <h6 class="modal-title">
+             <span ng-if="isWorkflow=='1'">{{'discussion.validateWorkflow' | translate}}</span>
+                   - {{contractData.contract_name}}
+             <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix" ng-if="!contractData.validation_contributor">
+       {{'discussion.inviteValidatorMsg'|translate}}
+    </div>
+    <div class="modal-body clearfix" ng-if="contractData.validation_contributor">
+        {{'discussion.submitMsg'|translate}}
+    </div>
+    <div class="modal-footer clearfix">
+        <button type="submit" class="btn btn-sm btn-primary" ng-click="inviteValidator()">
+                <i class="fa fa-dot-circle-o"></i> {{'general.yes' | translate}}</button>
+        <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+               <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="add-edit-contributors.html">
+    <div class="modal-header">
+        <h6 class="modal-title">
+            {{'Search' | translate}} {{'contract.contributor' | translate}}
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form novalidate name="actionItemForm" ng-submit="actionItemForm.$valid && saveContributors(data)">
+        <div class="modal-body clearfix">
+            <uib-tabset active="active">
+                <uib-tab index="0">
+                    <uib-tab-heading>
+                        <i class="glyphicon glyphicon-bell"></i> {{'general.expert' | translate}}
+                    </uib-tab-heading>
+                    <div class="form-group col-md-12 clearfix">
+                        <label for="business_unit">{{'reports.bu_unit' | translate}}</label>
+                        <select id="business_unit"
+                                ng-model="data.expert.business_unit"
+                                name="business_unit"
+                                class="chosen-choices"
+                                ng-change="getContributorsByBusinessUnit1(data.expert.business_unit,'expert')"
+                                ng-options="item.id_business_unit as item.bu_name for item in businessUnitList.expert">
+                                <option value="">-- {{'normal.select_busines_unit' | translate}} --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 clearfix drp-search" style="padding-bottom: 20px;">                        
+                        <div class="input-group" ng-init="expert.searchContracts=''">
+                            <input type="text" class="form-control" placeholder="{{'normal.placeholder_contributors' | translate}}"
+                                    ng-focus="showContractList1=true;" ng-model="expert.searchContracts"/>
+                            <span class="input-group-addon" ng-click="showContractList1=false;" style="cursor:pointer;">
+                                <i class="fa fa-times" uib-tooltip="Close"></i>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-12 constribute-opt" ng-show="showContractList1">
+                            <div ng-repeat="contract in expertList | filter:expert.searchContracts">
+                                <div ng-click="addExpertContributer(contract)">{{contract.name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 clearfix contributor-list"
+                          ng-if="data.expert.contributors.length>0" style="border: 1px solid #ccc;padding-top: 8px;">
+                        <span class="bold f14 pt-h pb2">{{'normal.selected_Expert_contributors' | translate}} : </span>
+                        <div class="clearfix selectedExpertText">
+                            <ul class="pt-h">
+                                <li ng-repeat="contributor in data.expert.contributors" ng-if="contributor.id_user" title="{{contributor.name}}">
+                                    {{contributor.name}}
+                                    <span class="fa fa-times-circle" ng-click="removeExpert($index)"></span>
+                                </li>
+                            </ul>
+                        </div>                        
+                    </div>
+                </uib-tab>
+                <uib-tab index="1">
+                    <uib-tab-heading>
+                        <i class="glyphicon glyphicon-bell"></i> {{'general.validator' | translate}}
+                    </uib-tab-heading>
+                    <div class="form-group col-md-12 clearfix">
+                        <label for="business_unit1">{{'reports.bu_unit' | translate}}</label>
+                        <select id="business_unit1"
+                                ng-model="data.validator.business_unit"
+                                name="business_unit1"
+                                class="chosen-choices"
+                                ng-change="getContributorsByBusinessUnit2(data.validator.business_unit,'validator')"
+                                ng-options="item.id_business_unit as item.bu_name for item in businessUnitList.validator">
+                                <option value="">-- {{'normal.select_busines_unit' | translate}} --</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label>{{'contract.contributor' | translate}}</label>
+                        <select
+                            single
+                            chosen
+                            placeholder-text-single="'{{'normal.placeholder_contributors' | translate}}'"
+                            ng-change="addValidatorContributer(data.validator.searchValidatorContracts,'validator');chosen();"
+                            ng-model="data.validator.searchValidatorContracts"
+                            ng-options="contract as contract.name for contract in validatorList">
+                            <option value="">-- {{'normal.select_contributor' | translate}}--</option>
+                        </select>
+                    </div>  
+                    <div class="form-group col-md-12 clearfix contributor-list" ng-if="data.validator.searchValidatorContracts"
+                        style="border: 1px solid #ccc; padding-top: 8px;">
+                        <span class="bold f14 pt-h pb2">{{'normal.select_validator_contributors' | translate}} : </span>
+                        <ul>
+                            <li ng-repeat="row in data.validator" ng-if="row.id_user==data.validator.searchValidatorContracts.id_user"> 
+                                {{row.name}}
+                                <span class="fa fa-times-circle" ng-click="removeValidator($index)"></span>
+                            </li>
+                        </ul>
+                    </div>                    
+                </uib-tab>
+                <uib-tab index="2">
+                    <uib-tab-heading>
+                    <i class="glyphicon glyphicon-bell"></i>{{'contract.provider'|translate}}
+                    </uib-tab-heading>
+                    <div class="col-md-12 clearfix">
+                        <label class="form-group col-md-12 clearfix p0" >Pre Selected {{'contract.provider'|translate}}: 
+                            <!-- <select class="form-control" ng-disabled="true">
+                                <option value="">{{contractModuleTopics.contract_details[0].provider_name_show}}</option>
+                            </select> -->
+                            <select id="provider_id"
+                            ng-model="data.provider.id_provider"
+                            name="provider1"
+                             class="chosen-choices"
+                        ng-change="getContributorsByBusinessUnit3(data.provider.id_provider,'provider')"
+                        ng-options="item.provider_id as item.provider_name for item in availableProviders">
+                        <option value="">-- Select {{'contract.provider'|translate}} --</option>
+                </select>
+                        </label>
+                    </div>
+                    <div class="col-md-12 clearfix drp-search" style="padding-bottom: 20px;">                        
+                        <div class="input-group" ng-init="provider.searchProviderContracts=''">
+                            <input type="text" class="form-control" placeholder="{{'normal.placeholder_contributors' | translate}}"
+                                    ng-focus="showContractList2=true;" ng-model="provider.searchProviderContracts"/>
+                            <span class="input-group-addon" ng-click="showContractList2=false;" style="cursor:pointer;">
+                                <i class="fa fa-times" uib-tooltip="Close"></i>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-12 constribute-opt"  ng-show="showContractList2">
+                            <div ng-repeat="contract in providerList | filter:provider.searchProviderContracts">
+                                <div ng-click="addProviderContributer(contract,'provider')">{{contract.name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 clearfix contributor-list"  
+                         style="border: 1px solid #ccc; padding-top: 8px;" ng-if="data.provider.contributors.length>0">
+                        <span class="bold f14 pt-h pb2">{{'normal.selected' | translate}} {{'contract.provider'|translate}} {{'user.breadcrumb.contibutors' | translate}} : </span>
+                        <div class="selectedExpertText clearfix">
+                            <ul>
+                                <li ng-repeat="contributor in data.provider.contributors" ng-if="contributor.id_user" title="{{contributor.name}}">
+                                    {{contributor.name}}
+                                    <span class="fa fa-times-circle" ng-click="removeProvider($index)"></span>
+                                </li>
+                            </ul>
+                        </div>                        
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary" ng-disabled="showBtn">
+                <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>
+<!-- parvathi code ends-->
+
+<style>  
+
+    .pl5 {
+        padding-left: 5px;
+    }
+
+    .pr5 {
+        padding-right: 5px;
+    }
+
+    .hover-show-icon {
+        display: none;
+    }
+
+    .hover-icon-cls:hover .hover-show-icon {
+        display: inline;
+    }
+
+
+    .accordion-default .panel-body {
+        padding: 0;
+    }
+
+    .panel-body .attachments_block {
+        padding: 5px !important;
+    }
+
+    .accordion-default .panel-body ul li {
+        padding: 0;
+        border-color: #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .nav-tabs .nav-item {
+        margin-bottom: 0px;
+        padding: 0;
+    }
+
+    .tab-content .tab-pane {
+        padding: 10px;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+        background: #FFF;
+        color: #464646;
+        text-align: center;
+        min-width: 165px;
+        border: 1px solid #ccc;
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-item.active .nav-link {
+        background: #efefef5e;
+        border-bottom-color: #FFF;
+        border: 1px solid #ccc;
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: -1px;
+        position: relative;
+    }
+
+    /* .nav-tabs .nav-item.active .nav-link::before {
+       content: '';
+       display: block;
+       width: 100%;
+       height: 4px;
+       background-color: #efefef5e;
+       position: absolute;
+    } */
+    .accordion-default .panel-body ul {
+        background: #fff;
+    }
+
+    .nav.nav-tabs li:last-child {
+        padding-right: 0px;
+        margin: 0;
+        margin-left: 0.2rem;
+    }
+
+    .accordion-default .panel-body ul {
+        padding: 0;
+        list-style: none;
+        background: #fff;
+    }
+
+    .accordion-default .panel-body ul li {
+        padding: 0;
+        border-color: transparent;
+        border-bottom: transparent;
+    }
+
+    .modal-dialog .nav-tabs {
+        background: #fff;
+    }
+
+    .modal-dialog .nav-tabs .nav-item .nav-link {
+        box-shadow: none;
+    }
+
+    .modal-dialog .nav-tabs .nav-item {
+        box-shadow: none;
+        margin-bottom: 0px;
+    }
+
+    .modal-dialog .tab-content {
+        border: 1px solid #ccc;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+        box-shadow: none;
+    }
+
+    .nav-tabs .nav-item {
+        box-shadow: none;
+        margin-bottom: 0px;
+    }
+
+    .tab-content {
+        border: 1px solid #ccc !important;
+        background-color: #f9f9f9;
+    }
+
+    .card-block .tab-content {
+        margin-top: 0;
+        height: 194px;
+        overflow-y: auto;
+    }
+
+    .alternate-div-bag>div:nth-of-type(odd) {
+        background: #e0e0e047;
+    }
+
+    .pl5 {
+        padding-left: 5px;
+    }
+
+    .pr5 {
+        padding-right: 5px;
+    }
+
+    .hover-show-icon {
+        display: none;
+    }
+
+    .hover-icon-cls:hover .hover-show-icon {
+        display: inline;
+    }
+    .review-content {
+        margin-bottom: 8px !important;
+        padding-bottom: 5px !important;
+    }
+    .contributorCLs .panel-body {
+        position: absolute;
+        z-index: 999;
+        width: 230px;
+        left: 0;
+        top: 35px;
+    }
+
+    .contributorCLs .panel-body .card-block {
+        background: #FFF;
+        border: 1px solid #ccc;
+    }
+
+    .contributorCLs .attachments_block {
+        height: auto;
+    }
+
+    .contributorCLs .accordion-default .panel-title {
+        color: #323232;
+        background: #ffffff;
+        font-size: 14px;
+        padding: 10px 0 10px 10px;
+        margin-bottom: 0px;
+    }
+
+    .contributorCLs h4.panel-title {
+        color: #323232;
+        background: #ffffff;
+        font-size: 14px;
+        padding: 10px 0 10px 10px;
+        margin-bottom: 0px;
+    }
+
+    .contributorCLs .accordion-default .panel-title a.accordion-toggle {
+        color: #323232;
+    }
+
+    .contributorCLs a.accordion-toggle {
+        color: #323232;
+    }
+
+    .contributorCLs .accordion-default .panel-title a.accordion-toggle span i.glyphicon {
+        width: 15px;
+        font-size: 14px;
+        color: #9998b5;
+    }
+
+    .contributorCLs i.glyphicon.ng-scope.fa.pull-right.fa-chevron-down,
+    .contributorCLs i.glyphicon.fa.fa-paperclip.ng-scope {
+        color: #9998b5;
+    }
+
+    .contributorCLs .attachment-widget p {
+        margin: 0;
+        font-size:12px;
+        padding: 2px 0;
+        padding-top: 7px;
+    }
+
+    .contributorCLs .attachment-widget span {
+        margin: 0;
+        padding: 0;
+        color: #ea901e;
+        font-size: 12px;
+    }
+
+    .nav-tabs {
+        background: transparent;
+    }
+
+    .nav.nav-tabs li:last-child {
+        padding-right: 0;
+    }
+    /* form.ng-pristine {
+        padding: 20px;
+    } */
+
+    .tab-content .tab-pane {
+        padding: 10px;        
+    }
+    .tab-content{
+        border: 1px solid #ccc;
+    }
+    .tab-content::after, .tab-content::before{
+        clear: both;
+        content: '';
+        display: block
+    }
+    .chosen-container {
+        width: 100% !important;
+    }
+    .nav-tabs .nav-item .nav-link {
+        background: #FFF;
+        color: #464646;
+        text-align: center;
+        min-width: 165px;
+        border: 1px solid #ccc;
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-item.active .nav-link {
+        background: #efefef5e;
+        border-bottom-color: #FFF;
+        border: 1px solid #ccc;
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: -1px;
+    }
+    .nav-tabs .nav-item{
+        margin-bottom: 0;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+        padding-bottom: 10px;
+    }
+    .contributor-list ul li{
+        border: 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .contributor-list ul li:last-child{
+        border-bottom: 0;
+    }
+    .selectedExpertText{
+        max-height: 100px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    .tab-content{
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+    }
+    .accordian_list_style .pagination li{
+        padding: 0;
+    }
+    ul.tabs{
+		margin: 0px;
+        padding: 0px;
+        list-style: none;
+        border-bottom: 1px solid #ddd;
+        height: 43px;
+    }	
+    ul.tabs li{
+        background: none;
+        color: #222;
+        display: inline-block;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+    ul.tabs li.current{
+        background: #ffffff;
+        color: #222;
+        border: 1px solid #dddddd;
+        /* margin-bottom: -1px; */
+        border-bottom: 0px solid #dddddd;
+        border-top: 0px solid #dddddd;
+        /* margin-bottom: -2px; */
+        z-index: 999;
+        height: 43px;
+    }
+    ul.tabs li:first-child.current{
+        border-left: 0px solid #dddddd;
+    }
+    ul.tabs li.current{
+        color: #e78200;
+    }
+
+    .tabs-view .tab-content{
+        display: none;
+        background: #ededed;
+        padding: 15px;
+    }
+
+    .tabs-view .tab-content.current{
+        display: inherit;
+    }
+    .tabs>li.active>a, .tabs>li.active>a:focus, .tabs>li.active>a:hover {
+        color: #555;
+        cursor: default;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+    .tabs-view .ul>li>a {
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+    }
+    .tabs-view .tab-content {
+        border: 0px solid #ccc;
+        background-color: #ffffff;
+    }
+    .tabs-view .tabs a{
+        margin: 12px 10px 0px 0px;
+    }
+    .contributor-manage-project.dropdown-menu{
+        top: 15px !important;
+        min-width: 153px !important; 
+    }
+    .only-name{
+    margin: 0;
+    padding: 0;
+    color: #ea901e;
+    font-size: 12px;
+}
+
+.ellipis1{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    white-space: nowrap;
+}
+
+.refresh-icon.module-validation{
+    height: 21px;
+    width: 21px;
+}
+
+.project-icons-validation .fa-check-circle,
+.project-icons-validation .fa-times-circle,
+.project-icons-validation .fa-exclamation-circle{
+    background: #fff;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+}
+.d-flex{
+        display: flex;
+    }
+.align-items-center{
+    align-items: center;
+}
+.refresh-icon{
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+    }
+  
+    .project-validationStatus{
+        padding-right: 33px;
+         width: 25%; 
+         display: flex;
+         justify-content: flex-end;
+         align-items: flex-end;
+    }
+
+    .icons-widget .card-block {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+.relation-active td{
+        background-color: #a9d18e !important;
+    }
+
+</style>

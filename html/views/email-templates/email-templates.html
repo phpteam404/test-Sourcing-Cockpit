@@ -1,0 +1,111 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['view']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="emailTemplates">
+                <thead>
+                    <tr>
+                        <td class="" >
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0 custom-field">
+                                    <select class="form-control" ng-change="filterTemplates(filter.filter_type)" ng-model="filter.filter_type">
+                                        <option value="">--{{'general.mail_type' | translate}}--</option>
+                                        <option value="User">User</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Review">Review</option>
+                                        <option value="Workflow">Task </option>
+                                        <option value="Project">Project </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="6">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="module_name" class="st-sort-ascent st-sort-descent">{{'module.module_name' | translate}}</th>
+                        <th st-sort="template_name" class="">{{'templates.template_name' | translate}}</th>
+                        <th st-sort="template_subject" class="">{{'email_temp.email_subject' | translate}}</th>
+                        <th class="hand-symbol">{{'contract.status' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!emptyTable">
+                    <tr ng-repeat="row in emailTemplates">
+                        <td>{{row.module_name}}</td>
+                        <td>{{row.template_name}}</td>
+                        <td>{{row.template_subject}}</td>
+                        <td>
+                            <!--<div class="onoffswitch form-inline">
+                                <input name="onoffswitch_toggle" ng-model="row.status"
+                                       ng-true-value="'1'"
+                                       ng-false-value="'0'"
+                                       ng-checked="row.status == 1"
+                                       class="onoffswitch-checkbox" type="checkbox">
+                                <label class="onoffswitch-label assessment-switch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>-->
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                       ng-model="row.status"
+                                       ng-true-value="'1'"
+                                       ng-false-value="'0'"
+                                       ng-checked="row.status == 1"
+                                       ng-change="updateEmailStatus($index,row)"
+                                       id="{{row.id_email_template}}_radio">
+                                <label class="onoffswitch-label assessment-switch mb-0"
+                                       for="{{row.id_email_template}}_radio">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <a ui-sref="app.email-templates.edit({name:(row.template_name),id:(row.id_email_template | encode )})"
+                               class="mr-1 gray" title="{{'general.edit' | translate}}"><i class="icon-edit" ></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="5" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="!isLoading && emailTemplates.length<=0">
+                    <tr><td colspan="5" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="5">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .assessment-switch .onoffswitch-inner::before {
+  content: "ON" !important; }
+
+.assessment-switch .onoffswitch-inner::after {
+  content: "OFF" !important; }
+</style>

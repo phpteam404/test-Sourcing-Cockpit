@@ -1,0 +1,79 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="contractsList">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <span class="pull-right">
+                                        <button class="btn btn-sm btn-primary" type="button" ng-click="createContractReview('0')">
+                                            <i class="icon-plus"></i>&nbsp; {{'general.Create' | translate}}</button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                    <th st-sort="action_item">{{'contract.action_item' | translate}}</th>
+                    <th>{{'contract.responsible_user' | translate}}</th>
+                    <th>{{'contract.due_date' | translate}}</th>
+                    <th>{{'general.actions' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in reviewList">
+                    <td>{{row.action_item}}</td>
+                    <td>{{row.user_name}}</td>
+                    <td>{{row.due_date | utcToLocal:'date' | checkEmpty}}</td>
+                    <td>
+                        <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20">
+                            <a href uib-dropdown-toggle class="font-sm">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu
+                                aria-labelledby="simple-dropdown">
+                                <li>
+                                    <a href="javascript:;" ng-click="createContractReview(row)">{{'general.edit'
+                                        | translate}}</a>
+                                </li>
+                            </ul>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr>
+                    <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                </tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr>
+                    <td colspan="8" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,411 @@
+
+<div class="modal-body clearfix">
+    <div class="col-lg-12 p015">
+        <div class="row" ng-init="indextab=0">
+            <div class="col-sm-12 col-lg-12 p-0 info-tabs-div">
+               <div class="modal-closer-contract">
+                  <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times f18"></a>
+               </div>
+               
+                <uib-tabset active="indextab">
+                    <uib-tab index="0"  heading="{{'normal.catalogue_information' | translate}} ({{catalogue_info_count}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">                        
+                                <div class="clearfix">
+                                    
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <span class="label-control">{{'providers.id' | translate}}</span>
+                                                <p>{{catalogue.catalogue_unique_id | checkEmpty}}</p>
+                                            </div>
+                                        </div>
+                                   
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="label-control">{{'normal.catalogue_item_name' | translate}}</span>
+                                            <p>{{catalogue.catalogue_name | checkEmpty}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="label-control">{{'contract.currency' | translate}}</span>
+                                            <p>{{catalogue.currency_name | checkEmpty}}</p>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="label-control">{{'customer.status' | translate}}</span>
+                                            <p>{{catalogue.status | checkEmpty}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <span class="label-control">{{'normal.catalogue_item_descreption' | translate}}</span>
+                                            <textarea class="form-control" ng-model="catalogue.description" name="desc"  style="height: 80px; width: 100%;"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer" style="display: flex;justify-content: flex-end;">
+                                        <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger pull-right">
+                                            <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                                        </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+   
+                       
+                    </uib-tab>
+                    <uib-tab index="1"  heading="{{'normal.catalogue_tags' | translate}} ({{catalogue_tags_count}})">
+                        <div class="card">                            
+                            <div class="card-block card-space">
+                                <div class="clearfix">
+                                    <div class="col-md-12 p0" style="margin-top: 10px;">
+                                        <div class="col-sm-12 p0">
+    
+                                            <div class="form-group col-sm-12 tagsGrouping clearfix mb0 m-0 p-0" style="margin: 0 15px;" ng-repeat="tagDataBusiness in tagsInfo track by $index" style="margin-bottom: 0px;" ng-if="!tagDataBusiness.bu_name">
+                                                <div  class="form-group col-sm-4" style="float:unset !important" ng-repeat="tag in tagDataBusiness.tag_details">
+                                                    <span class="label-control ellipis w_95" title="{{tag.tag_text}}">{{tag.tag_text | checkEmpty}}</span>
+                                                            <p ng-if="tag.tag_type == 'input'">
+                                                                <span ng-if="tag.field_type && tag.field_type == 'currency'" title="{{tag.tagAnswerDisplay | currency:' ':0 | checkEmpty}}">
+                                                                    <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tagAnswerDisplay !=null)">{{contractInfo.currency_name}}</span>
+                                                                    <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tagAnswerDisplay !=null)">{{tag.tagAnswerDisplay | currency:' ':0 | checkEmpty}}</span>
+                                                                    <span ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay ==''  || tag.tagAnswerDisplay ==null)">---</span>
+                                                                </span>
+                                                                <span ng-if="tag.field_type && tag.field_type == 'number'" title="{{tag.tagAnswerDisplay}}">
+                                                                    <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tagAnswerDisplay !=null)">{{tag.tagAnswerDisplay}}</span>
+                                                                    <span ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay =='' || tag.tagAnswerDisplay ==null)">---</span>
+                                                                </span>
+                                                                <span ng-if="tag.field_type && tag.field_type == 'text'" title="{{tag.tagAnswerDisplay}}">
+                                                                    {{tag.tagAnswerDisplay | checkEmpty}}
+                                                                </span>
+                                                            </p>
+                                    
+                                                            <div ng-repeat="opt in tag.selectedOption" ng-if="tag.selected_field" style="margin:0px;">
+                                                                <div ng-if="opt.name && opt.can_access==1" style="color:#2196f3;cursor: pointer;" title="{{opt.name}}"  ng-click="detailsPageGo(opt,tag)">{{opt.name | checkEmpty}}</div>
+                                                                <div ng-if="opt.name && opt.can_access==0" title="{{opt.name}}">{{opt.name | checkEmpty}}</div>            
+                                                            </div>
+                                                            <div ng-if="!tag.selectedOption && tag.selected_field">---</div>
+                                        
+                                                            <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'dropdown' && !tag.selected_field">
+                                                                <span title="{{tag.tagAnswerDisplay | checkEmpty}}"> {{tag.tagAnswerDisplay | checkEmpty}}</span>
+                                                            </p>
+                                    
+                                                            
+                                                            <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'date'"  title="{{tag.tagAnswerDisplay | utcToLocal:'date'}}">
+                                                                {{tag.tagAnswerDisplay | utcToLocal:'date' | isUndefinedOrNullOrZero}}
+                                                           </p>
+                                    
+                                                            <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'radio'" title="{{tag.tagAnswerDisplay}}">
+                                                            {{tag.tagAnswerDisplay | checkEmpty}}
+                                                            </p>
+                                                   
+                                                            <span ng-if="tag.tag_type=='rag'">
+                                                                <p ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay==''  || tag.tagAnswerDisplay==null)">---</p>
+                                                                <div ng-repeat ="opt1 in tag.options" ng-if="tag.tagAnswerDisplay && opt1.tag_option_name == tag.tagAnswerDisplay">
+                                                                    <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name=='R'" >
+                                                                        <span class="red-active"></span>
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                    </p>
+                                                                    <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name == 'A'">
+                                                                        <span class=""></span>
+                                                                        <span class="amber-active"></span>
+                                                                        <span class=""></span>
+                                                                    
+                                                                    </p>
+                                                                    <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name == 'G'">
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                        <span class="green-active"></span>
+                                                                    
+                                                                    </p>
+                                                                    <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name=='N/A'">
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                    </p>
+                                                                    <p class="status-widget font-weight-bold" ng-if="!opt1.tag_option_name">
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                        <span class=""></span>
+                                                                    </p>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                            </div> 
+                                            <div class="form-group col-sm-12 clearfix mb0 p-0" ng-repeat="tagDataBusiness in tagsInfo track by $index" style="margin-bottom: 0px;" ng-if="tagDataBusiness.bu_name">
+                                                <uib-accordion class="widget2 inputs-accordion" style="margin-bottom:5px !important;width: 100%;" close-others="oneAtATime">
+                                                    <div uib-accordion-group class="panel-default" heading="Stakeholders"
+                                                        template-url="group-template0.html" ng-init="open=false;" is-open="open">
+                                                        <uib-accordion-heading ng-click="open= !open">
+                                                            <span style="width: 16px;">
+                                                                <i class="glyphicon" 
+                                                                    ng-class="{'fa-solid fa-caret-down': open,'fa-solid fa-caret-right': !open}" style="color: #000;font-size: 18px;"></i>
+                                                            </span>
+                                                            <span style="z-index: 2;background-color: #fff;padding-right: 5px;">{{tagDataBusiness.bu_name}} ({{tagDataBusiness.count}})</span>
+                                                            <span ng-if="tagDataBusiness.status==0" style="background: #fff;z-index: 1;padding-right: 4px;">({{'general.inactive' | translate}})</span>
+                                                        </uib-accordion-heading>
+                                                        <div class="card-block" style="padding:7px 0px;">
+                                                            <div class="col-md-12 p-0 tagsGrouping">
+                                                            <div  class="form-group col-sm-4" ng-repeat="tag in tagDataBusiness.tag_details track by $index">
+                                    
+                                                        <span class="label-control ellipis w_95" title="{{tag.tag_text}}">{{tag.tag_text | checkEmpty}}</span>
+                                                        <p ng-if="tag.tag_type == 'input'">
+                                                            <span ng-if="tag.field_type && tag.field_type == 'currency'" title="{{tag.tagAnswerDisplay | currency:' ':0 | checkEmpty}}">
+                                                                <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tagAnswerDisplay !=null)">{{contractInfo.currency_name}}</span>
+                                                                <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tag_answer !=null)">{{tag.tagAnswerDisplay | currency:' ':0 | checkEmpty}}</span>
+                                                                <span ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay ==''  || tag.tagAnswerDisplay ==null)">---</span>
+                                                            </span>
+                                                            <span ng-if="tag.field_type && tag.field_type == 'number'" title="{{tag.tag_answer}}">
+                                                                <span ng-if="tag.tagAnswerDisplay && (tag.tagAnswerDisplay!=0 || tag.tagAnswerDisplay !='' || tag.tagAnswerDisplay !=null)">{{tag.tagAnswerDisplay}}</span>
+                                                                <span ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay =='' || tag.tagAnswerDisplay ==null)">---</span>
+                                                            </span>
+                                                            <span ng-if="tag.field_type && tag.field_type == 'text'" title="{{tag.tagAnswerDisplay}}">
+                                                                {{tag.tagAnswerDisplay | checkEmpty}}
+                                                            </span>
+                                                        </p>
+                                                        <!-- <p class="text-wdgt ellipis w_95" ng-if="tag.selected_field" style="margin:0px;"> -->
+                                                            <div ng-repeat="opt in tag.selectedOption" ng-if="tag.selected_field" style="margin:0px;">
+                                                                <div ng-if="opt.name && opt.can_access==1" style="color:#2196f3;cursor: pointer;" title="{{opt.name}}"  ng-click="detailsPageGo(opt,tag)">{{opt.name | checkEmpty}}</div>
+                                                                <div ng-if="opt.name && opt.can_access==0" title="{{opt.name}}">{{opt.name | checkEmpty}}</div>
+                                                            </div>
+                                                            <div ng-if="!tag.selectedOption && tag.selected_field">---</div>
+                                                        <!-- </p> -->
+                                    
+                                                        <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'dropdown' && !tag.selected_field">
+                                                            <span title="{{tag.tagAnswerDisplay}}"> {{tag.tagAnswerDisplay | checkEmpty}}</span>
+                                                        </p>
+                                    
+                                                        <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'date'"
+                                                                title="{{tag.tagAnswerDisplay | utcToLocal:'date'}}">
+                                                            {{tag.tagAnswerDisplay | utcToLocal:'date' | isUndefinedOrNullOrZero}}
+                                                        </p>
+                                    
+                                                        <p class="text-wdgt ellipis w_95" ng-if="tag.tag_type == 'radio'" title="{{tag.tagAnswerDisplay}}">
+                                                                {{tag.tagAnswerDisplay | checkEmpty}}
+                                                        </p>
+                                    
+                                                        <span ng-if="tag.tag_type=='rag'">
+                                                        <p ng-if="(tag.tagAnswerDisplay==0 || tag.tagAnswerDisplay==''  || tag.tagAnswerDisplay==null)">---</p>
+                                                        <div ng-repeat ="opt1 in tag.options" ng-if="tag.tagAnswerDisplay && opt1.tag_option_name == tag.tagAnswerDisplay">
+                                                            <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name=='R'" >
+                                                                <span class="red-active"></span>
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                            </p>
+                                                            <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name == 'A'">
+                                                                <span class=""></span>
+                                                                <span class="amber-active"></span>
+                                                                <span class=""></span>
+                                                            
+                                                            </p>
+                                                            <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name == 'G'">
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                                <span class="green-active"></span>
+                                                            
+                                                            </p>
+                                                            <p class="status-widget font-weight-bold" ng-if="opt1.tag_option_name=='N/A'">
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                            </p>
+                                                            <p class="status-widget font-weight-bold" ng-if="!opt1.tag_option_name">
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                                <span class=""></span>
+                                                            </p>
+                                                        </div>
+                                                    </span>   
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </uib-accordion>
+                                            </div>
+                                           
+                                            
+                                            <div class="modal-footer" style="margin: 0 10px;display: flex;justify-content: flex-end;">
+
+                                                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger pull-right">
+                                                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                                            </div>
+    
+    
+    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="2"  heading="{{'normal.catalogue_attachments' | translate}} ({{catalogue_attach_count}})">
+                        <div>
+                            <uib-tabset active="active" class="clearfix" style="padding: 10px 30px;" ng-init="active=0;">
+                                <div class="p-b-1">
+                                    <p ng-if="catalogue.attachment.documents.length>0"
+                                        ng-repeat="a in catalogue.attachment.documents">
+                                        <a download="{{a.document_name}}" target="_blank" href="#"
+                                            ng-click="getDownloadUrl(a)" download="{{a.document_name}}"
+                                            class="ellipis" style="width: 90%;">
+                                            <i class="fa fa-download"
+                                                style="vertical-align: middle;margin-right: 6px;"></i>{{a.document_name}}</a>
+                                        <span class="display-block f12 pl20">
+                                            <span class="gray">{{'attachment.uploaded_by' |
+                                                translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                            <span class="gray">{{'general.on' |
+                                                translate}}:</span>&nbsp;<span>{{a.uploaded_on |
+                                                utcToLocal:'toLocalDate'}}</span>
+                                        </span>
+                                    </p>
+                                    <p ng-show="catalogue.attachment.documents.length==0" class="text-sm-center">
+                                        {{'attachment.no_files' | translate}}</p>
+                                </div>
+                                <div class="p-b-1" style="padding-top: 25px;">
+                                    <p ng-if="catalogue.attachment.links.length>0"
+                                        ng-repeat="a in catalogue.attachment.links" style="position:relative">
+                                        <a ng-click="redirectUrl(a.document_source)" href="javascript:;"
+                                            class="ellipis" title="{{a.document_source}}"
+                                            style="cursor: pointer;width:95%"><i class="fa fa-link f16"></i>
+                                            {{a.document_name}}</a>
+                                        <span class="display-block f12 pl20">
+                                            <span class="gray">{{'links.uploaded_by' |
+                                                translate}}:</span>&nbsp;<span>{{a.uploaded_user}}</span>
+                                            <span class="gray">{{'general.on' |
+                                                translate}}:</span>&nbsp;<span>{{a.uploaded_on |
+                                                utcToLocal:'toLocalDate'}}</span>
+                                        </span>
+                                    </p>
+                                    <p ng-show="catalogue.attachment.links.length==0" class="text-sm-center pt20">
+                                        {{'links.no_links' | translate}}</p>
+                                </div>
+                                <div class="modal-footer" style="display: flex;justify-content: flex-end;">
+                                <button  type="button" ng-click="cancel()" class="btn btn-sm btn-danger pull-right">
+                                    <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                                </div>
+                         </div> 
+                                                           
+                                
+                    </uib-tab>
+                </uib-tabset>  
+                                
+                <!-- tabs 1 end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="group-template0.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display: flex;align-items: center;">
+                            {{heading}}
+                        <i class="glyphicon" ng-class="{'fa-solid fa-caret-down': open, 'fa-solid fa-caret-right': !open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body p-0" ng-transclude></div>
+        </div>
+    </div>
+</script>
+
+
+<style>
+    .custom-row{
+            display: flex;
+            flex-wrap: wrap;
+        }
+    .chosen-container{
+        width:100% !important;
+    }
+    .contract-list-popup .modal-dialog{
+        max-width: 1060px !important;
+    }
+    .modal-dialog .nav-tabs .nav-item .nav-link {
+        min-width: 145px !important;
+    }
+    .p015{
+        padding: 0 15px;
+    }
+    .modal-body {
+        position: relative;
+        padding: 5px;
+    }
+    .modal-closer-contract{
+        position: absolute;
+        right: 3px;
+        top: 8px;
+        cursor: pointer;
+    }
+    .info-tabs-div .nav-tabs .nav-link {
+        padding: 0.5em 0.9em;
+    }
+    .info-tabs-div .tab-content .tab-pane {
+        background-color: #fff;
+        padding: 10px;
+    }
+
+    .icon-trash{
+        font-size: 20px;
+        position: relative;
+        top:0px;
+    }
+    .nav-tabs .nav-item .nav-link {
+       background: #f9f9f9 !important;
+    }
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        background: #ffff !important;
+        border-bottom: 1px solid #fff !important;
+    }
+    
+   
+    .chosen-container .chosen-results li.active-result {
+        border-bottom: 0 !important;
+        padding: 5px;
+    }
+    
+    .tab-content {
+        border: 1px solid #ccc !important;
+        /* margin-top: -1px; */
+        
+    }
+
+    .tab-content .tab-content{
+        border: 0 !important;    
+    }
+    
+    .info-tabs-div .nav-tabs .nav-item .nav-link {
+        border: 1px solid #ccc !important;
+        margin-right: 4px;
+    }
+    .info-tabs-div .nav-tabs {
+        background-color: transparent;
+    }
+    .info-tabs-div .nav-tabs .nav-item {
+        margin-bottom: -1px;
+
+    }
+
+    .nav-tabs .nav-item {
+        margin-bottom: -1px !important;
+    }
+
+    .info-tabs-div .nav-tabs .nav-item.active .nav-link {
+        border-bottom: 1px solid #fff !important; 
+    }
+    .info-tabs-div .accordion-default .panel-title {
+        padding-left: 0 !important;
+    }
+    
+</style>

@@ -1,0 +1,162 @@
+<div class="animated fadeIn">
+    <div class="qpanel product-clist  clearfix">
+        <div class="panel-left-wrap">
+            <h6 class="heading pb10">{{'questions.choose_type' | translate}}</h6>
+            <div class="panel-btn-wrap pb10">
+                <ul class="clearfix">
+                    <li><a href="javascript:;" ng-click="loadModal('input')"><i class="icon-input-text"></i>{{'questions.input' | translate}} </a></li>
+                    <li><a href="javascript:;" ng-click="loadModal('radio')"><i class="icon-yes-no"></i> {{'questions.yes_no' | translate}} </a></li>
+                    <li><a href="javascript:;" ng-click="loadModal('dropdown')"><i class="icon-list"></i> {{'questions.dropdown' | translate}} </a></li>
+                    <li><a href="javascript:;" ng-click="loadModal('rag')"><i class="icon-rgb1"></i> {{'questions.rag' | translate}}  </a></li>
+                    <li><a href="javascript:;" ng-click="loadModal('date')"><i class="fa fa-calendar"></i> {{'questions.date' | translate}}</a></li>
+                </ul>
+               
+            </div>
+            <div class="onlyactive1" style="padding-top: 5px;">
+                <span class="mrg-space">{{'general.active_only' | translate}}</span>
+                <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                            ng-true-value="1" ng-false-value="0"
+                            ng-model="req.status"
+                           ng-checked="req.status == 1"
+                           ng-change="getQuestionsByStatus(req.status)"
+                           id="status">
+                    <label class="onoffswitch-label assessment-switch mb-0"
+                           for="status">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div> 
+        </div>
+        <div class="panel-right-wrap">
+            <div class="q-box mb10 scroll-div-wrap">
+                <div class="a-ques-list">
+                    <table class="table table-hover questions-list-table questions-list-custom-cls">
+                        <thead>
+                            <tr>
+                                <th style="width:550px !important; display: block"></th>
+                               <!--- <th class="w60" ng-repeat="head in topicQuestions[0].relationship_categories"> -->
+  <!---<span class="ellipis" uib-tooltip="{{head.relationship_category_name}}">{{head.relationship_category_short_name}}</span> -->
+                                </th>
+                               <th class="w60" ng-if="topicQuestions.length>0">{{'providers.provider' | translate}} </th>
+                            </tr>
+                        </thead>
+                        <tbody  ng-model="topicQuestions"> 
+                            <tr ng-repeat="row in topicQuestions"ng-class="{'relation-bg':row.provider_visibility==1}" style="border-bottom:5px solid transparent">
+                                <td class="ellisp" style="display: table; border-bottom: 0;">
+                                    <ul>
+                                        <li>
+                                            <div class="acc-wrapper accordian-wrapper disFlex-cls q-acc-wrap" ng-class="(row.question_status == 0)?'disable':''">
+                                                <span class="index-count">{{$index+1}}</span>
+                                                <div class="clearfix acc-head disFlex-cls q-acc-head">
+                                                    <span ng-if="row.question_type == 'dropdown'" class="icon-list" style="height: 21px;"></span>
+                                                    <span ng-if="row.question_type == 'radio'" class="icon-yes-no" style="height: 21px;"></span>
+                                                    <span ng-if="row.question_type == 'input'" class="icon-input-text" style="height: 21px;"></span>
+                                                    <span ng-if="row.question_type == 'rag'" class="icon-rgb1" style="height: 21px;"></span>
+                                                    <span ng-if="row.question_type == 'date'" class="fa fa-calendar" style="height:21px;"></span>
+                                                    <div class="question-text" title="{{row.question_text}}">{{row.question_text}}</div>
+                                                </div>
+                                                <div class="acc-body">
+                                                    <div class="acc-data" ng-if="show_options">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td> 
+<!----<td class="w60"  ng-repeat="item in row.relationship_categories">
+                                   <table class="inside-qtable">
+                                       <tr>
+                                           <td>
+                                               <div class="onoffswitch">
+                                                   <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                                          ng-init="item.status = (item.status == 1)? 1:0"
+                                                          ng-model="item.status"
+                                                          ng-true-value="1" ng-false-value="0"
+                                                          ng-checked="item.status == 1"
+                                                          ng-change="updateRelationships(item,row)"
+                                                          id="{{item.relationship_category_name}}_{{row.id_question}}" ng-disabled="row.question_status == 0">
+                                                   <label class="onoffswitch-label assessment-switch mb-0"
+                                                          for="{{item.relationship_category_name}}_{{row.id_question}}">
+                                                       <span class="onoffswitch-inner"></span>
+                                                       <span class="onoffswitch-switch"></span>
+                                                   </label>
+                                               </div>
+                                           </td>
+                                       </tr>
+                                   </table>
+                                </td> -->
+                                <td class="w60">
+                                    <table class="inside-qtable">
+                                        <tr>
+                                            <td>
+                                                <div class="onoffswitch">
+                                                    <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox"
+                                                           ng-init="row.provider_visibility = (row.provider_visibility == 1)? 1:0"
+                                                           ng-model="row.provider_visibility"
+                                                           ng-true-value="1" ng-false-value="0"
+                                                           ng-checked="row.provider_visibility == 1"
+                                                           ng-change="updateProvider(row)"
+                                                           id="{{row.provider_visibility}}_{{row.id_question}}"
+                                                           ng-disabled="row.question_status == 0">
+                                                    <label class="onoffswitch-label assessment-switch mb-0"
+                                                           for="{{row.provider_visibility}}_{{row.id_question}}">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                 </td> 
+                                <td class="w60">
+                                    <div class="pull-right panel-title p-0 mt-h" style="margin-left: -7px;">
+                                        <div uib-dropdown on-toggle="toggled(open)" class="c-dropdown pull-right">
+                                            <a href uib-dropdown-toggle>
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                <li>
+                                                    <a href="javascript:;" ng-click="loadModal('',row)">{{'general.edit' | translate}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" ng-click="enableQuestion(row)"
+                                                       ng-if="row.question_status == 0">{{'questions.enable' | translate}}</a>
+                                                    <a href="javascript:;" ng-click="enableQuestion(row)"
+                                                       ng-if="row.question_status == 1">{{'questions.disable' | translate}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="questions-acc.html">
+    <div class="accordion-default">
+        <div class="panel-heading">
+            <h4 class="panel-title p-0">
+                <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<style>
+    .relation-bg td{
+        background-color: #a9d18e !important;
+
+    }
+</style>

@@ -1,0 +1,305 @@
+<div class="edit-customer">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{title | translate}} {{'user.user' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form novalidate name="customUserForm" ng-submit="customUserForm.$valid && addUser(customUser)">
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.f_name' | translate}} *</label>
+                            <input type="text" class="form-control" name="first_name" ng-model="customUser.first_name"
+                                placeholder="{{'general.enter' | translate}} {{'user.profile.f_name' | translate}}"
+                                required>
+                            <span class="error-message"
+                                ng-if="customUserForm.first_name.$error.required && customUserForm.$submitted">{{'general.required_field'
+                                |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.l_name' | translate}} *</label>
+                            <input type="text" class="form-control" name="last_name" ng-model="customUser.last_name"
+                                placeholder="{{'general.enter' | translate}} {{'user.profile.l_name' | translate}}"
+                                required>
+                            <span class="error-message"
+                                ng-if="customUserForm.last_name.$error.required && customUserForm.$submitted">{{'general.required_field'
+                                |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.email' |translate}} *</label>
+                            <input type="email" class="form-control" name="email" ng-model="customUser.email"
+                                placeholder="{{'general.enter' | translate}} {{'user.profile.email' | translate}}"
+                                required>
+                            <span class="error-message"
+                                ng-if="customUserForm.email.$error.required && customUserForm.$submitted">{{'general.required_field'
+                                |translate}}</span>
+                            <span ng-if="customUserForm.email.$error.email && customUserForm.$submitted"
+                                class="error-message">{{'general.enter_valid_email' |translate}}</span>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.offi_phone' | translate}}</label>
+                            <input type="text" class="form-control" name="office_phone"
+                                ng-model="customUser.office_phone">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.sec_phone' | translate}}</label>
+                            <input type="text" class="form-control" name="secondary_phone"
+                                ng-model="customUser.secondary_phone">
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.fax_num' | translate}}</label>
+                            <input type="text" class="form-control" name="fax_number" ng-model="customUser.fax_number">
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="form-group col-sm-12">
+                            <label>{{'user.profile.address' | translate}}</label>
+                            <input type="text" class="form-control" name="address" ng-model="customUser.address">
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.postal_code' | translate}}</label>
+                            <input type="text" class="form-control" name="postal_code"
+                                ng-model="customUser.postal_code">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>{{'user.profile.city' | translate}}</label>
+                            <input type="text" class="form-control" name="city" ng-model="customUser.city">
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'customer.country' | translate}}</label>
+                            <select class="form-control" name="country" ng-model="customUser.country_id"
+                                ng-options="item.id_country as item.country_name for item in countriesList">
+                                <option value="">--{{'general.select_country' | translate}}--</option>
+                            </select>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+
+                        <div class="form-group col-sm-4">
+                            <label>{{'customer.admin.role' | translate}} *</label>
+                            <select class="form-control" ng-model="customUser.user_role_id" name="user_role" required
+                                ng-options="item as item.user_role_name for item in userRoles track by item.id_user_role">
+                                <option value="">--{{'general.select' | translate}}--</option>
+                            </select>
+                            <span ng-if="customUserForm.user_role.$error.required && customUserForm.$submitted"
+                                class="error-message">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="form-group col-sm-4"
+                            ng-if="((customUser.user_role_id.access!='ro' || customUser.is_allow_all_bu=='0'))">
+                            <label>{{'bussiness.bussiness_unit' | translate}} *</label>
+                            <select chosen class="form-control chosen-choices" id="add-chosen" multiple
+                                onchange="chosen()" allow-single-deselect="true"
+                                placeholder-text-multiple="'{{'normal.placeholder_search_business' | translate}}'" name="business_unit"
+                                ng-model="customUser.business_unit"
+                                ng-options="item.id_business_unit as item.bu_name for item in bussinessUnit"
+                                ng-required="(customUser.user_role_id.access!='ro')">
+                            </select>
+                            <span ng-if="customUserForm.business_unit.$error.required && customUserForm.$submitted"
+                                class="error-message">{{'general.required_field' |translate}}</span>
+                        </div>
+                        <div class="clearfix"
+                            ng-if="((customUser.user_role_id.access!='ro' || customUser.is_allow_all_bu=='0'))"></div>
+                        <div class="col-sm-4">
+                            <div class="form-group col-12">
+                                <label>{{'general.status' | translate}} *</label>
+                                <select class="form-control" ng-model="customUser.user_status"
+                                    ng-init="customUser.user_status = (customUser.user_status =='')?'0':'1'" required>
+                                    <option value="">-{{'general.select' | translate}}--</option>
+                                    <option value="1">{{'general.active' | translate}}</option>
+                                    <option value="0">{{'general.inactive' | translate}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label class="form-control-label">{{'user.profile.gender'| translate}}</label>
+                                <div class="" style="display:flex; align-items:center;"
+                                    ng-init="customUser.gender = (customUser.gender=='')?'female':'male'">
+                                    <label class="radio-inline mr-1">
+                                        <input type="radio" ng-model="customUser.gender" name="gender" value="male"
+                                            ng-change="getValue(customUser.gender)"> {{'user.profile.male' | translate}}
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="customUser.gender" name="gender" value="female"
+                                            ng-change="getValue(customUser.gender)"> {{'user.profile.female' |
+                                        translate}}
+                                    </label>
+                                    <label class="radio-inline otherGender pl-1">
+                                        <input type="radio" name="gender" value="other" ng-model="customUser.gender"
+                                            ng-change="getValue(customUser.gender)">
+                                    </label>
+                                    <span>
+                                        <input type="text" class="form-control" ng-disabled="disableField" value="Other"
+                                            ng-required="customUser.gender=='other'" name="otherGender"
+                                            ng-model="customUser.other_gender_value">
+                                        <span class="error-message"
+                                            ng-if="customUserForm.otherGender.$error.required && customUserForm.$submitted">{{'general.required_field'
+                                            |translate}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- {{customUser.is_allow_all_bu}}=={{customUser.user_role_id.access}}=={{customUser.is_allow_all_bu}} -->
+                        <div class="col-sm-4" ng-if="(customUser.user_role_id.access!='ro')">
+                            <div class="col-sm-12 p0" ng-init="customUser.contribution_type=0" ng-if ="access =='ca'">
+                                <div>
+                                    <label>{{'obligations.additional_rights' | translate}}</label>
+                                </div>
+                                <label class="checkbox d-block" for="contribution_type">
+                                    <input type="checkbox" name="inline-checkbox1" id="contribution_type"
+                                        ng-model="customUser.contribution_type" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.admin.validation_role' | translate}}
+                                </label>
+                                <label class="checkbox d-block" for="content_administator_relation">
+                                    <input type="checkbox" name="inline-checkbox1" id="content_administator_relation"
+                                        ng-model="customUser.content_administator_relation" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.content_administrator_relation' | translate}}
+                                </label>
+                                <label class="checkbox d-block" for="content_administator_review_templates">
+                                    <input type="checkbox" name="inline-checkbox1" id="content_administator_review_templates"
+                                        ng-model="customUser.content_administator_review_templates" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.content_administrator_review' | translate}}
+                                </label>
+                                <label class="checkbox d-block" for="content_administator_task_templates">
+                                    <input type="checkbox" name="inline-checkbox1" id="content_administator_task_templates"
+                                        ng-model="customUser.content_administator_task_templates" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.content_administrator_task' | translate}}
+                                </label>
+                                <label class="checkbox d-block" for="content_administator_currencies">
+                                    <input type="checkbox" name="inline-checkbox1" id="content_administator_currencies"
+                                        ng-model="customUser.content_administator_currencies" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.content_administrator_currencies' | translate}}
+                                </label>
+
+                                <label class="checkbox d-block" for="content_administator_catalogue">
+                                    <input type="checkbox" name="inline-checkbox1" id="content_administator_catalogue"
+                                        ng-model="customUser.content_administator_catalogue" ng-true-value="1" ng-false-value="0">
+                                    {{'normal.content_administrator_catalogue' | translate}}
+                                </label>
+
+                                <label class="checkbox d-block" for="legal_and_content_administator">
+                                    <input type="checkbox" name="inline-checkbox1" id="legal_and_content_administator"
+                                        ng-model="customUser.legal_and_content_administator" ng-true-value="1" ng-false-value="0">
+                                    {{'customer.legal_contract_Administrator' | translate}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" ng-if="(customUser.user_role_id.access=='ro')">
+                            <div class="col-sm-12 p0"
+                                ng-init="customUser.is_allow_all_bu=(customUser.is_allow_all_bu=='1')?1:0"
+                                ng-class="(customUser.is_allow_all_bu=='1')?'pt35':''">
+                                <label class="checkbox" for="is_allow_all_bu">
+                                    <input type="checkbox" name="inline-checkbox2" id="is_allow_all_bu"
+                                        ng-model="customUser.is_allow_all_bu" ng-true-value="1" ng-false-value="0">
+                                    {{'bussiness.show_all_bu' | translate}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4 p-0">
+                            <label >{{'customer.language' | translate}} *</label>
+                            <select class="form-control" name="language_id" ng-model="customUser.language_id" required 
+                                ng-options="item.id_language as item.language_name for item in language">
+                                <option value="">-{{'general.select' | translate}}-</option>
+                            </select>
+                            <span ng-if="customUserForm.language_id.$error.required && customUserForm.$submitted"
+                                class="error-message">{{'general.required_field' |translate}}</span>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                        <div class="col-sm-4" ng-show="!user_id">
+                            <div class="col-sm-5 p0" ng-init="customUser.is_manual=0">
+                                <label class="checkbox" for="is_manual">
+                                    <input type="checkbox" name="inline-checkbox1" id="is_manual"
+                                        ng-model="customUser.is_manual" ng-true-value="1" ng-false-value="0">
+                                    {{'obligations.manual_password' | translate}}
+                                </label>
+                            </div>
+                            <div ng-show="customUser.is_manual" class="form-group col-sm-7 p0">
+                                <label class="form-control-label">{{'user.profile.password' | translate}} *</label>
+                                <input type="text" class="form-control" name="password2010"
+                                    ng-model="customUser.password"
+                                    ng-pattern="/^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])(?=.*\d)(?=.*[$@$!%*#?&()\-_.=+])[A-Za-z\d$@$!%*#?&()\-_.=+]{8,}$/"
+                                    placeholder="{{'user.profile.password' | translate}}" maxlength="20"
+                                    ng-required="customUser.is_manual">
+                                <span ng-if="customUserForm.password2010.$error.required && customUserForm.$submitted"
+                                    class="error-message">{{'general.required_field'|translate}}</span>
+                                <div ng-if="!customUserForm.password2010.$error.required && customUserForm.password2010.$error.pattern"
+                                    class="error-message">
+                                    <span class="clearfix">{{'user.cpassword.password_pattern'|translate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-12" style="display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn btn-sm btn-primary" style="margin-right: 5px;">
+                                <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+                            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card" ng-show="user_id">
+                <div class="card-header">
+                    <strong>{{'user.cpassword.change_password' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form name="passwordForm" novalidate ng-submit="passwordForm.$valid && resetPassword(userPwd)">
+                        <div class="col-sm-12 p0 reset-psd">
+                            <div class="form-group col-sm-4">
+                                <label class="form-control-label">{{'user.cpassword.npassword' | translate}} *</label>
+                                <input type="password" class="form-control" name="npassword"
+                                    ng-model="userPwd.npassword"
+                                    ng-pattern="/^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])(?=.*\d)(?=.*[$@$!%*#?&()\-_.=+])[A-Za-z\d$@$!%*#?&()\-_.=+]{8,}$/"
+                                    placeholder="{{'user.cpassword.npassword' | translate}}" maxlength="20" minlength="8" required>
+                                <span ng-if="passwordForm.npassword.$error.required && passwordForm.$submitted"
+                                    class="error-message">{{'general.required_field'|translate}}</span>
+                                <div ng-if="!passwordForm.npassword.$error.required && passwordForm.npassword.$error.pattern"
+                                    class="error-message">
+                                    <span class="clearfix">{{'user.cpassword.password_pattern'|translate}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="form-control-label">{{'user.cpassword.cpassword' | translate}} *</label>
+                                <input type="password" class="form-control" name="cpassword"
+                                    ng-model="userPwd.cpassword" placeholder="{{'user.cpassword.cpassword' | translate}}" maxlength="20"
+                                    minlength="8" required>
+                                <span ng-if="passwordForm.cpassword.$error.required && passwordForm.$submitted"
+                                    class="error-message">{{'general.required_field' |translate}}</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-sm-4">
+                                <button type="submit" class="btn btn-sm btn-primary pr0" style="padding-right:10px;">
+                                    <i class="fa fa-dot-circle-o"></i> {{'general.reset'|translate}}
+                                </button>
+                                <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger pr0" style="padding-right:10px;">
+                                    <i class="fa fa-ban"></i> {{'general.cancel'|translate}}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+</script>
+<style>
+    .otherGender {
+        padding: 0 5px;
+    }
+</style>

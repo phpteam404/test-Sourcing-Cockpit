@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'templates.template' | translate}}
+        <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+    </h6>
+</div>
+<form novalidate name="templateForm" ng-submit="templateForm.$valid && save(customer)">
+    <div class="modal-body clearfix" id="modal-body">
+        <div class="col-md-12 form-group">
+            <label >{{'templates.template' | translate}} *</label>
+            <select class="form-control" name="template" ng-model="customer.template_id"
+                    ng-required="true"
+                    ng-change = getCounts(customer.template_id)
+                    ng-options="item as item.template_name for item in templatesList">
+                <option value="">--{{'customer.select_template' | translate}}--</option>
+            </select>
+            <span class="error-message" ng-if="templateForm.template.$error.required && templateForm.$submitted">{{'general.required_field' | translate}}</span>
+            <div class="clearfix"></div>            
+            <div  class="form-group col-sm-12 p0" ng-if="customer.counts">
+                <span class="pr-1">{{'templates.modules' |translate}} : {{customer.counts.module_count}}</span>
+                <span class="pr-1">{{'templates.topics' |translate}} : {{customer.counts.topic_count}}</span>
+                <span>{{'templates.questions' |translate}} : {{customer.counts.question_count}}</span> 
+            </div>
+            <span class="error-message" ng-if="templateForm.module_name.$error.required && templateForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div>
+        <!-- <div class="text-sm-center clearfix"> {{'general.OR' | translate}}</div>
+        <div class="col-md-12 form-group">
+            <label>{{'templates.template_name' | translate}} *</label>
+            <input type="text" ng-model="customer.new_template_name" class="form-control"
+                    ng-disabled="customer.template_id"
+                    name="template_name" ng-required="!customer.template_id" required/>
+            <span class="error-message" ng-if="templateForm.template_name.$error.required && templateForm.$submitted">{{'general.required_field' | translate}}</span>
+        </div> -->
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+        </button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+            {{'general.cancel' | translate}}
+        </button>
+    </div>
+</form>
+

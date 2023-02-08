@@ -1,0 +1,131 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary btn-radius" ng-click="goto()"
+                                            type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control"
+                                            placeholder="{{'general.search' | translate}}" st-search="search_key"
+                                            st-input-event="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="logo-th"></th>
+                        <th st-sort="company_name" class="st-sort-ascent st-sort-descent">{{'customer.company_name' |
+                            translate}}</th>
+                        <th st-sort="contracts_count" class=""># {{'customer.contracts' | translate}}</th>
+                        <th st-sort="city" class="">{{'customer.city' | translate}}</th>
+                        <th st-sort="country_name" class="">{{'customer.country' | translate}}</th>
+                        <th st-sort="company_status" class="">{{'customer.status' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in displayed">
+                        <td style="width: 50px;">
+                            <span class="country-logo"><img src="{{row.company_logo}}" /></span>
+                        </td>
+                        <td>{{row.company_name}}</td>
+                        <td>{{row.contracts_count}}</td>
+                        <td>{{row.city}}</td>
+                        <td>{{row.country_name}}</td>
+                        <td>
+                            <span ng-if="row.company_status == 1" class="green">{{'general.active' | translate}}</span>
+                            <span ng-if="row.company_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td>
+                            <div style="display:flex;">
+                            <div style="min-width: 29px;">
+                                <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}"
+                                    ng-click="goto(row)"><i class="icon-edit"></i></a>
+                            </div>
+                            <div style="min-width: 29px;">
+                                <a ng-if="row.company_status == 1" href="javascript:;" ng-click="gotoAdmin(row)"
+                                    class="mr-1 gray">
+                                    <i class="icon-master" title="Manage Admins" tooltip-placement="top"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;">
+                                <a ng-if="row.company_status == 1" href="javascript:;" ng-click="gotoUser(row)"
+                                    class="mr-1 gray">
+                                    <i class="icon-registrant-template" title="Manage Users"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;" ng-if="row.is_ldap_or_saml_active == 1">
+                                <a href="javascript:;"
+                                    ng-click="UpdateLdap(row)" class="mr-1 gray">
+                                    <i class="tss-square-key" style="color:#7dba01;" ; title="Configure Ldap"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;" ng-if="row.is_ldap_or_saml_active == 0">
+                                <a href="javascript:;"
+                                    ng-click="UpdateLdap(row)" class="mr-1 gray">
+                                    <i class="tss-square-key" style="color:#e40513;" title="Configure Ldap"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;" ng-if="row.is_mfa_active == 0">
+                                <a href="javascript:;" ng-click="goToMFA(row)"
+                                    class="mr-1 gray">
+                                    <i class="tss-shield-lock" style="color:#252022;" title="Configure Mfa"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;" ng-if="row.is_mfa_active == 1">
+                                <a href="javascript:;" ng-click="goToMFA(row)"
+                                    class="mr-1 gray">
+                                    <i class="tss-shield-lock1" style="color:#4366fe;" title="Configure Mfa"></i>
+                                </a>
+                            </div>
+                            <div style="min-width: 29px;">
+                                <a ng-if="row.company_status == 1" href="javascript:;" class="mr-1 gray"
+                                    ui-sref="app.customer.manage-templates({name:row.company_name,id:(row.id_customer | encode)})">
+                                    <i class="fa fa-cogs" title="{{'templates.manage_template' |  translate}}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr>
+                        <td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr>
+                        <td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount"
+                                    class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="animated fadeIn">
+    <div class="card-group col-lg-12 p0 contract-details">
+        <div class="row">
+            <!-- <div  class="col-sm-12  white-bg p-1  text-sm-center card" style="margin-top: 20px;">
+                {{'templates.no_modules' | translate}}
+            </div> -->
+            <uib-accordion close-others="oneAtATime" ng-repeat="mainModule in builderData.content">
+                <div uib-accordion-group class="panel-default mb-h" ng-class="bg-color-white"
+                    template-url="group-template.html" style="border: 1px solid #ccc;"
+                    is-open="showData[module.id]['open']">
+                    <uib-accordion-heading ng-click="showData[module.id]['open'] = !showData[module.id]['open']">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.id]['open'],
+                                                    'fa fa-plus-square-o': !showData[module.id]['open']}"></i>
+                        {{mainModule.name}}
+                    </uib-accordion-heading>
+                    <ul>
+                        <uib-accordion close-others="oneAtATime">
+                            <div uib-accordion-group class="panel-default mb-h" ng-repeat="children in mainModule.children"
+                            ng-if="mainModule.children.length >0" heading="Selection Process" ng-init="children.open=false;"
+                                 template-url="topic-template.html"  style="border: 1px solid #ccc;"
+                                is-open="showData[module.id]['children'][children.id]['open']">
+                                <uib-accordion-heading>
+                                    <i class="glyphicon"
+                                        ng-click="showData[module.id]['children'][children.id]['open'] = !showData[module.id]['children'][children.id]['open']"
+                                        ng-class="{'fa fa-minus-square-o': showData[module.id]['children'][children.id]['open'],
+                                              'fa fa-plus-square-o': !showData[module.id]['children'][children.id]['open']}"></i>
+                                    <a href="javascript:;" class="pl14">{{children.name | capitalize}} </a>
+
+                                </uib-accordion-heading>
+
+                                <div ng-bind-html="children.content |  trusted">
+
+                                </div>
+                            </div>
+                        </uib-accordion>
+                        <div ng-if="module.children.length == 0">
+                            <div ng-bind-html="module.content |  trusted">
+
+                            </div>
+                            <span> <input type="checkbox" ng-model="module.checked"></span>
+
+                        </div>
+                    </ul>
+                </div>
+            </uib-accordion>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="topic-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.show, 'fa fa-plus-square-o': !status.show}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+
+<style>
+.uib-daypicker  table tr th small {
+    color: #807b7b;
+}
+.uib-daypicker  table tr td {
+    padding: 0.05rem !important;
+}
+</style>

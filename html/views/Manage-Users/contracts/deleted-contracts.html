@@ -1,0 +1,129 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">            
+                <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="deletedContractsList">
+                    <thead>
+                        <tr>
+                            <td colspan="12">
+                                <div class="col-sm-12 clearfix p0">
+                                    <div class="action-head mb0">
+                                        <div class="col-sm-3 p0 table-search pull-right">
+                                            <input type="text" class="form-control" 
+                                            placeholder="{{'general.search' | translate}}" st-search="search_key" st-input-event="change">
+                                            <i class="fa icon-search"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="max-width:25px;"></th>
+                            <th st-sort="provider_sort">{{'contract.provider' | translate}}</th>
+                            <th st-sort="contract_name">{{'user.profile.name' | translate}}</th>
+                            <th st-sort="type">{{'general.type' | translate}}</th>
+                            <th st-sort="relationship_category_name">{{'contract.category' | translate}}</th>
+                            <th class="hand-symbol">{{'contract.review_by' | translate}}</th>
+                            <th class="hand-symbol">{{'contract.last_review' | translate}}</th>
+                            <th class="hand-symbol">{{'contract.deleted_by' | translate}}</th>
+                            <th class="hand-symbol">{{'contract.deleted_on' | translate}}</th>
+                            <!--
+                            <th style="max-width: 75px;" class="hand-symbol">{{'contract.current_status' | translate}}</th>
+-->
+                            <th class="hand-symbol"></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in deletedContractsList">
+                            <td style="max-width:25px;">
+                                <span ng-if="row.action_item_count>0" tooltip-placement="right" uib-tooltip="{{'contract.action_items' | translate}}" class="label_tag">{{row.action_item_count}}</span>
+                            </td>
+                            <td>
+                                <span class="ellipis w150" uib-tooltip="{{row.provider_name}}">{{row.provider_name}}</span>
+                            </td>
+                            <td>
+                                <span class="ellipis w150" uib-tooltip="{{row.contract_name}}">{{row.contract_name}}</span>
+                            </td>
+                            <td>
+                                <span class="ellipis w150" uib-tooltip="{{row.type | capitalize}}">{{row.type |capitalize}}</span>
+                            </td>
+                            <td>
+                                <span uib-tooltip="{{row.relationship_category_name}}">{{row.relationship_category_short_name |checkEmpty}}</span>
+                            </td>
+                            <td>
+                                <span class="ellipis w100" uib-tooltip="{{row.review_by}}">{{row.review_by | checkEmpty}}</span>
+                            </td>
+                            <td>{{row.last_review | utcToLocal:'date' | checkEmpty}}</td>
+                            <td>{{row.deleted_by}}</td>
+                            <td>{{row.updated_on | utcToLocal:'datetime' | checkEmpty}}</td>
+                            <!--<td>
+                                <div class="status-widget font-weight-bold" ng-if="row.score == 'Red'">
+                                    <span class="red-active"></span>
+                                    <span class=""></span>
+                                    <span class=""></span>
+                                </div>
+                                <div class="status-widget font-weight-bold" ng-if="row.score == 'Amber'">
+                                    <span class=""></span>
+                                    <span class="amber-active"></span>
+                                    <span class=""></span>
+                                </div>
+                                <div class="status-widget font-weight-bold" ng-if="row.score == 'Green'">
+                                    <span class=""></span>
+                                    <span class=""></span>
+                                    <span class="green-active"></span>
+                                </div>
+                                <div class="status-widget font-weight-bold" ng-if="!row.score">
+                                    <span class=""></span>
+                                    <span class=""></span>
+                                    <span class=""></span>
+                                </div>
+                                <span class="" ng-if="row.score=='N/A'">{{row.score}}</span>
+                            </td>-->
+                            <td>
+                                <span ng-if="row.contract_status == 'pending review'" uib-tooltip="{{'contract.pending_review_icon' | translate}}">
+                                    <i class="fa fa-undo yellow-orange f18"></i>
+                                </span>
+                                <span ng-if="row.ideedi == 'itako'" uib-tooltip="{{'discussion.top_msg' | translate}}">
+                                    <img style="padding-bottom: 8px; width: 20px;" src="img/discussion.png" />
+                                </span>
+                                <span uib-dropdown on-toggle="toggled(open)" ng-if="permission['update']" class="c-dropdown width-20 pull-right">
+                                    <a href uib-dropdown-toggle class="font-sm">
+                                        <span class="fa fa-ellipsis-v"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                        <li>
+                                            <a href="javascript:;" ng-click="undoDeleteContract(row)">{{'contract.undo' | translate}}</a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="9" class="text-sm-center">{{'general.loading' | translate}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="emptyTable">
+                        <tr>
+                            <td colspan="9" class="text-sm-center">{{'general.no_data' | translate}} </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                <div class="paginator">
+                                    <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                    <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                        <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                            ng-options="item for item in pagesNumber" selected>
+                                        </select>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+        </div>
+    </div>
+</div>

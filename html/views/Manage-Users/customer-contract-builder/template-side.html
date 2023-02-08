@@ -1,0 +1,578 @@
+<div class="row m-0">
+    <div class="col-sm-12 p-0">
+        <div class="col-sm-6 p-0">
+            <form class="form-horizontal template-formats profile-form" style="border: 1px solid #ccc;
+            padding: 10px;" name="form" novalidate ng-submit="form.$valid">
+                <div class="row template-formats-div m-0">
+                    <div class="col-sm-6">
+                        <p class="m-0">
+                            <span>
+                                {{'templates.template' | translate}}
+                            </span>:<span> {{structureName}}-{{language}}</span>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row" style="justify-content: flex-end; align-items: flex-end; display: flex;">
+                            <div class="col-sm-8 p0 w192 table-search p-r-3">
+                                <div>
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'general.search' | translate}}" id="searchText" ng-model="searchText">
+                                    <i class="fa icon-search"></i>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 p0 w105">
+                                <div class="input-group"
+                                    style="border-collapse: inherit;display: flex; padding-left: 6px;">
+                                    <button class="btn btn-sm btn-primary" type="button"
+                                        title="{{'contract.create_contract' | translate}}"
+                                        style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                        <i class="icon-plus-circle"></i><span
+                                            style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                    </button>
+
+                                    <button id="single-button" type="button"
+                                        class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                        ng-click="$event.stopPropagation();$event.preventDefault();templateItems();"
+                                        uib-dropdown-toggle ng-disabled="disabled"
+                                        style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                        <i id="arrow-icon-total" class="fa fa-angle-double-down"></i>
+                                    </button>
+                                    <div style="position: absolute;right: 7px;top: 28px; width: max-content;z-index: 99;"
+                                        class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer"
+                                        ng-show="showPie" id="alltotal">
+                                        <span style="display: block; padding: 4px;"
+                                            ng-click="addUnSelected(buildermodules.content)">{{'normal.add_unselect_items'|translate}}</span>
+                                        <span
+                                            style="display: block; padding: 4px;" ng-click="addSelected(buildermodules.content)">{{'normal.add_select_items'|translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <uib-accordion close-others="oneAtATime" ng-repeat="module in buildermodules.content | filter:searchText">
+                    
+                    <div uib-accordion-group class="panel-default mb-h" ng-class="bg-color-white"
+                        template-url="group-template.html" style="border: 1px solid #ccc;"
+                        is-open="showData[module.id]['open']" ng-if="module.type ='Heading'">
+                        <uib-accordion-heading ng-click="showData[module.id]['open'] = !showData[module.id]['open']">
+                            <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.id]['open'],'fa fa-plus-square-o': !showData[module.id]['open']}"></i>
+                            {{module.name}}
+                        </uib-accordion-heading>
+                        <div  style="position:absolute;right:15px;top:-25px;">
+                            <span ng-if="!module.movedKey" class="round checkbox4"> 
+                                <input type="checkbox" id="checkbox{{module.id}}" class="checked-selected" 
+                                          ng-model="module.checked" 
+                                          ng-click="moduleChecked(module.checked,module)">
+                                   <label for="checkbox{{module.id}}"></label>
+                           </span>
+
+                           <span ng-if="module.movedKey" class="round"> 
+                               <input type="checkbox" id="checkbox{{module.id}}" 
+                                      class="checked-selected" 
+                                      ng-disabled="module.movedKey" checked>
+                                  <label for="checkbox{{module.id}}"></label>
+                           </span>
+                        </div>
+                        <ul>
+                            <div ng-if="module.children.length >0" ng-repeat="topic in module.children" >
+                                <uib-accordion close-others="oneAtATime" ng-if = "topic.type=='Subheading'">
+                                    <div uib-accordion-group class="panel-default mb-h"  heading="Selection Process" ng-init="topic.open=false;"
+                                         template-url="topic-template.html"  style="border: 1px solid #ccc;"
+                                        is-open="showData[module.id]['topic'][children.id]['open']">
+                                        <uib-accordion-heading>
+                                            <i class="glyphicon"
+                                                ng-click="showData[module.id]['topic'][children.id]['open'] = !showData[module.id]['topic'][children.id]['open']"
+                                                ng-class="{'fa fa-minus-square-o': showData[module.id]['topic'][children.id]['open'],
+                                                      'fa fa-plus-square-o': !showData[module.id]['topic'][children.id]['open']}"></i>
+                                            <a href="javascript:;" class="pl14">{{topic.name | capitalize}} </a>
+                                        </uib-accordion-heading>
+                                       
+                                        <span ng-if="!topic.movedKey" class="round checkbox4" style="position:absolute;right:15px;top:-25px;"> 
+                                            <input type="checkbox" class="checked-selected"  
+                                                   id="checkbox{{topic.id}}"
+                                                   ng-click="moduleChecked(topic.checked,topic)"
+                                                   ng-model="topic.checked">
+                                                      <label for="checkbox{{topic.id}}" ></label>
+                                        </span>
+
+                                        <span ng-if="topic.movedKey" class="round" style="position:absolute;right:15px;top:-25px;"> 
+                                            <input type="checkbox" class="checked-selected" 
+                                                   ng-disabled="topic.movedKey" 
+                                                   id="checkbox{{topic.id}}" checked>
+                                                      <label for="checkbox{{topic.id}}" ></label>
+                                        </span>
+                                        
+
+  
+                                        <div class="topic-checkbox" ng-if="topic.children.length >0"> 
+                                            
+                                            <div ng-repeat="grandchildren in topic.children"  class="grandchildren" style="align-items: center;">
+                                                <div class="topic-checkbox-content" ng-bind-html="grandchildren.content |  trusted"></div>
+                                                <span ng-if="!grandchildren.movedKey" class="round checkbox2"> 
+                                                    <input type="checkbox" class="checked-selected" 
+                                                          id="checkbox{{grandchildren.id}}"
+                                                          ng-model="grandchildren.checked"> 
+                                                              <label for="checkbox{{grandchildren.id}}"></label> 
+                                                </span>  
+                                                
+                                                <span  ng-if="grandchildren.movedKey" class="round"> 
+                                                    <input type="checkbox"  ng-disabled="grandchildren.movedKey"
+                                                          class="checked-selected" id="checkbox{{grandchildren.id}}" checked>
+                                                     <label for="checkbox{{grandchildren.id}}"></label> 
+                                                </span> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </uib-accordion>
+
+                                <div class="topic-checkbox" ng-if = "topic.type=='Clause'"> 
+                                    <div class="topic-checkbox-content" ng-bind-html="topic.content |  trusted">
+                                    </div>
+                                   
+                                    
+                                    
+                                     <span ng-if="!topic.movedKey"  class="round checkbox2"> 
+                                        <input type="checkbox" class="checked-selected" 
+                                                id="checkbox{{topic.id}}"
+                                                ng-model="topic.checked">
+                                         <label for="checkbox{{topic.id}}" 
+                                                style="position: absolute;right: 15px;top: -20px;"></label> 
+                                    </span>  
+                                    
+                                    <span  ng-if="topic.movedKey" class="round"> 
+                                        <input type="checkbox"  ng-disabled="topic.movedKey"
+                                              class="checked-selected" id="checkbox{{topic.id}}" checked>
+                                         <label for="checkbox{{topic.id}}" style="position: absolute;right: 15px;top: -20px;"></label> 
+                                    </span> 
+                                    
+                                </div>
+                            </div>
+                            <div ng-if="module.children.length == 0">
+                                <div class="topic-checkbox">
+                                    <div class="topic-checkbox-content" ng-bind-html="module.content |  trusted">
+                                    </div>
+                                    <span> <input type="checkbox" class="checked-selected" ng-model="module.checked"></span>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </uib-accordion>
+            </form>
+        </div>
+
+        <div class="col-sm-6 p-0">
+            <form class="form-horizontal template-formats profile-form" style="border: 1px solid #ccc;
+            padding: 10px; border-left: 0px !important;"  name="form" novalidate ng-submit="form.$valid">
+
+<div class="row template-formats-div m-0">
+    <div class="col-sm-10">
+        <div style="display: flex !important; justify-content: space-between; align-items: center;">
+        <p class="m-0" style="display: flex !important;">
+            <span>
+                {{'user.breadcrumb.relation' | translate}}
+            </span>:<span> {{relationName}}</span>
+        </p>
+
+        <p class="m-0" style="display: flex !important;">
+            <span>
+                {{'user.profile.status' | translate}}
+            </span>: <span ng-if="statusContractBuild=='in_progress'"> {{'normal.in_progress' | translate}}</span>
+                      <span ng-if="statusContractBuild!='in_progress'"> {{statusContractBuild}}</span>
+
+        </p>
+
+        <p class="m-0" style="display: flex !important;">
+            <span>
+                {{'normal.version' | translate}}
+            </span>:<span> {{newbuildermodules.mostRecentVersion}}</span>
+        </p>
+    </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="row" style="justify-content: flex-end; align-items: flex-end; display: flex;">
+            <div class="col-sm-8 p0 w192 table-search p-r-3">
+                <div>
+                    
+                </div>
+            </div>
+            <div class="col-sm-4 p0 w105">
+                <div style="border-collapse: inherit;display: flex; padding-left: 6px;">
+                    <button class="btn btn-sm btn-primary" type="button" ng-click="addModuleContent()"
+                        title="{{'general.add' | translate}}"
+                        style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                        <i class="icon-plus-circle"></i><span
+                            style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            
+
+    <div ui-sortable="sortableOptions1" ng-model="newbuildermodules.content">
+        <uib-accordion close-others="oneAtATime" ng-repeat="(firstIndex,module) in newbuildermodules.content">
+            <div class="handle">
+                <div uib-accordion-group class="panel-default mb-h" ng-class="bg-color-white"
+                    template-url="group-template.html" style="border: 1px solid #ccc;"
+                    is-open="showData[module.id]['open']" ng-if="module.type ='Heading'">
+                    <uib-accordion-heading ng-click="showData[module.id]['open'] = !showData[module.id]['open']">
+                        <div class="module-header-toggle">
+                            <div>
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': showData[module.id]['open'],'fa fa-plus-square-o': !showData[module.id]['open']}"></i>
+                        {{module.name}}
+                    </div>
+                        <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                            <a href uib-dropdown-toggle class="font-sm">
+                                <span class="fa fa-ellipsis-v" ></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                <li> 
+                                    <a href="javascript:;" ng-click="editModuleContent(module.name,firstIndex)">{{'general.edit' | translate}}</a>
+                                </li>
+                                <li> 
+                                    <a href="javascript:;" ng-click="addTopicContent(firstIndex,secondIndex)">{{'general.add' | translate}}</a>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:;" ng-click="removeElement(firstIndex,secondIndex)">{{'normal.remove' | translate}}</a>
+                                </li>
+                            </ul>
+                        </span>
+                        </div>
+
+                    </uib-accordion-heading>
+                    <ul>
+                        <div ui-sortable="sortableOptions2">
+                            <div ng-if="module.children.length >0" ng-repeat="(secondIndex,children) in module.children">
+                                <uib-accordion close-others="oneAtATime" ng-if = "children.type=='Subheading'">
+                                    <div class="topic">
+                                        <div uib-accordion-group class="panel-default mb-h"  heading="Selection Process" ng-init="children.open=false;"
+                                            template-url="topic-template.html"  style="border: 1px solid #ccc;"
+                                            is-open="showData[module.id]['children'][children.id]['open']">
+                                            <uib-accordion-heading>
+                                                <div class="module-header-toggle">
+                                                <div>
+                                                <i class="glyphicon"
+                                                    ng-click="showData[module.id]['children'][children.id]['open'] = !showData[module.id]['children'][children.id]['open']"
+                                                    ng-class="{'fa fa-minus-square-o': showData[module.id]['children'][children.id]['open'],
+                                                        'fa fa-plus-square-o': !showData[module.id]['children'][children.id]['open']}"></i>
+                                                        <a href="javascript:;" class="pl14">{{children.name | capitalize}} </a>
+                                                        </div>
+
+                                                <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                                                    <a href uib-dropdown-toggle class="font-sm">
+                                                        <span class="fa fa-ellipsis-v" ></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                                        uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                        <li> 
+                                                            <a href="javascript:;" ng-click="editTopicContent(children.name,firstIndex,secondIndex)">{{'general.edit' | translate}}</a>
+                                                        </li>
+                                                        <li> 
+                                                            <a href="javascript:;" ng-click="addQuestionContent(children.name,firstIndex,secondIndex)">{{'general.add' | translate}}</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" ng-click="removeElement(firstIndex,secondIndex)">{{'normal.remove' | translate}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                                </div>
+                                            </uib-accordion-heading>
+                                    
+                                            <div class="content-toggle" ng-if="children.children.length >0">
+                                                
+                                                <div ng-repeat="grandchildren in children.children" class="grandchildren">
+                                                    <div class="content-toggle-topic" ng-bind-html="grandchildren.content |  trusted"></div>
+
+                                                    <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                                                        <a href uib-dropdown-toggle class="font-sm">
+                                                            <span class="fa fa-ellipsis-v" ></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                                            uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                            <li> 
+                                                                <a href="javascript:;" ng-click="openEditor(grandchildren.content,firstIndex,secondIndex)">{{'general.edit' | translate}}</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:;" ng-click="questRemoveElement(firstIndex,secondIndex)">{{'normal.remove' | translate}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                           </div>
+                                    </div>
+                                </uib-accordion>
+                                <div class="content-toggle" ng-if = "children.type=='Clause'">
+                                    <div class="content-toggle-topic" ng-bind-html="children.content |  trusted">
+                                    </div>
+
+                                    <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                                        <a href uib-dropdown-toggle class="font-sm">
+                                            <span class="fa fa-ellipsis-v" ></span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                            uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                            <li> 
+                                                <a href="javascript:;" ng-click="openEditor(children.content,firstIndex,secondIndex)">{{'general.edit' | translate}}</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" ng-click="removeElement(firstIndex,secondIndex)">{{'normal.remove' | translate}}</a>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="module.children.length == 0">
+                            <div class="content-toggle">
+                                <div class="content-toggle-topic" ng-bind-html="module.content |  trusted">
+                                </div>
+
+                                <span uib-dropdown on-toggle="toggled(open)" style="display: flex;" class="c-dropdown width-20 pull-right">
+                                    <a href uib-dropdown-toggle class="font-sm">
+                                        <span class="fa fa-ellipsis-v" ></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right custom-scrl custom-drop" dropdown-append-to-body="true"
+                                        uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                        <li> 
+                                            <a href="javascript:;" ng-click="openEditor(children.content,firstIndex,secondIndex)">{{'general.edit' | translate}}</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;" ng-click="removeElement(firstIndex,secondIndex)">{{'normal.remove' | translate}}</a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+
+            </form>
+        </div>
+
+    </div>
+    <div class="template-formats-content">
+        <div class="form-group col-sm-12 mt-1" style="text-align: end;">
+            <button style="background-color: #7030a0 ;color: #fff;border-color:#7030a0" ng-click="finalizeStructure('true')"
+             class="btn btn-sm text-center form-submit-btn"><i class="fa fa-file-invoice" style="padding-right: 5px;"></i>
+                {{'contract.finalize' | translate}}</button>
+            <button ng-click="versionShow()" class="btn btn-sm btn-success text-center">
+                <i class="icon-export2" style="padding-right: 5px;"></i>{{'contract.export' | translate}}</button>
+            <button class="btn btn-sm btn-primary" ng-click="finalizeStructure('false')">
+                <i class="fa fa-dot-circle-o"></i> {{'general.save' | translate}}</button>
+            <button type="button" ng-click="closeDocument()" class="btn btn-sm btn-danger">
+                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer"  
+             style="cursor: pointer" ng-click="toggleOpen()">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="topic-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer;font-weight: 400;">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}" style="display:flex;">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.show, 'fa fa-plus-square-o': !status.show}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<style>
+    .template-formats .template-formats-div {
+        background: #d0d0d0;
+        display: flex;
+        align-items: center;
+        padding: 3px;
+    }
+    
+    .checked-selected {
+    width:25px;
+    height: 25px;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #bbb7b7;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    }
+    .checked-selected:checked {
+    appearance: auto;
+    clip-path: circle(50% at 50% 50%);
+    background-color: #000 !important;
+    background-color: #006fcd !important;
+
+    }
+    .topic-checkbox{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .topic-checkbox .topic-checkbox-content{
+        background-color: #f2f1f6;
+        padding: 5px;
+        margin-right: 10px;
+    }
+    .content-toggle{
+        display: flex;
+        align-items: flex-start;
+    }
+    .topic-checkbox .topic-checkbox-content{
+        /* min-width: 500px;
+        width: 500px; */
+        width: 95%;
+    }
+    .grandchildren{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .module-header-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .c-dropdown .dropdown-menu li a{
+        border-bottom:transparent;
+        font-weight:500;
+    } 
+
+    .c-dropdown .dropdown-menu li {
+    border-bottom: 1px solid #cfd8dc;
+}
+/* .panel-body .c-dropdown .dropdown-toggle {
+    padding: 0;
+} */
+
+.accordion-default .panel-title {
+    padding: 10px !important;
+}
+.accordion-default .panel-body .accordion-default .panel-body{
+padding: 10px;
+}
+
+.c-dropdown .dropdown-toggle {
+    padding: 0px 10px;
+}
+.module-selected{
+    position: absolute;
+    right: 20px;
+    top: 58px;
+}
+.round {
+        position: relative;
+    }
+
+    .round label {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 20px;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 20px;
+    }
+
+    .round label:after {
+        border: 2px solid #fff;
+        border-top: none;
+        border-right: none;
+        content: "";
+        height: 6px;
+        left: 4px;
+        position: absolute;
+        top: 5px;
+        transform: rotate(-45deg);
+        width: 10px;
+    }
+
+    .round input[type="checkbox"] {
+        visibility: hidden;
+    }
+
+    .round input[type="checkbox"]:checked+label {
+        background-color: #0572ce;
+        border-color: #0572ce;
+    }
+    
+    .round input[type="checkbox"]:checked+label:after {
+        opacity: 1;
+    }
+    .checkbox2 input[type="checkbox"]:checked+label {
+        background-color: #fff;
+        border-color: #000;
+    }
+    .checkbox2 input[type="checkbox"]:checked+label:after {
+        border-color: #000;
+    }
+    .checkbox3 input[type="checkbox"]:checked+label {
+        background-color: #fff;
+        border-color: #000;
+    }
+    .checkbox4 input[type="checkbox"]:checked+label {
+        background-color: #ed7d31;
+        border-color: #2f528f;
+    }
+    .round input[type="checkbox" i]:disabled,
+    .round input[type="checkbox" i]:disabled + label {
+        cursor:not-allowed;
+        /* background-color: #0572ce !important;
+        color: #fff; */
+    }
+    .round input[type="checkbox" i]:disabled + label:after{
+        color:#fff !important;
+    }
+    .checkbox4 input[type="checkbox"]:checked+label:after {
+        border:0;
+        content: "-";
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: unset;
+        color: #fff;
+        width: 100%;
+        top: 3px;
+        left: 0;
+    }
+</style>

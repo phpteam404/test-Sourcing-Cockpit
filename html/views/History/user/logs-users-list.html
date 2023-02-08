@@ -1,0 +1,63 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['view']">
+            <table class="table table-custom table-striped table-hover" st-pipe="getUsers" st-table="usersList">
+                <thead>
+                <tr>
+                    <td colspan="12">
+                        <div class="col-sm-12 clearfix p0">
+                            <div class="action-head mb0">
+                                <div class="col-sm-3 p0 table-search pull-right">
+                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                           st-search="search_key" st-input-event="change">
+                                    <i class="fa icon-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th st-sort="name">{{'customer.admin.name' | translate}}</th>
+                    <th st-sort="email">{{'user.profile.email' | translate}}</th>
+                    <th st-sort="user_role_name">{{'customer.admin.role' | translate}}</th>
+                    <th class="w170" st-sort="last_logged_on">{{'access_log.last_logged_on' | translate}}</th>
+                    <th class="hand-symbol"></th>
+                </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                <tr ng-repeat="row in usersList">
+                    <td>{{row.name}}</td>
+                    <td>{{row.email}}</td>
+                    <td>{{row.user_role_name}}</td>
+                    <td>{{row.last_logged_on | utcToLocal:'toLocalTime' | checkEmpty}}</td>
+                    <td>
+                        <a href="javascript:;" class="" title="{{'access_log.view_actions' | translate}}"
+                           ng-click="goToUserLogs(row)"><i class="fa icon-eye" ></i></a>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                <tr><td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                <tr><td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

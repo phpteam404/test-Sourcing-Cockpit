@@ -1,0 +1,76 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer"
+                   st-table="questionsTableList">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <!--<span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary" ng-click="goto()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.add' | translate}}
+                                        </button>
+                                    </span>-->
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control"
+                                               placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="module_name" class="st-sort-ascent st-sort-descent">{{'workflows.workflow_name' | translate}}</th>
+                        <th st-sort="topic_name" class="">{{'questions.topic_name' | translate}}</th>
+                        <th st-sort="question_count" class="">{{'questions.no_of_questions' | translate}}</th>
+                        <th st-sort="relation_question_count" class="st-sort-ascent st-sort-descent">{{'normal.no_of_relation_questions' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in questionsTableList">
+                        <td>{{row.module_name}}</td>
+                        <td>{{row.topic_name}}</td>
+                        <td>{{row.question_count}}</td>
+                        <td>{{row.relation_question_count}}</td>
+                        <td>
+                            <a ui-sref="app.workflow-questions.questions-view({mName:(row.module_name),name:(row.topic_name),id:(row.id_topic | encode)})"
+                               class="mr-1 gray">
+                                <i class="icon-gear" title="Manage Questions" tooltip-placement="top"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr>
+                        <td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr>
+                        <td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

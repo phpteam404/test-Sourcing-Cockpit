@@ -1,0 +1,94 @@
+<div class="animated fadein">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="templateList">
+                <thead>
+                    <tr>
+                        <td colspan="8">
+                            <div class="col-sm-12 clearfix p0">
+                                <div class="action-head mb0">
+                                    <span class="pull-right ml-h" ng-if="permission['add']">
+                                        <button class="btn btn-sm btn-primary" type="button" ng-click="createTemplate(null,0)">
+                                            <i class="icon-plus"></i>&nbsp; {{'general.create' | translate}}
+                                        </button>
+                                    </span>
+                                    <span class="pull-right ml-h" ng-if="import_access ==1 && permission['add'] && user.access=='ca'">
+                                        <button class="btn btn-sm btn-success" type="button" ng-click="createTemplate(null,1)">
+                                            <i class="fa fa-download"></i>&nbsp; {{'general.import' | translate}}
+                                        </button>
+                                    </span>
+                                    <div class="col-sm-3 p0 table-search pull-right">
+                                        <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                               st-search="search_key" st-input-event ="change">
+                                        <i class="fa icon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th st-sort="template_name">{{'templates.template_name' | translate}}</th>
+                        <th class="hand-symbol">{{'general.status' | translate}}</th>
+                        <th class="hand-symbol" ng-if="user.access=='wa'">{{'general.import' | translate}}</th>
+                        <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="row in templateList track by $index">
+                        <td>{{row.template_name}}</td>
+                        <td><span class="green" ng-if="row.template_status == 1">{{'general.active' | translate}}</span>
+                            <span class="red"  ng-if="row.template_status == 0">{{'general.inactive' | translate}}</span>
+                        </td>
+                        <td  ng-if="user.access=='wa'">
+                            <div class="form-inline onoffswitch">
+                                <input type="checkbox" name="import_status_{{$index}}" 
+                                    ng-init="row.import_status = (row.import_status == '1') ? 1:0"
+                                    ng-true-value="1" ng-false-value="0"
+                                    ng-model="row.import_status" ng-change="updateTemplate(row)"
+                                    class="onoffswitch-checkbox " id="import_status_{{$index}}" checked>
+                                <label class="onoffswitch-label assessment-switch" for="import_status_{{$index}}">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:;" ng-click="createTemplate(row,'')" class="icon-pencil gray mr-1" title="{{'general.edit' | translate}}"></a>
+                            <a href="javascript:;" ng-if="row.template_status == 1"
+                               ui-sref="app.templates.templates-view({name:(row.template_name),id:(row.id_template | encode),type:'module'})"
+                               class="fa fa-sort-alpha-asc gray mr-1" title="{{'templates.manage_template' |  translate}}"></a>
+                            <a href="javascript:;" ng-click="previewTemplate(row)" class="icon-eye gray mr-1" title="{{'general.preview' | translate}}"></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="emptyTable">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="8">
+                            <div class="paginator">
+                                <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                    <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                    <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                        ng-options="item for item in pagesNumber" selected>
+                                    </select>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <div class="" ng-repeat="item in row.customer" ng-if=" item.customer_id != row.customer[0].customer_id">
+        <a href="javascript:;"  target="_blank" ui-sref="app.customer.edit-customer({name:item.assigned_to,id:(item.customer_id | encode)})">
+            {{item.assigned_to}}</a>
+    </div>
+</script>

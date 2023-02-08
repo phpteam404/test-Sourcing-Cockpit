@@ -1,0 +1,38 @@
+.accordion-default{
+  .panel-title{
+    color:#323232;
+    background:#ffffff;
+    font-size:14px;
+    padding: 10px 0 10px 10px;
+    margin-bottom:0px;
+    a{
+      &.accordion-toggle{
+        color: #323232;
+        &:focus{
+          outline: none;
+        }
+        span{
+          i{
+            &.glyphicon{
+              width: 15px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+    }
+  }
+  .panel-body{
+    background: #ffffff;
+    border-top: 1px solid #cfd8dc;
+    padding: 10px 15px;
+    ul{
+      padding: 0;
+      list-style: none;
+      li{
+        border-bottom: 1px solid #cfd8dc;
+      }
+    }
+  }
+}

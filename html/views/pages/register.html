@@ -1,0 +1,52 @@
+<div class="container d-table">
+    <div class="d-100vh-va-middle">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card mx-2">
+                    <div class="card-block p-2">
+                        <h1>{{'general.register' | translate}}</h1>
+                        <p class="text-muted">{{'general.create_account' | translate}}</p>
+                        <div class="input-group mb-1">
+                            <span class="input-group-addon"><i class="icon-user"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="{{'normal.placeholder_username' | translate}}" ng-model="u.user_name" required>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <span class="input-group-addon">@</span>
+                            <input type="email" class="form-control" placeholder="{{'user.profile.email' | translate}}" ng-model="u.email" required>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" placeholder="{{'user.profile.password' | translate}}" ng-model="u.password" required>
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" placeholder="{{'normal.placeholder_repeat_password' | translate}}" ng-model="u.rpassword" required>
+                            <div ng-if="u.password != u.rpassword" class="error-message error">{{'general.password_mismatch' | translate}}</div>
+                        </div>
+                        <button type="button" class="btn btn-block btn-success" ng-click="register(u)">{{'general.create_Acount' | translate}}</button>
+                    </div>
+                    <!--<div class="card-footer p-2">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <button class="btn btn-block btn-facebook" type="button">
+                                    <span>facebook</span>
+                                </button>
+                            </div>
+                            <div class="col-xs-6">
+                                <button class="btn btn-block btn-twitter" type="button">
+                                    <span>twitter</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

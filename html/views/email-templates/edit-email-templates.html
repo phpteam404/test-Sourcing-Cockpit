@@ -1,0 +1,141 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{'email_temp.edit_email_temp' | translate}}</strong>
+                </div>
+                <div class="card-block">
+                    <form novalidate name="emailTemplateForm" ng-submit="emailTemplateForm.$valid && updateTempalte(template)">
+                        <div class="col-sm-12 form-group p0">
+                            <div class="col-sm-4 form-group">
+                                <label>{{'templates.template_name' | translate}} *</label>
+                                <input  type="text" class="form-control" name="template_name" ng-model="template.template_name" required/>
+                                <span class="error-message" ng-if="emailTemplateForm.template_name.$error.required && emailTemplateForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>{{'email_temp.email_subject' | translate}} *</label>
+                                <input type="text" class="form-control" ng-model="template.template_subject" name="template_subject" required/>
+                                <span class="error-message" ng-if="emailTemplateForm.template_subject.$error.required && emailTemplateForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>{{'templates.template' | translate}} {{'contract.status' | translate}} *</label>
+                                <div class="onoffswitch form-inline">
+                                    <input name="onoffswitch_toggle" ng-model="template.status" id="status"
+                                           ng-true-value="'1'"
+                                           ng-false-value="'0'"
+                                           class="onoffswitch-checkbox" type="checkbox">
+                                    <label class="onoffswitch-label assessment-switch" for="status">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 form-group p0">
+                            <div class="col-sm-9">
+                                <label>{{'email_temp.email_content' | translate}} *</label>
+                                <!--<textarea ng-model="template.template_content" colspan="25" rows="25" class="form-control f12 p10"></textarea>-->
+                                <textarea ckeditor="" ng-model="template.template_content" class="width-full min-height70 f12 p10 darkcolor"></textarea>
+                                <!--<div class="textEditor" text-angular  type="text" ng-model="template.template_content" required name="template_content"></div>-->
+                                <span class="error-message" ng-if="emailTemplateForm.template_content.$error.required && emailTemplateForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                            </div>
+                            <!--ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','pre'],
+                                     ['bold','italics','underline','indent','outdent'],['undo','redo','clear','html'],['justifyLeft','justifyCenter','justifyRight','justifyFull']]"-->
+                            <div class="col-sm-3 form-group">
+                                <label>{{'email_temp.wild_cards' | translate}}</label>
+                                <ul class="" style="list-style:disc">
+                                    <li ng-repeat="card in template.wildcards">{{card}}</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>{{'email_temp.recipients' | translate}}</label>
+                                <ul class="" style="list-style:disc">
+                                    <li ng-repeat="u in template.recipients">{{u}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <!--<div class="col-sm-12 form-group">
+                            <label>{{'templates.template' | translate}} {{'contract.status' | translate}} *</label>
+                            <div class="onoffswitch form-inline">
+                                <input name="onoffswitch_toggle" ng-model="template.status" id="status"
+                                       ng-true-value="'1'"
+                                       ng-false-value="'0'"
+                                       class="onoffswitch-checkbox" type="checkbox">
+                                <label class="onoffswitch-label assessment-switch" for="status">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>-->
+                        <!--<div class="col-sm-12 form-group">
+                            <label>Wild cards</label>
+                            <p class="text-break">{{template.wildcards}}</p>
+                        </div>-->
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-12 text-center m-t-3">
+                            <button type="button" class="btn btn-sm btn-green" ng-click="testEmail(template)">
+                                <i class="fa fa-envelope"></i>&nbsp;{{'email_temp.preview' | translate}}
+                            </button>
+                            <button class="btn btn-sm btn-primary" type="submit">
+                                <i class="icon-plus"></i>&nbsp;{{'general.update' | translate}}</button>
+                            <button class="btn btn-sm btn-danger" type="button" ng-click="goToList()" >
+                                <i class="icon-times f12"></i>&nbsp;{{'general.cancel' | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="fill-email-text.html">
+   <div class="modal-header">
+       <h6 class="modal-title">
+           {{'email_temp.template_prvew' | translate}}- {{testTemplate.template_name}}
+           <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+       </h6>
+   </div>
+    <form name="templateDataForm" novalidate ng-submit="templateDataForm.$valid && sendSampleEmail(testTemplate)">
+        <div class="modal-body clearfix">
+            <div class="col-sm-12">
+                <div class="col-sm-12 form-group">
+                    <label>{{'email_temp.email_subject' | translate}} *</label>
+                    <input type="text" class="form-control" ng-model="testTemplate.template_subject" name="subject" required/>
+                    <span class="error-message" ng-if="templateDataForm.subject.$error.required && templateDataForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-12 form-group">
+                    <label>{{'email_temp.email_content' | translate}} *</label>
+                    <!--<textarea  ng-model="testTemplate.content" class="width-full min-height70 f12 p10 darkcolor"></textarea>-->
+                    <textarea ckeditor="" ng-model="testTemplate.content" class="width-full min-height70 f12 p10 darkcolor"></textarea>
+                    <!--<div class="textEditor" text-angular ta-toolbar="[]" type="text" ng-model="testTemplate.content"  name="content" required></div>-->
+                    <span class="error-message" ng-if="templateDataForm.content.$error.required && templateDataForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                </div>
+                <div class="clearfix pl-1">{{'email_temp.test_email' | translate}}</div>
+                <div class="col-sm-6 form-group">
+                    <label>{{'email_temp.name' | translate}} *</label>
+                    <input type="text" class="form-control" ng-model="testTemplate.to_name" name="to_name" required/>
+                    <span class="error-message" ng-if="templateDataForm.to_name.$error.required && templateDataForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>{{'email_temp.email_to' | translate}} *</label>
+                    <input type="email" class="form-control" ng-model="testTemplate.to_email" name="to_email" required/>
+                    <span ng-if="templateDataForm.to_email.$error.email && templateDataForm.$submitted" class="error-message">{{'general.enter_valid_email' |translate}}</span>
+                    <span class="error-message" ng-if="templateDataForm.to_email.$error.required && templateDataForm.$submitted">
+                                    {{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-envelope"></i> {{'general.send' | translate}}</button>
+            <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+        </div>
+    </form>
+</script>

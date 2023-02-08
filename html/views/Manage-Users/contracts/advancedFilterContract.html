@@ -1,0 +1,113 @@
+<div class="modal-header">
+    <h6 class="modal-title advanced-filter-modal-title" id="modal-title">{{'events.compose_filter' |translate}}</h6>
+<div class="advanced-filter-modal-add">
+<a ng-click="cancel()" title="{{'general.close' | translate}}" class="icon-times f16"></a>
+</div>
+
+</div>
+<div class="modal-body clearfix">
+    <div class="card-blocks">            
+            <table class="table advanced-filter-modal-list">
+              <tbody>
+                  <tr ng-repeat="row in filterList">
+                      <td class="pl-0 custom-ellipsis" title="{{row.field}}">
+                          <span class="ellipsis-block">{{row.field |checkEmpty}}</span>
+                          </td>
+                      <td ng-if="row.field_type=='date'" class="custom-ellipsis" style="width: 30%;" title="{{row.filter_display_value | utcToLocal: 'date'}}">
+                        <span class="ellipsis-block">{{row.filter_display_value | utcToLocal: 'date'  | checkEmpty}}</span>
+
+                        </td>
+                      <td ng-if="row.field_type!='date' && row.field_type!='numeric_text'"  class="custom-ellipsis"  style="width: 30%;">
+                        <span class="ellipsis-block" ng-if="row.filter_display_value=='Multiple Selected'"
+                        uib-tooltip-html="row.value_names_string" tooltip-class="customClass" tooltip-placement="bottom">{{row.filter_display_value | checkEmpty}} </span>
+                        <span class="ellipsis-block" ng-if="row.filter_display_value!='Multiple Selected'" title="{{row.filter_display_value}}">{{row.filter_display_value | checkEmpty}} </span>
+                    </td>
+                      <td ng-if="row.field_type=='numeric_text'"  class="custom-ellipsis" style="width: 30%;" title="{{row.filter_display_value | currency : row.currency_name+' ':0 |checkEmpty}}">
+                        <span class="ellipsis-block">
+                        {{row.filter_display_value | currency : row.currency_name+' ':0 |checkEmpty}} 
+                         </span>
+                    </td>
+
+
+                      <td style="width: 25px;"><span ng-click="createFilter(row)"><i class="icon-edit pointer"></i></span></td>
+                      <td class="pr-0" style="width: 25px;"><span ng-click="flterDelete(row)"><i class="fa fa-trash pointer"></i></span></td>
+                  </tr>
+              </tbody>
+              <tbody ng-show="filterLoading">
+                <tr>
+                    <td colspan="8" class="text-sm-center">{{'general.loading' | translate}}</td>
+                </tr>
+            </tbody>
+            <div ng-show="filterContracts" class="text-center">
+                <span>{{'general.no_filter_select' | translate}}</span>
+            </div>
+            </table>
+    </div>
+</div>
+
+<div class="modal-footer form-group col-sm-12 text-right m-t-3 mb-0 pr-1">
+    <button  class="btn btn-sm btn-primary btn-radius"
+                                type="button"  ng-click="createFilter()" title="{{'general.ADD' | translate}}">
+                                <i class="icon-plus-circle"></i>&nbsp; {{'general.ADD' | translate}}
+                                </button>
+    <button type="button" ng-click="cancel()" class="btn btn-sm btn-danger">
+                <i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+</div>
+
+
+<script>
+        function chosen() {
+        $("#add-chosen").trigger("chosen:updated");
+    }
+
+</script>
+<style>
+
+.advanced-filter-modal-list tr td:first-child{
+        max-width: 280px;
+        width: 280px;
+    }
+
+
+    .advanced-filter-modal-add{
+    position: absolute;
+    right: 15px;
+    top: 17px;
+    display: flex;
+    align-items: center; 
+    }
+    .advanced-filter-modal-add button{
+        margin-right: 12px;
+    }
+    .advanced-filter-modal-add a{
+        cursor: pointer;
+    }
+    .advanced-filter-modal-title{
+        margin-right: 105px;
+    }
+    .advanced-filter-modal-list tr td{
+        border-top: none !important;
+        padding: 0.2rem 0.45rem;
+        font-size: 16px;
+    }
+    .modal-footer {
+        background-color: #fff;
+}
+.input-group-btn.calender{
+    vertical-align: bottom;
+}
+.chosen-container.chosen-container-multi{
+    width: 100% !important;
+}
+.advanced-filter-modal-header{
+    margin: 0 15px;
+    padding: 10px 0px;
+    border-bottom: 2px solid #cbcaca;
+}
+.advanced-filter-modal-list i {
+    color: #a3a2a2;
+}
+.advanced-filter-modal-list i.fa-trash{
+    font-size: 18px;
+}
+</style>

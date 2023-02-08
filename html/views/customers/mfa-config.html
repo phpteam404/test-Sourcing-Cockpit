@@ -1,0 +1,70 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-title">{{title | translate}} {{'customer.mfa' | translate}}
+        <a  ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times pointer"></a>
+    </h6>
+</div>
+
+<form novalidate name="mfaForm" ng-submit="saveMFA(mfa, mfaForm)">
+    <div class="modal-body clearfix" id="modal-body">
+        <div class="col-md-6 form-group">
+            <label>{{'customer.enable_mfa' | translate}}</label>
+            <div class="onoffswitch">
+                <input type="checkbox" name="is_mfa_active" class="onoffswitch-checkbox"
+                       ng-model="mfa.is_mfa_active"
+                       ng-true-value="'1'"
+                       ng-false-value="'0'"
+                       ng-change="getEnableMfa(mfa.is_mfa_active)"
+                       ng-checked="mfa.is_mfa_active == 1"
+                       id="enable_radio">
+                <label class="onoffswitch-label assessment-switch mb-0"
+                       for="enable_radio">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 form-group">
+            <label>{{'customer.email_verify' | translate}}*</label>
+            <div class="onoffswitch">
+                <input type="checkbox" name="is_email_verification_active" class="onoffswitch-checkbox"
+                       ng-model="mfa.is_email_verification_active"
+                       ng-true-value="'1'"
+                       ng-false-value="'0'"
+                       ng-checked="mfa.is_email_verification_active == 1"
+                       id="enable_radio1" ng-required="enableMfa==1">
+                <label class="onoffswitch-label assessment-switch mb-0"
+                       for="enable_radio1">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+            <!-- <span class="error-message display" ng-if="mfaForm.is_email_verification_active.$error.required && mfaForm.$submitted">{{'general.required_field' | translate}}</span> -->
+        </div>
+        <!-- <div class="clearfix"></div> -->
+        <!-- <div class="col-md-6 form-group">
+            <label>{{'customer.sms_verify' | translate}}*</label>
+            <div class="onoffswitch">
+                <input type="checkbox" name="sms_verify" class="onoffswitch-checkbox"
+                       ng-model="mfa.sms_verify"
+                       ng-true-value="'1'"
+                       ng-false-value="'0'"
+                       ng-checked="mfa.sms_verify == 1"
+                       id="enable_radio2">
+                <label class="onoffswitch-label assessment-switch mb-0"
+                       for="enable_radio2">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+            <span class="error-message display" ng-if="mfaForm.sms_verify.$error.required && mfaForm.$submitted">{{'general.required_field' | translate}}</span>
+
+        </div> -->
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> {{'general.cancel' | translate}}</button>
+    </div>
+</form>

@@ -1,0 +1,1156 @@
+<div class="animated fadeIn" ng-controller="calendarCtrlLatest as vm">
+    <div class="row">
+
+        <div class="clearfix">
+            <div class="col-md-4 calender-widget" style="background: #ffffff; height: 594px; padding: 10px 1rem !important;">
+                <div>
+                    <div class="row" style="margin-bottom: 15px;">
+
+                        <h4 class="text-xs-center mb5">{{vm.calendarTitle}}</h4>
+                        <div class="col-md-6 mb5">
+                            <div class="btn-group">
+                                <button class="btn btn-primary" mwl-date-modifier date="vm.viewDate" decrement="vm.calendarView" uib-tooltip="{{'normal.previous' | translate}}" ng-click="loadYearData(vm.calendarView,true);resetFilter=false;resetFilter1=false;">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </button>
+                                <button class="btn btn-default" mwl-date-modifier date="vm.viewDate" set-to-today ng-click="loadYearData(vm.calendarView,true);resetFilter=false;resetFilter1=false;">
+                                    <span ng-if="vm.calendarView=='year' && (current != vm.calendarTitle)">{{current}}</span>
+                                    <span ng-if="vm.calendarView=='year' && (current == vm.calendarTitle)">{{'calender.today'| translate}}</span>
+                                    <span ng-if="vm.calendarView=='month'">{{'calender.today'| translate}}</span>
+                                </button>
+                                <button class="btn btn-primary" mwl-date-modifier date="vm.viewDate" increment="vm.calendarView" uib-tooltip="{{'normal.next' | translate}}" ng-click="loadYearData(vm.calendarView,true);resetFilter=false;resetFilter1=false;">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center mb5">
+                            <div class="btn-group pull-right calendar-btns-cls">
+                                <label class="btn btn-primary" ng-model="vm.calendarView" id="year-view" ng-click="loadYearData('year',true);resetFilter=false;resetFilter1=false;resetFilter2=false;" uib-btn-radio="'year'">{{'calender.year'| translate}}</label>
+                                <label class="btn btn-primary" ng-model="vm.calendarView" ng-click="loadYearData('month',true);resetFilter=false;resetFilter1=false;resetFilter2=false;" uib-btn-radio="'month'">{{'calender.month'| translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <mwl-calendar events="vm.events" view="vm.calendarView" view-title="vm.calendarTitle" view-date="vm.viewDate" on-event-click="vm.eventClicked(calendarEvent);" on-event-times-changed="vm.eventTimesChanged(calendarEvent); 
+                                                calendarEvent.startsAt = calendarNewEventStart;
+                                                calendarEvent.endsAt = calendarNewEventEnd" cell-is-open="vm.cellIsOpen" cell-modifier="vm.modifyCell(calendarCell)" cell-auto-open-disabled="true" on-timespan-click="vm.timespanClicked(calendarDate, calendarCell)"
+                        on-view-change-click="vm.viewChangeClicked(calendarNextView)">
+                    </mwl-calendar>
+                    <div class="calender-legends">
+                        <ul>
+                            <li>
+                                <div>
+                                    <p class="review-legend"></p> <span>{{'calender.reviews'| translate}}</span></div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p class="workflow-legend"></p> <span>{{'calender.tasks'| translate}}</span></div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p class="action-items-legend"></p> <span>{{'calender.action_items'| translate}}</span></div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p class="obligation-rights-legend"></p> <span>{{'calender.obligation_rights'| translate}}</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-8 right-tabView" style="background: #ffffff; border-left: 2px solid #cfcfcf;padding: 0px 1rem;">
+                <div class="row m-0 pb15" style="padding-top: 41px;">
+                    <!-- tabs start  -->
+                    <div class="card calender-right-tabs">
+                        <uib-tabset active="activeForm" style="height: auto;">
+                            <uib-tab index="0" style="width: 33.3%;height: auto;position: relative;" id="planning">
+                                <uib-tab-heading id="abcd"><span class="review-legend" style="position: absolute;left: 10px;"></span><span class="workflow-legend" style="position: absolute;left: 30px;"></span> {{'calender.planning' | translate}}
+                                    <span uib-dropdown on-toggle="toggled(open)" ng-if="user.access=='ca'" class="c-dropdown width-20 pull-right">
+                                        <a href uib-dropdown-toggle class="font-sm ">
+                                            <span class="fa fa-ellipsis-v"></span>
+                                    </a>
+                                    <ul   class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                        <li class="f12" style="white-space: nowrap;padding: 0 10px;">
+                                            <a href="javascript:;" ng-click="settingModel(true)">{{'calender.manage_review_reminder'|
+                                                    translate}}</a>
+                                        </li>
+                                        <li class="f12"  style="white-space: nowrap;padding: 0 10px;">
+                                            <a href="javascript:;" ng-click="settingModel(false)">{{'calender.manage_workflow_reminder'
+                                                    | translate}}</a>
+                                        </li>
+                                        <!-- <li class="f12" style="white-space: nowrap;padding: 0 10px;">
+                                            <a href="javascript:;" ng-click="addReviewForCalendar('add_review_calendar_title',true)">{{'calender.add_review_calendar'
+                                                    | translate}}</a>
+                                        </li>
+                                        <li class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;">
+                                            <a href="javascript:;" ng-click="addReviewForCalendar('add_workflow_calendar_title',false)">{{'calender.add_workflow_calendar'
+                                                    | translate}}</a>
+                                        </li>
+                                        <li class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;">
+                                            <a href="javascript:;" ng-click="addReviewForCalendar('add_workflow_calendar_title_project',project)">{{'calender.add_workflow_calendar_project'
+                                                    | translate}}</a>
+                                        </li> -->
+                                    </ul>
+                                    </span>
+                                    <span uib-tooltip="Reset" class="pull-right" ng-if="resetFilter" ng-click="resetList(true)">
+                                        <i class="fa fa-undo f14"></i>
+                                    </span>
+                                </uib-tab-heading>
+                                <div st-pipe="callServer" st-table="plannedList">
+
+                                    <table class="table table-custom table-striped table-hover planned-list" style="table-layout: fixed;">
+                                        <thead>
+                                            <!-- <tr>
+                                                <th> -->
+                                            
+                                            <div class="col-sm-5 p0 table-search pull-right calender-add-search" style="position: absolute;right: 0; top: -35px;">
+                                                <div class="calender-search-field">
+                                                <input type="text" class="form-control" placeholder="{{'normal.placeholder_planning' | translate}}" st-search="search_key" st-input-event="change">
+                                                <i class="fa icon-search"></i>
+                                            </div>
+
+                                                <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                    <button ng-if="(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')"
+                                                            class="btn btn-sm btn-primary" type="button" ng-click="planActivity()"
+                                                             style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                            <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                        </button>
+                                                      
+                                                        <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')"
+                                                        id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                        ng-click="$event.stopPropagation();$event.preventDefault();planActivity();"    
+                                                        uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                            <i id="plan-activity" class="fa fa-angle-double-down"></i>
+                                                        </button>
+                                                        <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="activityPlanning" id="calendar-planning">
+                                                            <span class="f12" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_review_calendar_title',true)">
+                                                                        {{'calender.add_review_calendar' | translate}} 
+                                                            </span>
+                                                            <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title',false)">
+                                                                {{'calender.add_workflow_calendar'
+                                                                        | translate}}
+                                                            </span>
+                                                            <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title_project',project)">
+                                                                {{'calender.add_workflow_calendar_project'
+                                                                        | translate}}
+                                                                </span>
+                                                    </div>
+                                                    </div>
+                                            </div> <!-- close-->
+                                           
+                                            <!-- </th>
+                                            </tr> -->
+                                            <tr>
+                                                <th class="hand-symbol planning-des">{{'contract.description' | translate}}</th>
+                                                <th class="hand-symbol planning-buss-unit">{{'customer.admin.business_unit' | translate}}
+                                                </th>
+                                                <th class="planning-review" st-sort="date">{{'contract.review_by' | translate}}</th>
+                                                <th class="planned-by" st-sort="first_name">{{'calender.planned_by' | translate}}</th>
+                                                <th st-sort="is_workflow" class="planning-type">{{'calender.type' | translate}}</th>
+                                                <th class="hand-symbol planning-action"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-show="!isLoading">
+                                            <tr ng-repeat="row in plannedList">
+                                                <td class="planning-des">
+                                                    <span class="ellipsis-calendar-block" title="{{row.workflow_name}}">{{row.workflow_name | checkEmpty}}</span>
+
+                                                    <span ng-if="row.contract_name.length > 0">
+                                                    <a href="javascript:;" class="icon-plus-circle gray ml-h plusIcon-more calendar-contract"
+                                                    uib-popover-template="dynamicPopover2.templateUrl"
+                                                    popover-placement="right" popover-trigger="'outsideClick'"
+                                                    class="btn btn-default"></a>
+                                                 </span>
+                                                </td>
+                                                <td class="planning-buss-unit">
+                                                    <span href="javascript:;" style="padding-left: 5px;" ng-if="!row.bu_name[0]">---</span>
+                                                    <span>
+                                                    <a class="ellipis" title="{{row.bu_name[0]}}" ng-if="!row.bu_name[1]">{{row.bu_name[0]}}</a>
+                                                    <a class="ellipis" ng-if="row.bu_name[1]">{{'general.multi_selected' | translate}}</a>
+                                                    <a ng-if="row.bu_name[1]" href="javascript:;" class="icon-plus-circle gray ml-h plusIcon-more"
+                                                        uib-popover-template="dynamicPopover.templateUrl"
+                                                        popover-placement="right" popover-trigger="'outsideClick'"
+                                                        class="btn btn-default"></a>
+                                                </span>
+                                                </td>
+
+                                                <td class="planning-review">
+                                                    <span ng-class="(row.overdue=='1') ?'overdue-date': ''">{{row.date | date}}</span>
+                                                </td>
+                                                <td class="planned-by"><span class="ellipis" title="{{row.username}}">{{row.username | checkEmpty}}</span></td>
+                                                <td class="planning-type">
+                                                    <span ng-if="row.workflow_info == 0" class="skyblue">{{'calender.review' | translate}}</span>
+                                                    <span ng-if="row.workflow_info == 1" class="green">{{'calender.workflow' | translate}}</span>
+                                                </td>
+                                                <td class="planning-action text-right">
+                                                    <span class="f12" tooltip-placement="left" ng-if="row.recurrence_name  && row.is_workflow == 0" uib-tooltip-html="row.tooltip_text" tooltip-class="customClass">
+                                                    <i class="fa fa-info-circle f12 green"></i>
+                                                </span>
+                                                    <span uib-dropdown on-toggle="toggled(open)" class="c-dropdown width-20 pull-right" ng-if="row.created_by==user.id_user">
+                                                    <a href uib-dropdown-toggle class="font-sm">
+                                                        <span class="fa fa-ellipsis-v"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right" dropdown-append-to-body="true" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                        <li>
+                                                            <a href="javascript:;" ng-if="row.workflow_info==0" ng-click="addReviewForCalendar('add_review_calendar_title',true,row)">{{'general.edit'
+                                                                | translate}}</a>
+                                                            <a href="javascript:;" ng-if="row.workflow_info==1 && row.type !='project'" ng-click="addReviewForCalendar('add_workflow_calendar_title',false,row)">{{'general.edit'
+                                                                | translate}}</a>
+                                                            <a href="javascript:;" ng-if="row.type=='project' && (row.workflow_info==0 || row.workflow_info==1)" ng-click="addReviewForCalendar('add_workflow_calendar_title_project',project,row)">{{'general.edit'
+                                                                    | translate}}</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" ng-click="deleteFromPlanning(row)">{{'general.delete'
+                                                                | translate}}</a>
+                                                        </li>
+                                                    </ul>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="isLoading">
+                                            <tr>
+                                                <td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="plannedList.length==0">
+                                            <tr>
+                                                <td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-center" colspan="6">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown">
+                                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                        <select ng-model="displayCount" ng-change="defaultPages1(displayCount)"
+                                                            ng-options="item for item in pagesNumber" selected>
+                                                        </select>
+                                                    </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </uib-tab>
+                            <uib-tab index="1" style="width: 33.3%; margin: 0; padding-right: 0px !important; position: relative;" class="pr0" id="action_item">
+                                <uib-tab-heading><span class="action-items-legend" style="position: absolute;left: 10px;"></span> {{'calender.open_action_item' | translate}}
+                                    <span title="Reset" class="pull-right" ng-if="resetFilter1" ng-click="resetList(false)">
+                                        <i class="fa fa-undo f14"></i>
+                                    </span>
+                                </uib-tab-heading>
+                                <div st-pipe="callServer1" st-table="actionItemsList">
+                                    <table class="table table-custom table-striped table-hover open-action-list">
+                                        <thead>
+                                            <!-- <tr>
+                                                <th> -->
+                                            <div class="col-sm-5 p0 table-search pull-right calender-add-search" style="position: absolute;right: 0; top: -35px;">
+                                                <div class="calender-search-field">
+                                                <input type="text" class="form-control" placeholder="{{'normal.placeholder_action_items' | translate}}" st-search="search_key" st-input-event="change">
+                                                <i class="fa icon-search"></i>   
+                                            </div> <!-- close-->
+                                            <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                <button ng-if="(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')"
+                                                        class="btn btn-sm btn-primary" type="button" ng-click="planActivity()"
+                                                         style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                        <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                    </button>
+                                                  
+                                                    <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')"
+                                                    id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                    ng-click="$event.stopPropagation();$event.preventDefault();planActivity();"    
+                                                    uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                        <i id="plan-activity" class="fa fa-angle-double-down"></i>
+                                                    </button>
+                                                    <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="activityPlanning" id="calendar-planning">
+                                                        <span class="f12" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_review_calendar_title',true)">
+                                                                    {{'calender.add_review_calendar' | translate}} 
+                                                        </span>
+                                                        <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title',false)">
+                                                            {{'calender.add_workflow_calendar'
+                                                                    | translate}}
+                                                        </span>
+                                                        <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title_project',project)">
+                                                            {{'calender.add_workflow_calendar_project'
+                                                                    | translate}}
+                                                            </span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <!-- </th>
+                                            </tr> -->
+                                            <tr>
+                                                <th class="action_item" st-sort="action_item">{{'contract.action_item' | translate}}</th>
+                                                <th class="user_name" st-sort="user_name">{{'contract.responsible' | translate}}</th>
+                                                <th class="due_date" st-sort="due_date">{{'contract.due_date' | translate}}</th>
+                                                <th class="priority" st-sort="priority">{{'contract.priority' | translate}}</th>
+                                                <th class="status" st-sort="status">{{'contract.status' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-show="!isLoading">
+                                            <tr ng-repeat="row in actionItemsList">
+                                                <td class="action_item custom-ellipsis">
+                                                    <!-- <a style="font-weight: normal;
+                                                            width: 95%;
+                                                            white-space: nowrap;
+                                                            text-overflow: ellipsis;
+                                                            display: inline-block;
+                                                            overflow: hidden;"
+                                                    class="ellipis lh16 display-block" href="javascript:;" title="{{row.action_item}}"
+                                                    id="{{row.id_contract_review_action_item}}" ng-click="updateContractAction(row,'noAction')">
+                                                    {{row.action_item}}
+                                                </a> -->
+                                                    <span class="ellipsis-block skyblue pointer" ng-click="updateContractAction(row,'noAction')" title="{{row.action_item}}"> {{row.action_item}}</span>
+                                                </td>
+                                                <td class="user_name custom-ellipsis">
+                                                    <span class="ellipsis-block orange" style="width:95%;" title="{{row.user_name}}">{{row.user_name}}</span>
+                                                </td>
+                                                <!-- <td class="due_date"><span class="due-date-calender" style="white-space: nowrap;">{{row.due_date | utcToLocal:'date'}}</span></td> -->
+                                                <td>
+                                                    <span class="w100" style="white-space: nowrap;" ng-class="(row.overdue=='1') ?'overdue-date': ''">{{row.due_date | utcToLocal:'date'}}</span>
+                                                </td>
+                                                <td class="priority"><span class="">{{row.priority | checkEmpty}}</span></td>
+                                                <td class="status"><span>{{row.status}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="isLoading">
+                                            <tr>
+                                                <td colspan="6" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="actionItemsList.length==0">
+                                            <tr>
+                                                <td colspan="6" class="text-sm-center">{{'general.no_data' | translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-center" colspan="6">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords2>10">
+                                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages2(displayCount)"
+                                                            ng-options="item for item in pagesNumber" selected>
+                                                        </select>
+                                                    </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </uib-tab>
+                            <uib-tab index="2" style="width: 33.3%; margin: 0; padding-right: 0px !important;position: relative;" class="pr0" id="obligations_rights">
+                                <uib-tab-heading>
+                                    <span class="obligation-rights-legend" style="position: absolute;left: 10px;"></span> {{'contract.obligation_rights' | translate}}
+                                    <span title="Reset" class="pull-right" ng-if="resetFilter2" ng-click="resetList('obligation')">
+                                        <i class="fa fa-undo f14"></i>
+                                    </span>
+                                </uib-tab-heading>
+                                <div st-pipe="callServer2" st-table="obligationsList">
+                                    <table class="table table-custom table-striped table-hover open-action-list">
+                                        <thead>
+                                            <!-- <tr>
+                                                <th> -->
+                                            <div class="col-sm-5 p0 table-search pull-right calender-add-search" style="position: absolute;right: 0; top: -35px;">
+                                                <div class="calender-search-field">
+                                                <input type="text" class="form-control" placeholder="{{'normal.placeholder_obligation_search' | translate}}" st-search="search_key" st-input-event="change">
+                                                <i class="fa icon-search"></i>
+                                            </div>
+                                            <div class="input-group" style="border-collapse: inherit;display: flex;">
+                                                <button ng-if="(user.access=='ca' || user.access=='bo' || user.access=='bd' ||user.access=='bm')"
+                                                        class="btn btn-sm btn-primary" type="button" ng-click="planActivity()"
+                                                         style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">
+                                                        <i class="icon-plus-circle"></i><span style="padding-left: 5px;">{{'general.ADD'| translate}}</span>
+                                                    </button>
+                                                  
+                                                    <button ng-show="(user.access=='ca'  || user.access=='bo'|| user.access=='bd' ||user.access=='bm')"
+                                                    id="single-button" type="button" class="btn btn-sm btn-primary dashboard-custom-drop" type="button"
+                                                    ng-click="$event.stopPropagation();$event.preventDefault();planActivity();"    
+                                                    uib-dropdown-toggle ng-disabled="disabled" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                                                        <i id="plan-activity" class="fa fa-angle-double-down"></i>
+                                                    </button>
+                                                    <div class="showMenu resolution bg-primary dashboard-drop-menu dashboard-acceletor pointer" ng-show="activityPlanning" id="calendar-planning">
+                                                        <span class="f12" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_review_calendar_title',true)">
+                                                                    {{'calender.add_review_calendar' | translate}} 
+                                                        </span>
+                                                        <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title',false)">
+                                                            {{'calender.add_workflow_calendar'
+                                                                    | translate}}
+                                                        </span>
+                                                        <span class="f12 pr-0" style="white-space: nowrap;padding: 0 10px;" ng-click="addReviewForCalendar('add_workflow_calendar_title_project',project)">
+                                                            {{'calender.add_workflow_calendar_project'
+                                                                    | translate}}
+                                                            </span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <!-- </th>
+                                            </tr> -->
+                                            <tr>
+                                                <th class="obligations-contract-name" st-sort="contract_name">{{'contract.contract_name' | translate}}</th>
+                                                <th class="obligations-description" st-sort="description">{{'providers.description' | translate}}</th>
+                                                <th class="obligations-type-name" st-sort="type_name">{{'general.type' | translate}}</th>
+                                                <th class="obligations-recurrence" st-sort="recurrence">{{'calender.recurrence' | translate}}</th>
+                                                <th class="obligations-start-date" st-sort="parent_recurrence_start_date">{{'contract.start_date' | translate}}</th>
+                                                <th class="obligations-end-date" st-sort="recurrence_end_date">{{'contract.end_date' | translate}}</th>
+                                                <th class="obligations-actions">{{'user.breadcrumb.actions' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-show="!isObligationLoading">
+                                            <tr ng-repeat="row in obligationsList">
+                                                <td class="obligations-contract-name custom-ellipsis">
+                                                    <span class="ellipsis-block skyblue pointer" title="{{row.contract_name}}" ng-click="goToContractPage(row)">{{row.contract_name |checkEmpty}}</span>
+                                                </td>
+
+                                                <td class="obligations-description custom-ellipsis">
+                                                    <span class="ellipsis-block" title="{{row.description}}">{{row.description |checkEmpty}}</span>
+                                                </td>
+
+                                                <td class="obligations-type-name">
+                                                    <span title="{{row.type_name}}">{{row.type_name |checkEmpty}}</span>
+                                                </td>
+                                                <td class="obligations-recurrence"><span>{{row.recurrence | checkEmpty}}</span></td>
+                                                <td class="obligations-start-date"><span>{{row.recurrence_start_date | utcToLocal:'date' |checkEmpty}}</span></td>
+                                                <td class="obligations-end-date">{{row.recurrence_end_date | utcToLocal:'date'|checkEmpty}}</td>
+                                                <td class="obligations-actions">
+                                                    <span ng-if="row.detailed_description!=''" style="padding-right: 5px; vertical-align: middle;" tooltip-placement="left" tooltip-append-to-body="true" tooltip-class="customClass" uib-tooltip="{{row.detailed_description}}">
+                                                    <img style="width:16px; margin-bottom: 4px;" src="img/Comments.svg" alt="">
+                                                </span>
+
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="isObligationLoading">
+                                            <tr>
+                                                <td colspan="7" class="text-sm-center">{{'general.loading' | translate}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-show="obligationsList.length==0">
+                                            <tr>
+                                                <td colspan="7" class="text-sm-center">{{'general.no_data' | translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-center" colspan="7">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount3" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords3>10">
+                                                        <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages3(displayCount)"
+                                                            ng-options="item for item in pagesNumber" selected>
+                                                        </select>
+                                                    </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                    <!-- tabs end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="add-review-calendar.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{action | translate}} {{head | translate}} :
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <form class="form-horizontal profile-form" name="form" novalidate ng-submit="form.$valid && addReview(customOptions)">
+        <div class="modal-body clearfix" id="modal-body">
+            <div class="form-group col-sm-12" ng-if="addType">
+                <label class="col-sm-3 p0">{{'calender.review_name' | translate}} *</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" ng-disabled="businessUnitField" ng-model="customOptions.review_name" name="review_name" required>
+                    <span class="error-message" ng-if="form.$submitted && form.review_name.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12" ng-if="!addType">
+                <label class="col-sm-3 p0">{{'workflows.workflow' | translate}} *</label>
+                <div class="col-sm-9">
+                    <!-- <select chosen
+                                allow-single-deselect="true"
+                                placeholder-text-single="'Select Task'"
+                                ng-model="customOptions.workflow_template_id"
+                                name="workflow_id" 
+                                class="form-control chosen-choices" required
+                                ng-options="item.workflow_template_id as item.module_name for item in workflowsList">
+                        </select> -->
+                    <select chosen required class="form-control chosen-choices" allow-single-deselect="true" ng-disabled="disablefields || businessUnitField" placeholder-text-single="'{{'normal.placeholder_provider' | translate}}'" ng-model="customOptions.workflow_template_id" name="workflow_id" ng-options="item.workflow_template_id as item.module_name for item in workflowsList">
+                            <option value=""></option>
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.workflow_id.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12">
+                <label class="col-sm-3 p0">{{'reports.bu_unit' | translate}} *</label>
+                <div class="col-sm-9">
+                    <select chosen id="add-chosen0" ng-change="getSmartFilters('bussiness_unit_id')" allow-single-deselect="true" ng-disabled="disablefields" placeholder-text-multiple="'{{'normal.placeholder_business_unit' | translate}}'" multiple ng-model="customOptions.bussiness_unit_id"
+                        name="business_unit" size="1" class="chosen-choices" required ng-options="item.id_business_unit as item.bu_name for item in business_units">
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.business_unit.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+
+            <div class="form-group col-sm-12" ng-if="enablefield">
+                <label class="col-sm-3 p0">{{'calender.relation_category' | translate}} </label>
+                <div class="col-sm-9">
+                    <select chosen id="add-chosen0" ng-change="getSmartFilters('provider_relationship_category_id')" allow-single-deselect="true" 
+                        ng-disabled="disablefields || businessUnitField" placeholder-text-multiple="'{{'normal.placeholder_relation_Catagery_search' | translate}}'" multiple ng-model="customOptions.provider_relationship_category_id"
+                        name="relation_category" size="1" class="chosen-choices"  
+                        ng-options="item.id_provider_relationship_category as item.relationship_category_name for item in provider_relationship_category">
+                        </select>
+                    
+                </div>
+            </div>
+
+             
+            <div class="form-group col-sm-12 pr-0" ng-if="enablefield">
+                <label class="col-sm-3 p0">{{'user.breadcrumb.contract_classification' | translate}}</label>
+                <div class="col-sm-9 classification">
+                    <select chosen id="add-chosen2" ng-change="getSmartFilters('relationship_category_id')" allow-single-deselect="true" ng-disabled="disablefields || businessUnitField" placeholder-text-multiple="'{{'normal.placeholder_contract_classification' | translate}}'" multiple
+                        ng-model="customOptions.relationship_category_id" name="id_relationship_category" class="chosen-choices" size="1" ng-options="item.id_relationship_category as item.relationship_category_name for item in relationCategory">
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.id_relationship_category.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12" ng-if="enablefield">
+                <label class="col-sm-3 p0">{{'providers.providers' | translate}}</label>
+                <div class="col-sm-9">
+                    <select chosen id="add-chosen5" ng-change="getSmartFilters('provider_id')" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_provider' | translate}}'" multiple ng-model="customOptions.provider_id" name="providers"
+                        size="1" ng-disabled="disablefields || businessUnitField" class="chosen-choices" ng-options="item.id_provider as item.provider_name for item in providers">
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.providers.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="col-sm-3 p0" ng-if="enablefield">{{'reports.contracts' | translate}}</label>
+                <label class="col-sm-3 p0" ng-if="!enablefield">{{'reports.project' | translate}}</label>
+                <div class="col-sm-9">
+                    <select chosen ng-if="enablefield" id="add-chosen3" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_contract' | translate}}'" multiple ng-model="customOptions.contract_id" ng-disabled="disablefields || businessUnitField" name="id_contract"
+                        class="chosen-choices" size="1" ng-options="item.id_contract as item.contract_name for item in contracts">
+                        </select>
+                    <select chosen ng-if="!enablefield" id="add-chosen3" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_project' | translate}}'" multiple ng-model="customOptions.contract_id" ng-disabled="disablefields" name="id_contract"
+                        class="chosen-choices" size="1" ng-options="item.id_contract as item.contract_name for item in contracts">
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.id_contract.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-if="isEdit && enablefield">
+                <label class="col-sm-3 p0">{{'contract.completed_contracts' | translate}}</label>
+                <div class="col-sm-9">
+                    <select chosen id="add-chosen7" allow-single-deselect="true" placeholder-text-multiple="'{{'normal.placeholder_no_complete_contracts' | translate}}'" multiple ng-model="customOptions.completed_contract_id" name="id_contract" class="chosen-choices" size="1" ng-disabled="isEdit" ng-options="item.id_contract as item.contract_name for item in completed_contracts">
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.id_contract.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12" ng-if="!addType">
+                <label class="col-sm-3 p0">{{'workflows.workflow_name' | translate}} *</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" ng-model="customOptions.workflow_name" name="workflow_name" required>
+                    <span class="error-message" ng-if="form.$submitted && form.workflow_name.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="col-sm-3 p0" ng-if="addType">{{'calender.review_by' | translate}} *</label>
+                <label class="col-sm-3 p0" ng-if="!addType">{{'calender.execute_by' | translate}} *</label>
+                <div class="col-sm-9">
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="customOptions.date" datepicker-options="options" ng-change="validateRecurrence()" ng-disabled="(addType && isEdit) || businessUnitField" name="review_by" is-open="openCal1"
+                            show-weeks="false" show-button-bar="false" readonly required/>
+                        <span class="input-group-btn ">
+                                <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                    </div>
+                    <span class="error-message" ng-if="form.$submitted && form.review_by.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-if="addType">
+                <label class="col-sm-3 p0">{{'calender.recurrence' | translate}}</label>
+                <div class="col-sm-9">
+                    <select class="form-control" ng-model="customOptions.recurrence" name="recurrence" ng-change="validateRecurrence()" ng-disabled="isEdit || businessUnitField">
+                                <option value="">-- {{'general.select' |translate}} --</option>
+                                <option value="1">{{'contract.monthly' | translate}}</option>
+                                <option value="2">{{'contract.quarter' | translate}}</option>
+                                <option value="3">{{'contract.yearly' | translate}}</option>
+                        </select>
+                    <span class="error-message" ng-if="form.$submitted && form.recurrence.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-if="addType">
+                <label class="col-sm-3 p0">{{'calender.recurrence_till' | translate}}  <span ng-if="customOptions.recurrence">*</span></label>
+                <div class="col-sm-9">
+                    <div class="input-group clearfix form-group-custom">
+                        <input type="text" class="form-control white-bg bg-white" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="customOptions.recurrence_till" datepicker-options="options1" name="recurrence_till" is-open="openCal2" show-weeks="false" show-button-bar="false"
+                            ng-disabled="((isEdit)?true:(customOptions.recurrence=='')) || businessUnitField" readonly ng-required="customOptions.recurrence" />
+                        <span class="input-group-btn ">
+                                <button type="button" class="btn btn-default border" ng-click="openCal2 = true">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                    </div>
+                    <span class="error-message" ng-if="form.$submitted && form.recurrence_till.$error.required">{{'general.required_field' |translate}}</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="col-sm-3 p0" ng-if="addType">{{'calender.initiate_review' | translate}}  </label>
+                <label class="col-sm-3 p0" ng-if="!addType">{{'calender.initiate_workflow' | translate}}  </label>
+                <div class="col-sm-9">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch_toggle" class="onoffswitch-checkbox" ng-true-value="1" ng-false-value="0" ng-disabled="((isEdit)?true:false)|| businessUnitField" ng-model="customOptions.auto_initiate" ng-checked="customOptions.auto_initiate == 1" id="auto_initiate" ng-disabled="(isEdit)?true:false">
+                        <label class="onoffswitch-label assessment-switch mb-0" for="auto_initiate">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> {{bottom | translate}}
+                </button>
+            <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i>
+                    {{'general.cancel' | translate}}
+                </button>
+        </div>
+    </form>
+</script>
+
+
+
+
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <div class="" ng-repeat="item in row.bu_name">
+        <span>{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="myPopoverTemplate2.html">
+    <div class="skyblue pointer" ng-repeat="item in row.contract_name track by $index">
+        <span ng-click="goToContractReviwPage(row,$index)">{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="myPopoverTemplate3.html">
+    <div class="" ng-repeat="item in row.relationship_category_name" ng-if=" item != row.relationship_category_name[0]">
+        <span>{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="confirm-dialog.html">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-title">{{action | translate}} {{head | translate}} :
+            <a ng-click="cancel()" title="{{'general.close' | translate}}" class=" pull-right icon-times"></a>
+        </h6>
+    </div>
+    <div class="modal-body clearfix" id="modal-body">
+        <i ng-bind-html="val_data" id="val_data"></i><br>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" ng-click="saidOk()">
+            <i class="fa fa-check"></i> {{'general.ok' | translate}}
+        </button>
+        <button type="reset" class="btn btn-sm btn-danger" ng-click="cancel()"><i class="fa fa-times"></i>
+            {{'general.cancel' | translate}}
+        </button>
+    </div>
+</script>
+<style>
+    .ellipsis-calendar-block {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        width: 92%;
+    }
+    
+    .calender-legends ul {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .calender-legends ul li p {
+        display: block;
+        width: inherit;
+        height: inherit;
+        margin: 0;
+        border-radius: 0;
+        margin-right: 5px;
+    }
+    
+    p.action-items-legend,
+    p.workflow-legend,
+    p.review-legend {
+        background-color: transparent;
+    }
+    
+    .review-legend:after {
+        color: #478af5;
+        content: ' \25B2';
+        font-size: 18px;
+        line-height: 18px;
+    }
+    
+    .workflow-legend:after {
+        content: ' \25A0';
+        font-size: 17px;
+        color: #54b13d;
+        line-height: 18px;
+    }
+    
+    .action-items-legend:after {
+        content: '\f111';
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 14px;
+        color: #db441d;
+        line-height: 18px;
+    }
+    
+    .obligation-rights-legend:after {
+        content: ' \2605';
+        color: #ffc000;
+        font-size: 21px;
+        line-height: 18px;
+    }
+    
+    .review-event:after {
+        color: #478af5;
+        content: ' \25B2';
+        font-size: 18px;
+    }
+    
+    .review-event {
+        position: absolute;
+        left: 0;
+        top: 0px;
+    }
+    
+    .workflow-event {
+        position: absolute;
+        right: 0;
+        top: 0px;
+    }
+    
+    .workflow-event:after {
+        content: ' \25A0';
+        font-size: 18px;
+        color: #54b13d;
+    }
+    
+    .action-items-event {
+        position: absolute;
+        top: 21px;
+        left: 0;
+    }
+    
+    .action-items-event:after {
+        content: '\f111';
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 16px;
+        color: #db441d;
+        line-height: 13px;
+    }
+    
+    .obligation-rights-event {
+        position: absolute;
+        right: 0;
+        top: 21px;
+    }
+    
+    .obligation-rights-event:after {
+        content: ' \2605';
+        color: #ffc000;
+        font-size: 20.5px;
+        line-height: 8px;
+    }
+    
+    mwl-calendar .events-list {
+        padding-left: 2px !important;
+    }
+    
+    .tab-pane.active {
+        height: auto !important;
+        /* overflow-x: hidden;*/
+        /* max-height: 500px; */
+        /* overflow-y: scroll; */
+    }
+    
+    .cal-week-box-cell {
+        visibility: hidden;
+    }
+    
+    .planning-des {
+        width: 25%;
+    }
+    
+    .planning-buss-unit {
+        width: 20%;
+    }
+    
+    .planning-review {
+        width: 20%;
+    }
+    
+    .planned-by {
+        width: 20%;
+    }
+    
+    .planning-type {
+        width: 9%;
+    }
+    
+    .planning-action {
+        width: 6%;
+    }
+    
+    .planned-list a.ellipis,
+    span.ellipis {
+        max-width: 95%;
+    }
+    
+    .action_item {
+        width: 30%;
+    }
+    
+    .user_name {
+        width: 25%;
+    }
+    
+    .due_date {
+        width: 20%;
+    }
+    
+    .priority {
+        width: 15%;
+    }
+    
+    .status {
+        width: 10%;
+    }
+    
+    .calendar-contract.plusIcon-more {
+        position: absolute;
+        right: 0;
+        top: -14px;
+    }
+    
+    .popover {
+        max-width: 500px !important;
+    }
+    
+    .calender-right-tabs .nav-tabs li.nav-item:last-child .nav-link {
+        margin-left: 0px;
+    }
+    
+    .obligations-contract-name {
+        width: 17%;
+    }
+    
+    .obligations-description {
+        width: 15%;
+    }
+    
+    .obligations-type-name {
+        width: 13%;
+    }
+    
+    .obligations-recurrence {
+        width: 14%;
+    }
+    
+    .obligations-start-date {
+        width: 14%;
+    }
+    
+    .obligations-end-date {
+        width: 14%;
+    }
+    
+    .obligations-actions {
+        width: 13%;
+    }
+    
+    .events-year-view .events-list-count {
+        position: relative;
+        bottom: 0;
+        left: 17%;
+        margin: 0;
+        z-index: 0;
+        width: 100%;
+        transform: translate(0%, -17%);
+    }
+    
+    .cal-year-box .events-list-count li {
+        font-weight: 600;
+    }
+    
+    .events-year-view .review-event:after,
+    .events-year-view .workflow-event:after,
+    .events-year-view .action-items-event:after,
+    .events-year-view .obligation-rights-event:after {
+        content: '';
+    }
+    
+    .cal-year-box .events-year-view .events-list-count li {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        max-height: 22px !important;
+        min-height: 22px !important;
+        line-height: 34px;
+    }
+    
+    .cal-year-box .events-year-view .events-list-count li.review-event {
+        position: absolute !important;
+        left: 5px;
+        top: 7px;
+        width: 0 !important;
+        height: 0 !important;
+        border-style: solid;
+        border: 0 solid transparent !important;
+        border-right-width: 18px !important;
+        border-left-width: 18px !important;
+        border-bottom: 30px solid #478af4 !important;
+    }
+    
+    .cal-year-box .events-year-view .events-list-count li.workflow-event {
+        position: absolute !important;
+        left: 55px;
+        top: 7px;
+        width: 32px !important;
+        height: 40px !important;
+        background-color: #54b13d;
+        min-height: 30px !important;
+    }
+    
+    .cal-year-box .events-year-view .events-list-count li.action-items-event {
+        position: absolute !important;
+        left: 5px;
+        top: 45px;
+        width: 34px !important;
+        height: 40px !important;
+        background-color: #db441d;
+        min-height: 34px !important;
+        border-radius: 50px;
+    }
+    
+    .cal-year-box .events-year-view .events-list-count li.obligation-rights-event {
+        background: #ffc000;
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        display: inline-block;
+        height: 40px !important;
+        width: 42px;
+        min-height: 40px !important;
+        position: absolute;
+        left: 50px;
+        top: 44px;
+        line-height: 39px;
+    }
+    
+    .tooltip.customClass .tooltip-inner {
+        white-space: break-spaces;
+        max-width: 750px;
+        z-index: 9999;
+        background-color: #5bb166 !important;
+        color: #fff;
+        font-size: 14px !important;
+    }
+    
+    .tooltip.customClass .tooltip-inner .text-tooltip {
+        text-align: left !important;
+        white-space: break-spaces;
+        color: #fff !important;
+    }
+    
+    .events-year-view .action-items-event:after {
+        left: 2px;
+    }
+    
+    mwl-calendar .cal-month-box .events-list {
+        position: relative !important;
+        max-width: 38px;
+        margin: 0 auto;
+    }
+    
+    mwl-calendar .cal-month-day {
+        height: 65px !important;
+    }
+    
+    mwl-calendar .cal-month-box .cal-day-today span[data-cal-date] {
+        font-size: 1.2em !important;
+        font-weight: 600;
+    }
+    
+    .assessment-switch[disabled="disabled"] {
+        cursor: not-allowed;
+    }
+    
+    .showMenu.showDivMenu{
+    display: block;
+}
+    .calender-search-tab {
+        position: absolute;
+        right: 0px;
+        top: -44px;
+        background: transparent !important;
+        border-bottom: none;
+        padding: 10px 0;
+        width: 100%;
+    }
+    .classification{
+      padding-left: 10px !important;
+    }
+    .classification .chosen-container.chosen-container-multi{
+      width: 375px !important;
+    }
+    
+    @media(max-width:1700px) {
+        .events-year-view .events-list-count {
+            left: 10%;
+            transform: translate(0%, -10%);
+        }
+    }
+    
+    @media(max-width: 1440px) {
+        .planning-des {
+            width: 23%;
+        }
+        .planning-action {
+            width: 7%;
+        }
+        .calender-legends ul li {
+            padding: 0 4px;
+        }
+        .events-year-view .events-list-count {
+            left: 5%;
+            transform: translate(0%, -5%);
+        }
+        .cal-year-box .events-year-view .events-list-count li.obligation-rights-event {
+            left: 44px;
+            top: 42px;
+        }
+        .cal-year-box .events-year-view .events-list-count li.workflow-event {
+            left: 49px;
+        }
+    }
+    
+    @media(max-width:1280px) {
+        .cal-year-box .events-year-view .events-list-count li.review-event {
+            border-right-width: 14px !important;
+            border-left-width: 14px !important;
+            border-bottom: 25px solid #478af4 !important;
+        }
+        .cal-year-box .events-year-view .events-list-count li {
+            max-height: 20px !important;
+            min-height: 20px !important;
+            line-height: 30px;
+            font-size: 11px;
+        }
+        .cal-year-box .events-year-view .events-list-count li.workflow-event {
+            left: 38px;
+            width: 26px !important;
+            min-height: 25px !important;
+            line-height: 26px;
+        }
+        .cal-year-box .events-year-view .events-list-count li.action-items-event {
+            top: 52px;
+            width: 26px !important;
+            min-height: 26px !important;
+            line-height: 26px;
+        }
+        .cal-year-box .events-year-view .events-list-count li.obligation-rights-event {
+            width: 35px;
+            min-height: 31px !important;
+            left: 35px;
+            top: 50px;
+            line-height: 32px;
+        }
+        .events-year-view .events-list-count {
+            left: 10%;
+            transform: translate(0%, -10%);
+        }
+    }
+    
+    @media(max-width: 1199px) {
+        .planned-list td,
+        .planned-list th,
+        .open-action-list th,
+        .open-action-list td {
+            font-size: 12px;
+        }
+        .planning-des {
+            width: 20%;
+        }
+        .planning-action {
+            width: 10%;
+        }
+        mwl-calendar .cal-month-box .cal-row-head [class*=cal-cell] {
+            max-height: 25px !important;
+            min-height: 25px !important;
+            font-size: 10px;
+        }
+        .calender-widget .btn {
+            padding: 5px 10px;
+        }
+    }
+    
+    @media(max-width:1140px) {
+        .events-year-view .review-event {
+            left: 3%;
+        }
+        .events-year-view .workflow-event {
+            right: 3%;
+        }
+        .events-year-view .action-items-event {
+            left: 3%;
+        }
+        .events-year-view .obligation-rights-event {
+            right: 3%;
+        }
+    }
+    
+    @media(max-width:1100px) {
+        .events-year-view .events-list-count {
+            left: 2%;
+            transform: translate(0%, 0%);
+        }
+    }
+    
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+        /* this will target only Mac Safari and Chrome browsers */
+        .mac-os .obligation-rights-event:after {
+            font-size: 18.5px;
+            line-height: 13px;
+        }
+    }
+</style>
+
+<script>
+    $(function() {
+        $('body').delegate('.cal-month-day', 'click', function(e) {
+            // debugger;
+            $('.cal-month-day').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+</script>

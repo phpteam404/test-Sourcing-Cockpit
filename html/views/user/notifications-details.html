@@ -1,0 +1,214 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row">
+        <!--<div class="row" ng-if="permission['view']">-->
+            <form novalidate name="notificationForm" ng-submit="notificationForm.$valid && getData(for_date)" class="clearfix">
+                <div class="col-sm-12 action-head p0 mb5 pull-right">
+                    <div class="display-inline-block" ng-if="!emptyData">
+                        <label class="mb-0" ng-if="updatesDate"><span class="gray">{{'notification.updates_of_date' |translate}} :</span> {{updatesDate}} </label>
+                        <label ng-if="!updatesDate">{{'notification.updates_of_date' |translate}} : {{for_date | utcToLocal:'date'}} </label>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary pull-right"><i class="icon-search"></i></button>
+                    <div class="form-inline pull-right">
+                        <label class="pull-left p0 mr-h pt2">{{'notification.select_date' |translate}} :</label>
+                        <div class="input-group table-search">
+                            <input type="text" class="form-control date-pic"
+                                   uib-datepicker-popup="dd-MM-yyyy" date-disabled="false"
+                                   data-ng-model="for_date"
+                                   datepicker-options="options"
+                                   name="for_date" is-open="openCal" show-weeks="false"
+                                   show-button-bar="false" readonly required/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-default border" ng-click="openCal = true">
+                                        <i class="fa fa-calendar"></i></button>
+                                </span>
+                        </div>
+                        <span class="error-message display-block" ng-if="notificationForm.for_date.$error.required && notificationForm.$submitted">{{'general.required_field' |translate}}</span>
+                    </div>
+                </div>
+            </form>
+            <!--<div ng-if="!emptyData">
+                <label ng-if="updatesDate">{{'notification.updates_of_date' |translate}} : {{updatesDate}} </label>
+                <label ng-if="!updatesDate">{{'notification.updates_of_date' |translate}} : {{for_date | utcToLocal:'date'}} </label>
+            </div>-->
+            <div ng-if="emptyData">
+                <div class="card text-sm-center p-1">{{'general.no_data' |translate}}</div>
+            </div>
+            <div ng-if="!emptyData">
+                <div>
+                    <uib-accordion close-others="oneAtATime" ng-init="status.open = true">
+                        <div uib-accordion-group class="panel-default mb-h" heading="Selection Process"
+                             template-url="group-template2.html"
+                             style="border: 1px solid #ccc;" is-open="status.open">
+                            <uib-accordion-heading  ng-click="status.open = !status.open">
+                                <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                                {{'notification.contract_updates' |translate}} ({{contract_updates.length}})
+                            </uib-accordion-heading>
+                            <table class="table table-custom table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>{{'customer.admin.name' | translate}}</th>
+                                    <th>{{'notification.date' |translate}}</th>
+                                    <th>{{'customer.admin.business_unit' | translate}}</th>
+                                    <th>{{'contract.provider' | translate}}</th>
+                                    <th>{{'contract.contract_name' | translate}}</th>
+                                    <th>{{'general.actions' | translate}}</th>
+                                </tr>
+                                </thead>
+                                <tbody ng-show="contract_updates.length > 0">
+                                <tr ng-repeat="row in contract_updates | orderBy: 'date'">
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.date | utcToLocal:'datetime' | checkEmpty}}</td>
+                                    <td>{{row.bu_name}}</td>
+                                    <td>{{row.provider_name}}</td>
+                                    <td>{{row.contract_name}}</td>
+                                    <td>{{row.action_name | underscoreless | capitalize}}</td>
+                                </tr>
+                                </tbody>
+                                <tbody ng-show="contract_updates.length ==0">
+                                <tr><td colspan="8" class="text-sm-center">{{'general.no_data' | translate}} </td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </uib-accordion>
+                </div>
+                <div>
+                    <uib-accordion close-others="oneAtATime" ng-init="status.open1 = true">
+                        <div uib-accordion-group class="panel-default mb-h" heading="Selection Process"
+                             template-url="group-template.html"
+                             style="border: 1px solid #ccc;" is-open="status.open1">
+                            <uib-accordion-heading  ng-click="status.open1 = !status.open1">
+                                <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open1, 'fa fa-plus-square-o': !status.open1}"></i>
+                                {{'notification.new_contracts' |translate}} ({{content.new_contract.length}})
+                            </uib-accordion-heading>
+                            <table class="table table-custom table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{{'customer.admin.name' | translate}}</th>
+                                        <th>{{'notification.date' |translate}}</th>
+                                        <th>{{'customer.admin.business_unit' | translate}}</th>
+                                        <th>{{'contract.provider' | translate}}</th>
+                                        <th>{{'contract.contract_name' | translate}}</th>
+                                        <th>{{'general.actions' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="content.new_contract.length >0">
+                                    <tr ng-repeat="row in content.new_contract | orderBy: 'date'">
+                                        <td>{{row.name}}</td>
+                                        <td>{{row.date | utcToLocal:'datetime' | checkEmpty}}</td>
+                                        <td>{{row.bu_name}}</td>
+                                        <td>{{row.provider_name}}</td>
+                                        <td>{{row.contract_name}}</td>
+                                        <td>{{'contract created' | underscoreless | capitalize}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="content.new_contract.length == 0">
+                                    <tr><td colspan="8" class="text-sm-center">{{'general.no_data' | translate}} </td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </uib-accordion>
+                </div>
+                <div>
+                    <uib-accordion close-others="oneAtATime"  ng-init="status.open2 = true">
+                        <div uib-accordion-group class="panel-default mb-h" heading="Selection"
+                             template-url="group-template1.html"
+                             style="border: 1px solid #ccc;" is-open="status.open2">
+                            <uib-accordion-heading  ng-click="status.open2 = !status.open2">
+                                <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open2, 'fa fa-plus-square-o': !status.open2}"></i>
+                                {{'notification.user_updates' |translate}}  ({{user_updates.length}})
+                            </uib-accordion-heading>
+                            <table class="table table-custom table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>{{'customer.admin.name' | translate}}</th>
+                                    <th>{{'notification.date' |translate}}</th>
+                                    <th>{{'customer.admin.business_unit' | translate}}</th>
+                                    <th>{{'general.actions' | translate}}</th>
+                                </tr>
+                                </thead>
+                                <tbody ng-show="user_updates.length > 0">
+                                <tr ng-repeat="row in user_updates | orderBy: 'created_on'">
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.created_on | utcToLocal:'datetime' | checkEmpty}}</td>
+                                    <td>
+                                        <span ng-if="!row.business_unit[1]">{{row.business_unit[0] |checkEmpty}}</span>
+                                        <span ng-if="row.business_unit[1]">{{'general.multi_selected' | translate}}</span>
+                                        <span ng-if="row.business_unit[1]" href="javascript:;" class="icon-plus-circle gray ml-h"  uib-popover-template="dynamicPopover.templateUrl1"
+                                           popover-placement = "right" popover-trigger="'outsideClick'" class="btn btn-default"></span>
+                                    </td>
+                                    <td>{{row.action_name | underscoreless | capitalize}}</td>
+                                </tr>
+                                </tbody>
+                                <tbody ng-show="user_updates.length  == 0">
+                                <tr><td colspan="8" class="text-sm-center">{{'general.no_data' | translate}} </td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </uib-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+    <div class="" ng-repeat="item in row.bu_name" ng-if=" item != row.bu_name[0]">
+        <span>{{item}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open, 'fa fa-plus-square-o': !status.open}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template2.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open1, 'fa fa-plus-square-o': !status.open1}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group-template1.html">
+    <div class="accordion-default accordian_list_style">
+        <div class="panel-heading">
+            <h4 class="panel-title cursor-pointer" ng-click="toggleOpen()" style="cursor: pointer">
+                <a href tabindex="0" class="accordion-toggle" uib-accordion-transclude="heading">
+                    <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+                        <i class="glyphicon" ng-class="{'fa fa-minus-square-o': status.open2, 'fa fa-plus-square-o': !status.open2}"></i>
+                        {{heading}}
+                    </span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="myPopoverTemplate1.html">
+    <div class="" ng-repeat="item in row.business_unit">
+        <span>{{item}}</span>
+    </div>
+</script>

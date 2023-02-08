@@ -1,0 +1,177 @@
+<!-- <div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+            <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                <thead>
+                <tr>
+                    <td colspan="4">
+                        <div class="col-sm-3 clearfix p0">
+                            <button ng-click="goToClassifications()" class="text-center">
+                                {{'relationship-classification.relationship-classification' | translate}}</button>
+                        </div>
+                        <div class="col-sm-9 clearfix p0">
+                            <div class="action-head mb0">
+                                    <span class="pull-right ml-h">
+                                        <button class="btn btn-sm btn-primary" ng-click="updateCategory()" type="button"><i class="icon-plus"></i>&nbsp;
+                                            {{'general.ADD' | translate}}
+                                        </button>
+                                    </span>
+                                <div class="col-sm-3 p0 table-search pull-right">
+                                    <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                           st-search="search_key" st-input-event ="change">
+                                    <i class="fa icon-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th st-sort="relationship_category_name" class="st-sort-ascent st-sort-descent">{{'category-relation.name' | translate}}</th>
+                    <th st-sort="relationship_category_quadrant" class="">{{'category-relation.quadrant' | translate}}</th>
+                    <th st-sort="relationship_category_status" class="">{{'general.status' | translate}}</th>
+                    <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody ng-show="!isLoading && displayed.length>0">
+                <tr ng-repeat="row in displayed">
+                    <td>{{row.relationship_category_name}} ({{row.relationship_category_short_name | uppercase}})</td>
+                    <td>{{row.relationship_category_quadrant}}</td>
+                    <td>
+                        <span  ng-if="row.relationship_category_status == 1" class="green">{{'general.active' | translate}}</span>
+                        <span  ng-if="row.relationship_category_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}" ng-click="updateCategory(row)"><i class="icon-edit" ></i></a>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                </tbody>
+                <tbody ng-show="!isLoading && displayed.length<=0">
+                    <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="paginator">
+                            <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                            <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                    ng-options="item for item in pagesNumber" selected>
+                                </select>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div> -->
+<div class="animated fadeIn">
+    <div class="col-sm-12 p0">
+        <div class="row" ng-if="permission['list']">
+           <!-- tabs start  -->
+            <div class="card">
+                <div class="tab-form-demo">
+                    <uib-tabset active="activeForm">
+                        <uib-tab index="0">
+                            <uib-tab-heading>
+                                {{'user.breadcrumb.contract_classifications' | translate}}
+                            </uib-tab-heading>
+                            <div class="row m-0" ng-if="permission['list']">
+                                <div class="col-sm-12 p0">
+                                    <div class="">
+                                        <table class="table table-custom table-striped table-hover" st-pipe="callServer" st-table="displayed">
+                                            <thead>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <div class="col-sm-3 clearfix p0">
+                                                        <button ng-click="goToClassifications()" class="text-center">
+                                                            {{'category-relation.contract-classification' | translate}}</button>
+                                                    </div>
+                                                    <div class="col-sm-9 clearfix p0">
+                                                        <div class="action-head mb0">
+                                                                <span class="pull-right ml-h">
+                                                                    <button class="btn btn-sm btn-primary btn-radius" ng-click="updateCategory()" type="button"><i class="icon-plus"></i>&nbsp;
+                                                                        {{'general.ADD' | translate}}
+                                                                    </button>
+                                                                </span>
+                                                            <div class="col-sm-3 p0 table-search pull-right">
+                                                                <input type="text" class="form-control" placeholder="{{'general.search' | translate}}"
+                                                                       st-search="search_key" st-input-event ="change">
+                                                                <i class="fa icon-search"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th st-sort="relationship_category_name" class="st-sort-ascent st-sort-descent">{{'category-relation.classification_name' | translate}}</th>
+                                                <th st-sort="relationship_category_quadrant" class="">{{'category-relation.quadrant' | translate}}</th>
+                                                <th st-sort="relationship_category_status" class="">{{'general.status' | translate}}</th>
+                                                <th class="hand-symbol">{{'general.actions' | translate}}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody ng-show="!isLoading && displayed.length>0">
+                                            <tr ng-repeat="row in displayed">
+                                                <td>{{row.relationship_category_name}} ({{row.relationship_category_short_name | uppercase}})</td>
+                                                <td>{{row.relationship_category_quadrant}}</td>
+                                                <td>
+                                                    <span  ng-if="row.relationship_category_status == 1" class="green">{{'general.active' | translate}}</span>
+                                                    <span  ng-if="row.relationship_category_status == 0" class="red">{{'general.inactive' | translate}}</span>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:;" class="mr-1 gray" title="{{'general.edit' | translate}}" ng-click="updateCategory(row)"><i class="icon-edit" ></i></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tbody ng-show="isLoading">
+                                                <tr><td colspan="4" class="text-sm-center">{{'general.loading' | translate}}</td></tr>
+                                            </tbody>
+                                            <tbody ng-show="!isLoading && displayed.length<=0">
+                                                <tr><td colspan="4" class="text-sm-center">{{'general.no_data' | translate}}</td></tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td class="text-center" colspan="8">
+                                                    <div class="paginator">
+                                                        <span class="paginator-num" st-pagination="" st-items-by-page="displayCount" class="text-sm-center"></span>
+                                                        <span class="paginator-dropdown" ng-if="totalRecords>10">
+                                                            <label>{{'general.records_per_page' | translate}}&nbsp;</label>
+                                                            <select ng-model="displayCount" ng-change="defaultPages(displayCount)"
+                                                                ng-options="item for item in pagesNumber" selected>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                   
+                                </div>
+                               
+                            </div>
+                        </uib-tab>
+                        <uib-tab index="1" ui-sref="app.relationship_category.list1">
+                            <uib-tab-heading>
+                                {{'relationship-classification.provider_categories' | translate}}
+                            </uib-tab-heading>
+                          
+                          </uib-tab>
+
+                    </uib-tabset>
+                </div>
+            </div>
+            <!-- tabs end -->
+        </div>
+    </div>
+</div> 
+<style>
+    .nav-tabs .nav-item.active .nav-link {
+        background: #FFF;
+    }
+</style>

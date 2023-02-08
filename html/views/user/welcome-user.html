@@ -1,0 +1,34 @@
+<div class="container d-table" id="loginPage">
+    <div class="d-100vh-va-middle">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card-group">
+                    <div class="card p-2">
+                        <div class="card-block">
+                            <p><img src="img/logowith.png"></p>
+                            <form class="form-group" name="myForm" ng-submit="myForm.$valid && submitLogin(myForm,user)" novalidate>
+                                <h1><span>{{'user.login.welcome' | translate}}</span></h1>
+                                <span class="hint-text">{{'user.login.sign_in_below_to_get_started' | translate}}</span>
+                                <div class="input-group mb-0 form-group">
+                                    <!--<input type="email" class="form-control" ng-model="user.email_id" name="email_id"  required readonly>-->
+                                   <label class="form-control-static"> {{user.email_id}}--Email come here--</label>
+                                </div>
+                                <div class="input-group mb-2 form-group">
+                                    <input type="password" class="form-control" ng-model="user.password" name="password" placeholder="{{'user.profile.password' | translate}}" required>
+                                    <div ng-if="myForm.password.$error.required && myForm.$submitted" class="error-message">{{'general.enter_password' | translate}}</div>
+                                </div>
+                                <div class="input-group mb-2 form-group">
+                                    <input type="password" class="form-control" ng-model="user.cpassword" name="cpassword" placeholder="{{'normal.placeholder_retype_password' | translate}}" required>
+                                    <div ng-if="myForm.cpassword.$error.required && myForm.$submitted" class="error-message">{{'general.re_enter_password' | translate}}</div>
+                                </div>
+                                <div class="col-xs-12 sign-in pb-3">
+                                    <button type="submit" class="btn btn-orange px-2">{{'user.login.sign_in' | translate}}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

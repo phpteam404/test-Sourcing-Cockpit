@@ -1,0 +1,171 @@
+<div class="animated fadeIn">
+    <div class="row">
+            <div class="col-sm-12 p0">
+                <div class="col-md-12 p0 basic-form" >
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>{{'reports.selection_criteria' | translate}}</strong>
+                        </div>
+                        <div class="card-block">
+                            <form class="form-horizontal profile-form" name="createReportForm" novalidate ng-submit="createReportForm.$valid && createReport(customOptions)">
+                                <div class="form-group col-sm-12" ng-if="business_units">
+                                    <label class="col-sm-3">{{'reports.bu_unit' | translate}}</label>
+                                    <div class="col-sm-9">
+                                        <select chosen
+                                                id="add-chosen1"
+                                                onchange="chosen1()"
+                                                allow-single-deselect="true"
+                                                placeholder-text-multiple="'{{'normal.placeholder_business_unit' | translate}}'"
+                                                multiple ng-model="customOptions.business_unit"
+                                                name="business_unit" size="1"
+                                                class="chosen-choices"
+                                                ng-options="item.id_business_unit as item.bu_name for item in business_units">
+                                        </select>
+                                        <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.business_unit.$error.required">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-3">{{'reports.classification' | translate}}</label>
+                                    <div class="col-sm-9">
+                                        <select chosen
+                                                id="add-chosen2"
+                                                onchange="chosen2()"
+                                                allow-single-deselect="true"
+                                                placeholder-text-multiple="'{{'normal.placeholder_classification' | translate}}'"
+                                                multiple ng-model="customOptions.classifications"
+                                                name="id_relationship_category"
+                                                class="chosen-choices"  size="1"
+                                                ng-options="item.id_relationship_category as item.relationship_category_name for item in classifications">
+                                        </select>
+                                        <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.id_relationship_category.$error.required">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-3">{{'reports.contracts' | translate}}</label>
+                                    <div class="col-sm-9" ng-init="contact-placeholder">
+                                        <select chosen 
+                                                id="add-chosen3"
+                                                onchange="chosen3()"
+                                                allow-single-deselect="true"    
+                                                placeholder-text-multiple="'{{'normal.placeholder_contract' | translate}}'"
+                                                multiple ng-model="customOptions.contracts"
+                                                name="id_contract"
+                                                class="chosen-choices" size="1"
+                                                ng-options="item.id_contract as item.contract_name for item in contracts">
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--<div class="form-group col-sm-12">
+                                    <label class="col-sm-3">{{'reports.latest_fm_date' | translate}}</label>
+                                    <div class="col-sm-9 p0">
+                                        <div class="col-sm-1 pl0 text-sm-center pt-h">{{'reports.from' | translate}}</div>
+                                        <div class="col-sm-5">
+                                            <div class="input-group clearfix form-group-custom">
+                                                <input type="text" class="form-control white-bg bg-white"
+                                                       uib-datepicker-popup="yyyy-MM-dd" date-disabled="false"
+                                                       data-ng-model="customOptions.start_date" my-date
+                                                       name="start_date" is-open="openCal" show-weeks="false" required
+                                                       show-button-bar="false"/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default border" ng-click="openCal = true">
+                                                        <i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                            <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.start_date.$error.required">{{'general.required_field' |translate}}</span>
+                                        </div>
+                                        <div class="col-sm-1 text-sm-center pt-h">{{'reports.to' | translate}}</div>
+                                        <div class="col-sm-5">
+                                            <div class="input-group clearfix form-group-custom">
+                                                <input type="text" class="form-control white-bg bg-white"
+                                                       uib-datepicker-popup="yyyy-MM-dd" date-disabled="false"
+                                                       data-ng-model="customOptions.end_date" my-date
+                                                       name="end_date" is-open="openCal1" show-weeks="false" required
+                                                       show-button-bar="false"/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default border" ng-click="openCal1 = true">
+                                                        <i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                            <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.end_date.$error.required">{{'general.required_field' |translate}}</span>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-3">{{'reports.status' | translate}}</label>
+                                    <div class="col-sm-9">
+                                        <select chosen
+                                            id="add-chosen4"
+                                            onchange="chosen4()"
+                                            allow-single-deselect="true"
+                                            placeholder-text-multiple="'{{'normal.placeholder_status' | translate}}'"
+                                                multiple ng-model="customOptions.status"
+                                                name="status"
+                                                class="chosen-choices"
+                                                ng-options="item.key as item.value for item in status">
+                                        </select>
+                                        <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.status.$error.required">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-3">{{'reports.description' | translate}}</label>
+                                    <div class="col-sm-9">
+                                        <select chosen
+                                            id="add-chosen6"
+                                            onchange="chosen6()"
+                                            allow-single-deselect="true"
+                                            placeholder-text-multiple="'{{'normal.placeholder_descreption' | translate}}'"
+                                                multiple ng-model="customOptions.description"
+                                                name="status"
+                                                class="chosen-choices"
+                                                ng-options="item.id_calender as item.activity_name for item in description">
+                                        </select>
+                                        <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.description.$error.required">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12" ng-if="providers">
+                                    <label class="col-sm-3">{{'providers.providers' | translate}}</label>
+                                    <div class="col-sm-9">
+                                        <select chosen
+                                                id="add-chosen5"
+                                                onchange="chosen5()"
+                                                allow-single-deselect="true"
+                                                placeholder-text-multiple="'{{'normal.placeholder_provider' | translate}}'"
+                                                multiple ng-model="customOptions.provider"
+                                                name="providers" size="1"
+                                                class="chosen-choices"
+                                                ng-options="item.id_provider as item.provider_name for item in providers">
+                                        </select>
+                                        <span class="error-message" ng-if="createReportForm.$submitted && createReportForm.providers.$error.required">{{'general.required_field' |translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group text-xs-center">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        {{'reports.search' | translate}}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<script>
+    function chosen1() {
+        $("#add-chosen1").trigger("chosen:updated");
+    }
+    function chosen2() {
+        $("#add-chosen2").trigger("chosen:updated");
+    }
+    function chosen3() {
+        $("#add-chosen3").trigger("chosen:updated");
+    }
+    function chosen4() {
+        $("#add-chosen4").trigger("chosen:updated");
+    }function chosen5() {
+        $("#add-chosen5").trigger("chosen:updated");
+    }
+    function chosen6() {
+        $("#add-chosen6").trigger("chosen:updated");
+    }
+
+</script>

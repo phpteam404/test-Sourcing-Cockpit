@@ -1,0 +1,105 @@
+
+#loginPage .card-primary{
+    display: none;
+}
+#loginPage .p-2 {
+    padding: 0 !important;
+}
+#loginPage .card-block{
+    padding: 0;
+}
+#loginPage .card{
+    border: 0px;
+    border-radius: 4px;
+}
+#loginPage .card-block p {
+    text-align: center;
+    width: 100px;
+    margin: 36px auto 0;
+}
+#loginPage .card-block p img {
+    width: 100%;
+}
+#loginPage .card-group {
+    border: 0px;
+    box-shadow: 0px 0px 20px #999;
+}
+.card-group .form-group h1 {
+    text-align: center;
+    position: relative;
+    margin-bottom: 25px;
+    margin-top: 5px;
+}
+.card-group .form-group h1 span {
+    font-size: 18px;
+    text-transform: uppercase;
+    z-index: 5;
+    background: #fff;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    color: #8E8C8D;
+}
+.card-group .form-group h1::before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: #E9EAEB;
+    top: 31px;
+    left: 0;
+}
+#loginPage .input-group,.sign-in{
+    padding: 0 20px;
+}
+#loginPage .form-group .form-control{
+    border-radius: 4px;
+    height: 47px;
+    /*border: 1px solid #DCDCDC;*/
+}
+.btn-orange{
+    color: #fff;
+    background-color: #DA451B;
+    border-color: #DA451B;
+}
+.btn-orange:hover{
+    background: #DA3A16;
+    border-color: #DA3A16;
+}
+.sign-in .btn-orange {
+    width: 100%;
+    border-radius: 4px;
+    font-weight: 400;
+    height: 45px;
+}
+.sign-in .disable-color {
+    width: 100%;
+    border-radius: 4px;
+    font-weight: 400;
+    height: 45px;
+}
+.login-ad .disable-color{
+    width: 100%;
+    border-radius: 4px;
+    font-weight: 400;
+    height: 45px;
+}
+.forget-psd {
+    text-align: center;
+    float: none;
+    margin: 5px 0 5px;
+}
+/*h5{color:#f00;}*/
+.forgot-btns{text-align: center !important;}
+.login-ad{
+    text-align: center;
+    float: none;
+    margin: 10px 0 15px;
+}
+.login-ad button{
+    width: 97%;
+    border-radius: 4px;
+    height: 45px;
+    text-transform:uppercase;
+}
