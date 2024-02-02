@@ -19,6 +19,6 @@
   },
   "homepage": "https://angular-translate.github.io",
   "dependencies": {
-    "angular-translate": "~2.14.0"
+    "angular-translate": "~2.19.1"
   }
 }
